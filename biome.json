@@ -26,7 +26,13 @@
     "rules": {
       "recommended": true,
       "nursery": {
-        "useSortedClasses": "warn"
+        "useSortedClasses": {
+          "level": "warn",
+          "fix": "safe",
+          "options": {
+            "attributes": ["className"]
+          }
+        }
       }
     }
   },
