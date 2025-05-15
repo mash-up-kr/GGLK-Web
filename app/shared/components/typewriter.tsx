@@ -47,14 +47,5 @@ export default function TypeWriter({
     }
   }, [isPresent, animate, count, text.length, safeToRemove, durationPerChar]);
 
-  // useEffect(() => {
-  //   const controls = animate(count, text.length, {
-  //     type: "tween", // Not really needed because adding a duration will force "tween"
-  //     duration: 1,
-  //     ease: "easeInOut",
-  //   });
-  //   return controls.stop;
-  // }, [count, text.length]);
-
-  return <motion.span>{displayText}</motion.span>;
+  return <motion.span ref={scope}>{displayText}</motion.span>;
 }
