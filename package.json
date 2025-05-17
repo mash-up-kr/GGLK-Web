@@ -2,6 +2,7 @@
   "name": "GGLK-Web",
   "type": "module",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
