@@ -1,3 +1,5 @@
 export default function ImageStudioPage() {
-  return <div>Image Studio</div>;
+  return (
+    <div className="flex h-full flex-col items-center border">이미지 수정</div>
+  );
 }
