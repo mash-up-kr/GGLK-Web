@@ -11,6 +11,11 @@
     "typecheck": "react-router typegen && tsc",
     "test": "vitest --watch"
   },
+  "packageManager": "pnpm@10.11.0",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "dependencies": {
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
