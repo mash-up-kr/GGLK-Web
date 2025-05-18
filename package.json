@@ -9,12 +9,14 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "test": "vitest --watch"
+    "test": "vitest --watch",
+    "orval": "orval"
   },
   "dependencies": {
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
     "@tanstack/react-query": "^5.75.1",
+    "axios": "^1.9.0",
     "isbot": "^5.1.27",
     "motion": "^12.9.4",
     "react": "^19.1.0",
@@ -40,6 +42,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "jsdom": "^26.1.0",
     "lefthook": "^1.11.13",
+    "orval": "^7.9.0",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3",
     "vite": "^6.3.3",
