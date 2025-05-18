@@ -77,8 +77,8 @@ const Carousel: React.FC<PropType> = (props) => {
           </div>
         </div>
         <div className="w-full max-w-[150px] flex mx-auto mt-4 justify-between items-center">
-          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-          {showArrows && (
+        <div className="w-8 flex justify-center">
+        {showArrows && ( <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />)}</div>
             <div className="flex justify-center mt-2 items-center space-x-2">
               {slides.map((_, index) => (
                 <button
@@ -95,8 +95,9 @@ const Carousel: React.FC<PropType> = (props) => {
                 />
               ))}
             </div>
-          )}
-          <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+            <div className="w-8 flex justify-center">
+            {showArrows && (<NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />)}
+        </div>
         </div>
       </div>
     </section>

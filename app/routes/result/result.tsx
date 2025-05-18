@@ -4,7 +4,7 @@ import CarouselContainer from "~/shared/components/carousel/CarouselContainer";
 const createSlides = (count: number) => {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
-    image: `/app/shared/images/${index + 1}.png`,
+    image: `/public/png/${index + 1}.png`,
     alt: `img-alt-${index + 1}`,
   }));
 };
