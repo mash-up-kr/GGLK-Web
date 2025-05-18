@@ -1,0 +1,18 @@
+pre-commit:
+  parallel: true
+  commands:
+    check:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+
+prepare-commit-msg:
+  commands:
+    prepare-conventional-commit:
+      interactive: true
+      run: exec < /dev/tty && pnpm run commit prepare --hook || true
+
+commit-msg:
+  scripts:
+    "commitlint.sh":
+      runner: bash
