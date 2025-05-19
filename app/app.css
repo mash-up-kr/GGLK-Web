@@ -13,3 +13,13 @@ body {
     color-scheme: dark;
   } */
 }
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6); /* 어두운 반투명 배경 */
+  backdrop-filter: blur(2px);
+}
+
+/* margin: auto 추가로 모달 가운데 정렬 (tailwind preflight 때문에 추가) */
+dialog {
+  margin: auto;
+}
