@@ -1,0 +1,11 @@
+ls:
+  .ts: kebab-case
+  .tsx: kebab-case
+  .*.ts: kebab-case
+  .*.tsx: kebab-case
+
+ignore:
+  - "node_modules"
+  - "build"
+  - "public"
+  - ".react-router"
