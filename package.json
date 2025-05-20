@@ -5,11 +5,12 @@
     "preinstall": "npx only-allow pnpm",
     "postinstall": "[ -n \"$CI\" ] || lefthook install",
     "commit": "cz",
-    "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc",
-    "test": "vitest --watch"
+    "build": "ls-lint && react-router build",
+    "dev": "ls-lint && react-router dev",
+    "start": "ls-lint && react-router-serve ./build/server/index.js",
+    "typecheck": "ls-lint && react-router typegen && tsc",
+    "test": "ls-lint && vitest --watch",
+    "ls-lint": "ls-lint"
   },
   "dependencies": {
     "@react-router/node": "^7.5.3",
@@ -27,6 +28,7 @@
     "@biomejs/biome": "1.9.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@ls-lint/ls-lint": "^2.3.0",
     "@react-router/dev": "^7.5.3",
     "@tailwindcss/vite": "^4.1.4",
     "@testing-library/jest-dom": "^6.6.3",
