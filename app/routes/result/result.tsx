@@ -1,7 +1,8 @@
 import React from "react";
+import type { CarouselSlide } from "~/shared/components/carousel/Carousel";
 import CarouselContainer from "~/shared/components/carousel/CarouselContainer";
 
-const createSlides = (count: number) => {
+const createSlides = (count: number): CarouselSlide[] => {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
     image: `/public/png/${index + 1}.png`,
@@ -15,9 +16,7 @@ export default function ResultPage() {
 
   return (
     <div className="p-4">
-      <div className="carousel-container">
-        <CarouselContainer slides={slides} />
-      </div>
+      <CarouselContainer slides={slides} fullWidthSlide={true} />
     </div>
   );
 }
