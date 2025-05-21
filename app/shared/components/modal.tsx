@@ -1,5 +1,12 @@
 import { AnimatePresence, motion } from "motion/react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  type ComponentRef,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ReactPortal from "./react-portal";
 
 interface ModalContextType {
@@ -59,27 +66,31 @@ function Close({ children }: { children: React.ReactNode }) {
 
 function Content({ children }: { children: React.ReactNode }) {
   const { isOpen } = useModal();
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const dialogRef = useRef<ComponentRef<typeof motion.dialog>>(null);
 
   useEffect(() => {
     if (dialogRef.current) {
       if (isOpen) {
         dialogRef.current.showModal();
-      } else {
-        dialogRef.current.close();
       }
     }
   }, [isOpen]);
 
   return (
     <ReactPortal>
-      <AnimatePresence mode="wait">
+      <AnimatePresence
+        mode="wait"
+        onExitComplete={() => {
+          dialogRef.current?.close();
+        }}
+      >
         {isOpen && (
           <motion.dialog
             ref={dialogRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
           >
             {children}
           </motion.dialog>
