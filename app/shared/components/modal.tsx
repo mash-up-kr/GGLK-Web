@@ -1,28 +1,14 @@
 import { AnimatePresence, motion } from "motion/react";
-import {
-  type ComponentRef,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type ComponentRef, useEffect, useRef, useState } from "react";
+import { createContext } from "../contexts/create-context";
 import ReactPortal from "./react-portal";
 
-interface ModalContextType {
+interface ModalContext {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const ModalContext = createContext<ModalContextType | null>(null);
-
-function useModal() {
-  const context = useContext(ModalContext);
-  if (!context) {
-    throw new Error("Modal components must be used within a Modal.Root");
-  }
-  return context;
-}
+const [ModalContextProvider, useModal] = createContext<ModalContext>();
 
 interface RootProps {
   children: React.ReactNode;
@@ -32,9 +18,9 @@ interface RootProps {
 function Root({ children, defaultOpen = false }: RootProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
-    <ModalContext.Provider value={{ isOpen, setIsOpen }}>
+    <ModalContextProvider value={{ isOpen, setIsOpen }}>
       {children}
-    </ModalContext.Provider>
+    </ModalContextProvider>
   );
 }
 
