@@ -6,37 +6,14 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
+    --font-apple-gothic: 'Apple SD Gothic Neo', sans-serif;
+    --font-sf: 'SF Pro Display', sans-serif;
+    --font-neo: 'NeoDunggeunmo', monospace;
+    --font-elice: 'Elice Digital Baeum', sans-serif;
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-mono: 'Courier New', monospace;
+  }
 
-.font-apple-gothic {
-    font-family: 'Apple SD Gothic Neo', sans-serif;
-  }
-  
-  /* 여기서부터는 약어를 사용하도록 설정 */
-  .font-sf {
-    font-family: 'SF Pro Display', sans-serif;
-  }
-  
-  .font-neo {
-    font-family: 'NeoDunggeunmo', monospace;
-  }
-  
-  .font-elice {
-    font-family: 'Elice Digital Baeum', sans-serif;
-  }
-  
-  /* 기본 시스템 폰트 클래스 */
-  .font-sans {
-    font-family: 'Helvetica', 'Arial', sans-serif;
-  }
-  
-  .font-serif {
-    font-family: 'Georgia', 'Times New Roman', serif;
-  }
-  
-  .font-mono {
-    font-family: 'Courier New', monospace;
-  }
   
   /* 전역 기본 폰트 설정 */
   html, body {
