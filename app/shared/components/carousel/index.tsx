@@ -1,7 +1,7 @@
 import type { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import React, { useEffect, useState } from "react";
-import { NextButton, PrevButton, usePrevNextButtons } from "./CarouselButtons";
+import { useEffect, useState } from "react";
+import { NextButton, PrevButton, usePrevNextButtons } from "./carousel-buttons";
 
 export type CarouselSlide = {
   id: number;
@@ -44,7 +44,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
     return () => {
       emblaApi?.off("select", onSelect);
     };
-  }, [emblaApi]);
+  }, [emblaApi, props.onSelectIndexChange]);
 
   return (
     <section className="mx-auto">
@@ -54,17 +54,12 @@ const Carousel: React.FC<CarouselProps> = (props) => {
             {slides.map((slide, index) => (
               <div
                 className={`
-                  ${fullWidthSlide ? "flex-none w-full" : "flex-none pl-4"} 
-                  max-h-full min-w-0 px-2 transform-gpu
-                `}
+                  ${fullWidthSlide ? "w-full flex-none" : "flex-none pl-4"} max-h-full min-w-0 transform-gpu px-2 `}
                 key={slide.id}
               >
-                <div className="aspect-[4/3] w-[306px] h-[511px] mx-auto relative">
+                <div className="relative mx-auto aspect-[4/3] h-[511px] w-[306px]">
                   <img
-                    className={`
-                    w-full h-full
-                    object-cover rounded-md transition-all duration-300
-                    ${
+                    className={`h-full w-full rounded-md object-cover transition-all duration-300 ${
                       selectedIndex === index
                         ? "opacity-100 blur-0"
                         : "opacity-70 blur-sm"
@@ -78,8 +73,8 @@ const Carousel: React.FC<CarouselProps> = (props) => {
             ))}
           </div>
         </div>
-        <div className="w-full max-w-[150px] flex mx-auto mt-4 justify-between items-center">
-          <div className="w-8 flex justify-center">
+        <div className="mx-auto mt-4 flex w-full max-w-[150px] items-center justify-between">
+          <div className="flex w-8 justify-center">
             {showArrows && (
               <PrevButton
                 onClick={onPrevButtonClick}
@@ -87,23 +82,22 @@ const Carousel: React.FC<CarouselProps> = (props) => {
               />
             )}
           </div>
-          <div className="flex justify-center mt-2 items-center space-x-2">
-            {slides.map((_, index) => (
+          <div className="mt-2 flex items-center justify-center space-x-2">
+            {slides.map((slide, index) => (
               <button
-                key={index}
+                type="button"
+                key={slide.id}
                 onClick={() => emblaApi?.scrollTo(index)}
-                className={`
-                        w-2 h-2 rounded-full border
-                        ${
-                          selectedIndex === index
-                            ? "bg-black"
-                            : "bg-white border-gray-400"
-                        }
+                className={`h-2 w-2 rounded-full border ${
+                  selectedIndex === index
+                    ? "bg-black"
+                    : "border-gray-400 bg-white"
+                }
                       `}
               />
             ))}
           </div>
-          <div className="w-8 flex justify-center">
+          <div className="flex w-8 justify-center">
             {showArrows && (
               <NextButton
                 onClick={onNextButtonClick}

@@ -1,6 +1,6 @@
 import React from "react";
-import type { CarouselSlide } from "~/shared/components/carousel/Carousel";
-import CarouselContainer from "~/shared/components/carousel/CarouselContainer";
+import type { CarouselSlide } from "~/shared/components/carousel";
+import CarouselContainer from "~/shared/components/carousel/carousel-container";
 
 const createSlides = (count: number): CarouselSlide[] => {
   return Array.from({ length: count }, (_, index) => ({
