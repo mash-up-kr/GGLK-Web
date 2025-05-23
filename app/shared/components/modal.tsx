@@ -8,7 +8,11 @@ interface ModalContext {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const [ModalContextProvider, useModal] = createContext<ModalContext>();
+const [ModalContextProvider, useModal] = createContext<ModalContext>({
+  contextName: "ModalContext",
+  hookName: "useModal",
+  providerName: "ModalContextProvider",
+});
 
 interface RootProps {
   children: React.ReactNode;
