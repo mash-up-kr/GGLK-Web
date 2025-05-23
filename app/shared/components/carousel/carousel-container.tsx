@@ -1,5 +1,6 @@
 import type { EmblaOptionsType } from "embla-carousel";
-import Carousel, { type CarouselSlide } from "./Carousel";
+import type { CarouselSlide } from ".";
+import Carousel from ".";
 
 type CarouselContainerProps = {
   slides: CarouselSlide[];
@@ -11,11 +12,15 @@ type CarouselContainerProps = {
 const CarouselContainer: React.FC<CarouselContainerProps> = ({
   slides,
   options = { loop: true },
-  fullWidthSlide
+  fullWidthSlide,
 }) => {
   return (
-    <div className="w-full max-w-lg mx-auto">
-      <Carousel slides={slides} options={options} fullWidthSlide={fullWidthSlide} />
+    <div className="mx-auto w-full max-w-lg">
+      <Carousel
+        slides={slides}
+        options={options}
+        fullWidthSlide={fullWidthSlide}
+      />
     </div>
   );
 };
