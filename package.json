@@ -6,7 +6,7 @@
     "postinstall": "[ -n \"$CI\" ] || lefthook install",
     "commit": "cz",
     "build": "ls-lint && react-router build",
-    "dev": "ls-lint && react-router dev",
+    "dev": "vite --host",
     "start": "ls-lint && react-router-serve ./build/server/index.js",
     "typecheck": "ls-lint && react-router typegen && tsc",
     "test": "ls-lint && vitest --watch",
