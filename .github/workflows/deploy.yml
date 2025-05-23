@@ -67,5 +67,11 @@ jobs:
               --user root \
               -v $(pwd)/build:/build \
               --entrypoint sh gglkkakao/gglk-front -c "cp -r /app/build/* /build"
+
+            sudo rm -rf /var/www/gglk/
+            sudo mkdir /var/www/gglk
+            sudo cp -r /root/build /var/www/gglk/build
+            sudo chown -R www-data:www-data /var/www/gglk
+
             docker rmi $DOCKER_IMAGE:latest
 
