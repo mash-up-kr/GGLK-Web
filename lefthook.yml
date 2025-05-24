@@ -9,6 +9,7 @@ pre-commit:
 prepare-commit-msg:
   commands:
     prepare-conventional-commit:
+      skip: rebase
       interactive: true
       run: exec < /dev/tty && pnpm run commit prepare --hook || true
 
