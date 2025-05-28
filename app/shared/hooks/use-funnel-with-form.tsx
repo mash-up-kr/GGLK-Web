@@ -13,20 +13,20 @@ type StepProps = {
   name: string;
 };
 
-export default function useFunnelWithForm<
+interface FunnelOptions<
   T extends { name: string },
   D extends FieldValues = FieldValues,
->({
-  defaultStep,
-  steps,
-  methods,
-  onSubmit,
-}: {
+> {
   defaultStep: T;
   steps: (T & { validatePath?: Path<D>[] })[];
   methods: UseFormReturn<D>;
   onSubmit: (data: D) => void;
-}) {
+}
+
+export default function useFunnelWithForm<
+  T extends { name: string },
+  D extends FieldValues = FieldValues,
+>({ defaultStep, steps, methods, onSubmit }: FunnelOptions<T, D>) {
   const { trigger, handleSubmit } = methods;
   const [step, setStep] = useState<T>(defaultStep);
 
