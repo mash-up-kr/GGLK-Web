@@ -13,7 +13,7 @@ type StepProps = {
   name: string;
 };
 
-interface FunnelOptions<
+interface FunnelConfig<
   T extends { name: string },
   D extends FieldValues = FieldValues,
 > {
@@ -26,7 +26,7 @@ interface FunnelOptions<
 export default function useFunnelWithForm<
   T extends { name: string },
   D extends FieldValues = FieldValues,
->({ defaultStep, steps, methods, onSubmit }: FunnelOptions<T, D>) {
+>({ defaultStep, steps, methods, onSubmit }: FunnelConfig<T, D>) {
   const { trigger, handleSubmit } = methods;
   const [step, setStep] = useState<T>(defaultStep);
 
