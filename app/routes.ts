@@ -8,11 +8,7 @@ import {
 export default [
   layout("./shared/components/root-layout.tsx", [
     index("./routes/home.tsx"),
-    route(
-      "/intensity-select",
-      "./routes/intensity-select/intensity-select.tsx",
-    ),
-    route("/image-studio", "./routes/image-studio/image-studio.tsx"),
+    route("/analyze", "./routes/analyze/analyze.tsx"),
     route("/result", "./routes/result/result.tsx"),
   ]),
 ] satisfies RouteConfig;
