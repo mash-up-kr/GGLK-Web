@@ -1,22 +1,24 @@
-FROM node:20-alpine AS development-dependencies-env
-COPY . /app
-WORKDIR /app
-RUN npm ci
+FROM --platform=linux/amd64 node:22-alpine AS base
 
-FROM node:20-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
-WORKDIR /app
-RUN npm ci --omit=dev
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-FROM node:20-alpine AS build-env
-COPY . /app/
-COPY --from=development-dependencies-env /app/node_modules /app/node_modules
-WORKDIR /app
-RUN npm run build
+FROM base AS builder
 
-FROM node:20-alpine
-COPY ./package.json package-lock.json /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
+RUN apk update
+RUN apk add --no-cache libc6-compat git
 WORKDIR /app
-CMD ["npm", "run", "start"]
+
+COPY . .
+
+RUN pnpm install
+RUN pnpm build
+
+FROM base AS runner
+WORKDIR /app
+ 
+RUN adduser --system --uid 1001 reactjs
+USER reactjs
+
+COPY --from=builder --chown=reactjs:reactjs /app/build ./build

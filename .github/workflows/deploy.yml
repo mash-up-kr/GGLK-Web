@@ -1,0 +1,77 @@
+name: Deploy To Prod
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Bump version and Build
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+
+      - name: Create .env file
+        run: |
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      
+      - name: Build, tag, and push image
+        id: build-image
+        env:
+          DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL }}
+          REPOSITORY_NAME: ${{ secrets.DOCKER_REPOSITORY_NAME }}
+          IMAGE_TAG: ${{  steps.tag_version.outputs.new_tag }}
+        run: |
+          DOCKER_IMAGE="$DOCKER_REGISTRY_URL/$REPOSITORY_NAME"
+
+          docker build -t $DOCKER_IMAGE:$IMAGE_TAG .
+          docker image tag $DOCKER_IMAGE:$IMAGE_TAG $DOCKER_IMAGE:latest
+          docker push $DOCKER_IMAGE:$IMAGE_TAG
+          docker push $DOCKER_IMAGE:latest
+
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_ADDRESS }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.HOST_KEY }}
+          port: ${{ secrets.HOST_PORT }}
+          script: |
+            DOCKER_REGISTRY_URL=${{ secrets.DOCKER_REGISTRY_URL }}
+            REPOSITORY_NAME=${{ secrets.DOCKER_REPOSITORY_NAME }}
+            DOCKER_IMAGE="$DOCKER_REGISTRY_URL/$REPOSITORY_NAME"
+
+            echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
+            docker pull $DOCKER_IMAGE:latest
+            docker run --rm \
+              --user root \
+              -v $(pwd)/build:/build \
+              --entrypoint sh gglkkakao/gglk-front -c "cp -r /app/build/* /build"
+
+            sudo rm -rf /var/www/gglk/
+            sudo mkdir /var/www/gglk
+            sudo cp -r /root/build /var/www/gglk/build
+            sudo chown -R www-data:www-data /var/www/gglk
+
+            docker rmi $DOCKER_IMAGE:latest
+
