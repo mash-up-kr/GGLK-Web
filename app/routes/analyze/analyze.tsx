@@ -36,6 +36,9 @@ export default function Analyze() {
       // 여기서 폼 데이터를 서버로 전송하거나 원하는 처리를 수행
       console.log("Form submitted:", data);
     },
+    onStepChange: () => {
+      console.log("step changed");
+    },
   });
 
   return (

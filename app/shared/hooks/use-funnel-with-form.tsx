@@ -21,13 +21,14 @@ interface FunnelConfig<
   steps: (T & { validatePath?: Path<D>[] })[];
   methods: UseFormReturn<D>;
   onSubmit: (data: D) => void;
+  onStepChange?: () => void;
 }
 
 export default function useFunnelWithForm<
   T extends { name: string },
   D extends FieldValues = FieldValues,
->({ defaultStep, steps, methods, onSubmit }: FunnelConfig<T, D>) {
-  const { trigger, handleSubmit } = methods;
+>({ defaultStep, steps, methods, onSubmit, onStepChange }: FunnelConfig<T, D>) {
+  const { trigger, handleSubmit, formState } = methods;
   const [step, setStep] = useState<T>(defaultStep);
 
   const getCurrentStepIndex = () =>
@@ -51,19 +52,20 @@ export default function useFunnelWithForm<
   const onNext = async () => {
     const currentIndex = getCurrentStepIndex();
     const isValid = await canMoveToNext();
+    const isLastStep = currentIndex === steps.length - 1;
 
     if (isValid) {
       setStep(steps[currentIndex + 1]);
+      onStepChange?.();
     } else {
-      if (currentIndex === steps.length - 1) {
-        handleSubmit(onSubmit)();
-      }
+      if (isLastStep) handleSubmit(onSubmit)();
     }
   };
 
   const onPrev = () => {
     if (canMoveToPrevious()) {
       setStep(steps[getCurrentStepIndex() - 1]);
+      onStepChange?.();
     }
   };
 
