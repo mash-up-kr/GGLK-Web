@@ -1,5 +1,5 @@
 import { AnimatePresence } from "motion/react";
-import { useFormContext } from "react-hook-form";
+import { type Path, useFormContext } from "react-hook-form";
 import TypeWriter from "~/shared/components/typewriter";
 import type { AnalyzeFormData } from "./analyze";
 
@@ -11,10 +11,14 @@ interface Intensity {
 
 // 예시 코드
 export default function IntensitySelectPage({
+  field,
   onNext,
-}: { onNext: () => void }) {
+}: {
+  field: Path<AnalyzeFormData>;
+  onNext: () => void;
+}) {
   const { register, watch } = useFormContext<AnalyzeFormData>();
-  const selectedIntensity = watch("intensity");
+  const selectedIntensity = watch(field);
 
   const intensities: Intensity[] = [
     {
