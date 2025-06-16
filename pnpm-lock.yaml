@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fingerprintjs/fingerprintjs':
+        specifier: ^4.6.2
+        version: 4.6.2
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.4(react@19.1.0))
@@ -23,6 +26,12 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.75.1
         version: 5.76.1(react@19.1.0)
+      dexie:
+        specifier: ^4.0.11
+        version: 4.0.11
+      dexie-react-hooks:
+        specifier: ^1.1.7
+        version: 1.1.7(@types/react@19.1.4)(dexie@4.0.11)(react@19.1.0)
       embla-carousel:
         specifier: ^8.6.0
         version: 8.6.0
@@ -579,6 +588,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fingerprintjs/fingerprintjs@4.6.2':
+    resolution: {integrity: sha512-g8mXuqcFKbgH2CZKwPfVtsUJDHyvcgIABQI7Y0tzWEFXpGxJaXuAuzlifT2oTakjDBLTK4Gaa9/5PERDhqUjtw==}
 
   '@hookform/resolvers@5.0.1':
     resolution: {integrity: sha512-u/+Jp83luQNx9AdyW2fIPGY6Y7NG68eN2ZW8FOJYL+M0i4s49+refdJdOp/A9n9HFQtQs3HIDHQvX3ZET2o7YA==}
@@ -1363,6 +1375,16 @@ packages:
   detect-libc@2.0.4:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
+
+  dexie-react-hooks@1.1.7:
+    resolution: {integrity: sha512-Lwv5W0Hk+uOW3kGnsU9GZoR1er1B7WQ5DSdonoNG+focTNeJbHW6vi6nBoX534VKI3/uwHebYzSw1fwY6a7mTw==}
+    peerDependencies:
+      '@types/react': '>=16'
+      dexie: ^3.2 || ^4.0.1-alpha
+      react: '>=16'
+
+  dexie@4.0.11:
+    resolution: {integrity: sha512-SOKO002EqlvBYYKQSew3iymBoN2EQ4BDw/3yprjh7kAfFzjBYkaMNa/pZvcA7HSWlcKSQb9XhPe3wKyQ0x4A8A==}
 
   dom-accessibility-api@0.5.16:
     resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
@@ -3355,6 +3377,10 @@ snapshots:
   '@esbuild/win32-x64@0.25.4':
     optional: true
 
+  '@fingerprintjs/fingerprintjs@4.6.2':
+    dependencies:
+      tslib: 2.8.1
+
   '@hookform/resolvers@5.0.1(react-hook-form@7.56.4(react@19.1.0))':
     dependencies:
       '@standard-schema/utils': 0.3.0
@@ -4145,6 +4171,14 @@ snapshots:
   detect-indent@6.1.0: {}
 
   detect-libc@2.0.4: {}
+
+  dexie-react-hooks@1.1.7(@types/react@19.1.4)(dexie@4.0.11)(react@19.1.0):
+    dependencies:
+      '@types/react': 19.1.4
+      dexie: 4.0.11
+      react: 19.1.0
+
+  dexie@4.0.11: {}
 
   dom-accessibility-api@0.5.16: {}
 
