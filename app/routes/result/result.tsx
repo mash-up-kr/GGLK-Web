@@ -1,5 +1,7 @@
 import { useState } from "react";
-import BottomSheet from "~/shared/components/bottomSheet/bottom-sheet";
+import BottomSheet, {
+  type BottomSheetAction,
+} from "~/shared/components/bottomSheet/bottom-sheet";
 import type { CarouselSlide } from "~/shared/components/carousel";
 import CarouselContainer from "~/shared/components/carousel/carousel-container";
 
@@ -16,6 +18,68 @@ export default function ResultPage() {
   const slides = createSlides(slideCount);
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const handleCopyLink = async () => {
+    console.log("---------");
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/`);
+      alert("홈 링크 복사됨");
+      console.log("copy!");
+    } catch (err) {
+      alert("링크 복사 실패 ㅠ");
+      console.error(err);
+    }
+  };
+
+  // FIXME: 카카오톡 공유 로직
+  const handleKakaoShare = async () => {
+    try {
+      // TODO
+      console.log("카카오톡 공유 func 실행");
+      alert("카카오톡 공유");
+    } catch (err) {
+      console.error("카카오톡 공유 실패:", err);
+    }
+  };
+
+  // FIXME: 이미지 저장 로직
+  const handleSaveImage = async () => {
+    try {
+      // TODO
+      console.log("이미지 저장 func 실행");
+      alert("이미지 저장");
+    } catch (err) {
+      console.error("이미지 저장 실패:", err);
+    }
+  };
+
+  // 메인 액션
+  const mainActions: BottomSheetAction[] = [
+    {
+      id: "copy-link",
+      label: "링크 복사",
+      icon: "/public/png/iconShare.png",
+      onClick: handleCopyLink,
+      disabled: false,
+    },
+    {
+      id: "kakao-share",
+      label: "카카오톡",
+      icon: "/public/png/iconKaKaoTalk.png",
+      onClick: handleKakaoShare,
+      disabled: false,
+    },
+  ];
+
+  // 구분선 아래의 세컨더리 액션
+  const secondaryActions: BottomSheetAction[] = [
+    {
+      id: "save-image",
+      label: "이미지 저장",
+      icon: "/public/png/iconSave.png",
+      onClick: handleSaveImage,
+      disabled: false,
+    },
+  ];
 
   return (
     <div className="p-4">
@@ -28,15 +92,12 @@ export default function ResultPage() {
         >
           공유하기
         </button>
-
         <BottomSheet
           isOpen={isBottomSheetOpen}
           onClose={() => setIsBottomSheetOpen(false)}
           title="공유하기"
-          imageUrl={slides[0]?.image || ""} // TO-BE: 캐러셀의 현재 이미지를 선택해야 함
-          shareUrl={window.location.href}
-          shareTitle="FIXME - 이미지 타이틀로 변경"
-          shareText="공유하기 클릭"
+          mainActions={mainActions}
+          secondaryActions={secondaryActions}
         />
       </div>
     </div>
