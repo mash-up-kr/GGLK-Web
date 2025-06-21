@@ -1,4 +1,6 @@
 import { motion } from "motion/react";
+import { useEffect } from "react";
+import { toastHandler } from "~/shared/stores/toast-store";
 import type { Toast } from "~/shared/types/toast";
 
 interface ToastItemProps {
@@ -7,6 +9,17 @@ interface ToastItemProps {
 
 export default function ToastItem({ toast }: ToastItemProps) {
   const { id, message, type } = toast;
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      toastHandler.dispatch({ type: "remove" });
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, []);
+
   return (
     <motion.div
       key={id}
