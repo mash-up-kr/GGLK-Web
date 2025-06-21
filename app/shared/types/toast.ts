@@ -7,3 +7,9 @@ export type ToastPosition =
   | "bottom-left"
   | "bottom-center"
   | "bottom-right";
+
+export type Toast = {
+  id: string;
+  message: string;
+  type: ToastType;
+};
