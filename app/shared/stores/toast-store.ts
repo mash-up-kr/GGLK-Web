@@ -31,6 +31,8 @@ const dispatch = (action: ToastAction) => {
   for (const listener of listeners) {
     listener();
   }
+  // 테스트 용 로그 출력
+  // console.log(getToast());
 };
 
 const subscribe = (listener: () => void) => {
