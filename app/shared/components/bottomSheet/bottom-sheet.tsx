@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ActionButton from "./action-button";
 
 // 바텀시트에서 수행하는 Action Item들의 Type 정의
 export interface BottomSheetAction {
@@ -14,9 +13,7 @@ export interface BottomSheetAction {
 export interface ShareBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
-  mainActions: BottomSheetAction[];
-  secondaryActions?: BottomSheetAction[];
+  children: React.ReactNode;
   className?: string;
   width?: string;
 }
@@ -24,9 +21,7 @@ export interface ShareBottomSheetProps {
 function BottomSheet({
   isOpen,
   onClose,
-  title,
-  mainActions,
-  secondaryActions = [],
+  children,
   // className = "",
   width = "w-[359px]",
 }: ShareBottomSheetProps) {
@@ -75,7 +70,7 @@ function BottomSheet({
       />
       {/* 시트 */}
       <div
-        className={`relative ${width} max-w-md transform rounded-t-2xl bg-[#212121] py-[8px] shadow-2xl transition-transform duration-300 ${
+        className={`pointer-events-auto relative ${width} max-w-md transform rounded-t-2xl bg-[#212121] py-[8px] shadow-2xl transition-transform duration-300 ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
         role="alert"
@@ -86,36 +81,7 @@ function BottomSheet({
         <div className="mb-4 flex justify-center">
           <div className="h-1 w-12 rounded-full bg-[#636363]" />
         </div>
-        <h3
-          id="bottom-sheet-title"
-          className="mb-[20px] px-[16px] text-start font-bold text-[18px] text-white"
-        >
-          {title}
-        </h3>
-        {mainActions.length > 0 && (
-          <div className="mb-[20px] flex justify-start gap-8 px-[16px]">
-            {mainActions.map((action) => (
-              <ActionButton
-                key={action.id}
-                action={action}
-                variant="horizontal"
-              />
-            ))}
-          </div>
-        )}
-        {/* secondary actions가 존재하지 않을 경우 구분선 생략 */}
-        {secondaryActions.length > 0 && (
-          <>
-            <hr className="py-3 text-[#636363]" />
-            {secondaryActions.map((action) => (
-              <ActionButton
-                key={action.id}
-                action={action}
-                variant="vertical"
-              />
-            ))}
-          </>
-        )}
+        {children}
       </div>
     </div>
   );

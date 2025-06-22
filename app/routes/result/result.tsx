@@ -4,6 +4,8 @@ import BottomSheet, {
 } from "~/shared/components/bottomSheet/bottom-sheet";
 import type { CarouselSlide } from "~/shared/components/carousel";
 import CarouselContainer from "~/shared/components/carousel/carousel-container";
+import ReanalyzeContent from "./reanalyze-content";
+import ShareContent from "./share-content";
 
 const createSlides = (count: number): CarouselSlide[] => {
   return Array.from({ length: count }, (_, index) => ({
@@ -14,6 +16,9 @@ const createSlides = (count: number): CarouselSlide[] => {
 };
 
 export default function ResultPage() {
+  const [contentType, setContentType] = useState<"share" | "reanalyze">(
+    "share",
+  );
   const [slideCount] = useState(3); // 이번 스펙 기준 3장으로 설정
   const slides = createSlides(slideCount);
 
@@ -21,7 +26,8 @@ export default function ResultPage() {
   const handleCopyLink = async () => {
     console.log("---------");
     try {
-      await navigator.clipboard.writeText(`${window.location.origin}/`);
+      const homeUrl = `${window.location.origin}/`; // 홈 URL
+      await navigator.clipboard.writeText(homeUrl);
       alert("홈 링크 복사됨");
       console.log("copy!");
     } catch (err) {
@@ -95,10 +101,19 @@ export default function ResultPage() {
         <BottomSheet
           isOpen={isBottomSheetOpen}
           onClose={() => setIsBottomSheetOpen(false)}
-          title="공유하기"
-          mainActions={mainActions}
-          secondaryActions={secondaryActions}
-        />
+        >
+          {contentType === "share" ? (
+            <ShareContent
+              mainActions={mainActions}
+              secondaryActions={secondaryActions}
+            />
+          ) : (
+            <ReanalyzeContent
+              onKakaoLogin={() => console.log("카카오 로그인 로직")} //handleKakaoLogin
+              onClose={() => setIsBottomSheetOpen(false)}
+            />
+          )}
+        </BottomSheet>
       </div>
     </div>
   );
