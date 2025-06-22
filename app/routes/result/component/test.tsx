@@ -8,12 +8,12 @@ export default function TestComponent() {
   // 브라우저 정보 감지 로직
   useEffect(() => {
     const userAgent = navigator.userAgent;
-    if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
-      setBrowserInfo("Safari");
+    if (userAgent.includes("CriOS")) {
+      setBrowserInfo("Chrome (iOS)");
     } else if (userAgent.includes("Chrome")) {
       setBrowserInfo("Chrome");
-    } else {
-      setBrowserInfo("Other Browser");
+    } else if (userAgent.includes("Safari")) {
+      setBrowserInfo("Safari");
     }
   }, []);
 
