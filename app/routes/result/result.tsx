@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import BottomSheet, {
   type BottomSheetAction,
 } from "~/shared/components/bottomSheet/bottom-sheet";
@@ -16,6 +17,7 @@ const createSlides = (count: number): CarouselSlide[] => {
 };
 
 export default function ResultPage() {
+  const navigate = useNavigate();
   const [contentType, setContentType] = useState<"share" | "reanalyze">(
     "share",
   );
@@ -88,14 +90,19 @@ export default function ResultPage() {
   ];
 
   return (
-    <div className="p-4">
+    <div className="h-full w-full bg-[#181818] p-4">
       <CarouselContainer slides={slides} fullWidthSlide={true} />
-      <div className="m-10 flex flex-col items-center justify-center">
+      <div className="m-10 flex h-[46px] flex-row items-center justify-center gap-x-[10px]">
         <button
           type="button"
           onClick={() => setIsBottomSheetOpen(true)}
-          className="w-[150px] rounded-xl bg-gray-800 py-3 font-bold text-white transition-colors hover:bg-black"
+          className="flex h-[46px] w-[161px] items-center justify-center rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
         >
+          <img
+            src="/png/IconShare2.png"
+            className="mr-1 h-[24px] w-[24px]"
+            alt="icon-share"
+          />
           공유하기
         </button>
         <BottomSheet
@@ -114,6 +121,14 @@ export default function ResultPage() {
             />
           )}
         </BottomSheet>
+
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="h-[46px] w-[161px] rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
+        >
+          다시하기
+        </button>
       </div>
     </div>
   );
