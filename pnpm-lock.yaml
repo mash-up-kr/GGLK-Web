@@ -26,6 +26,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.75.1
         version: 5.76.1(react@19.1.0)
+      '@unhead/react':
+        specifier: ^2.0.10
+        version: 2.0.11(react@19.1.0)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1062,6 +1065,11 @@ packages:
   '@types/react@19.1.4':
     resolution: {integrity: sha512-EB1yiiYdvySuIITtD5lhW4yPyJ31RkJkkDw794LaQYrxCSaQV/47y5o1FMC4zF9ZyjUjzJMZwbovEnT5yHTW6g==}
 
+  '@unhead/react@2.0.11':
+    resolution: {integrity: sha512-Bs5jBelfqgIghfE7FbiXEzRT9VwScPLd4K3LCGyZogScAsFsXjKcwt97GzEcVgn2W7QeJE9Y2F0l1hQFvpLmzQ==}
+    peerDependencies:
+      react: '>=18'
+
   '@vitejs/plugin-react@4.4.1':
     resolution: {integrity: sha512-IpEm5ZmeXAP/osiBXVVP5KjFMzbWOonMs0NaQQl+xYnUAcq4oHUBsF2+p4MgKWG4YMmFYJU8A6sxRPuowllm6w==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -1791,6 +1799,9 @@ packages:
   homedir-polyfill@1.0.3:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
     engines: {node: '>=0.10.0'}
+
+  hookable@5.5.3:
+    resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
 
   hosted-git-info@6.1.3:
     resolution: {integrity: sha512-HVJyzUrLIL1c0QmviVh5E8VGyUS7xCFPS6yydaVd1UegW+ibV/CohqTH9MkOLDp5o+rb82DMo77PTuc9F/8GKw==}
@@ -2830,6 +2841,9 @@ packages:
   undici@6.21.3:
     resolution: {integrity: sha512-gBLkYIlEnSp8pFbT64yFgGE6UIB9tAkhukC23PmMDCe5Nd+cRqKxSjw5y54MK2AZMgZfJWMaNE4nYUHgi1XEOw==}
     engines: {node: '>=18.17'}
+
+  unhead@2.0.11:
+    resolution: {integrity: sha512-wob9IFYcCH6Tr+84P6/m2EDhdPgq/Fb8AlLEes/2eE4empMHfZk/qFhA7cCmIiXRCPqUFt/pN+nIJVs5nEp9Ng==}
 
   unicorn-magic@0.1.0:
     resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
@@ -3982,6 +3996,11 @@ snapshots:
     dependencies:
       csstype: 3.1.3
 
+  '@unhead/react@2.0.11(react@19.1.0)':
+    dependencies:
+      react: 19.1.0
+      unhead: 2.0.11
+
   '@vitejs/plugin-react@4.4.1(vite@6.3.5(@types/node@20.17.47)(jiti@2.4.2)(lightningcss@1.29.2))':
     dependencies:
       '@babel/core': 7.27.1
@@ -4757,6 +4776,8 @@ snapshots:
   homedir-polyfill@1.0.3:
     dependencies:
       parse-passwd: 1.0.0
+
+  hookable@5.5.3: {}
 
   hosted-git-info@6.1.3:
     dependencies:
@@ -5684,6 +5705,10 @@ snapshots:
   undici-types@6.19.8: {}
 
   undici@6.21.3: {}
+
+  unhead@2.0.11:
+    dependencies:
+      hookable: 5.5.3
 
   unicorn-magic@0.1.0: {}
 
