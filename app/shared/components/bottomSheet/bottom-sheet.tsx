@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+let bottomSheetHeight = 0;
+export const BOTTOM_SHEET_HEIGHT = () => bottomSheetHeight;
 
 // 바텀시트에서 수행하는 Action Item들의 Type 정의
 export interface BottomSheetAction {
@@ -26,11 +29,15 @@ function BottomSheet({
   width = "w-[359px]",
 }: ShareBottomSheetProps) {
   const [_, setIsVisible] = useState(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       document.body.style.overflow = "hidden";
+      if (sheetRef.current) {
+        bottomSheetHeight = sheetRef.current.offsetHeight;
+      }
     } else {
       document.body.style.overflow = "unset";
       const timer = setTimeout(() => setIsVisible(false), 300);
@@ -73,6 +80,7 @@ function BottomSheet({
         className={`pointer-events-auto relative ${width} max-w-md transform rounded-t-2xl bg-[#212121] py-[8px] shadow-2xl transition-transform duration-300 ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
+        ref={sheetRef}
         role="alert"
         aria-modal="true"
         aria-labelledby="bottom-sheet-title"
