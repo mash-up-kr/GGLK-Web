@@ -7,6 +7,8 @@ import {
   isRouteErrorResponse,
 } from "react-router";
 
+import { UnheadProvider, createHead } from "@unhead/react/client";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -81,10 +83,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 // Create a client
 const queryClient = new QueryClient();
 
+const head = createHead();
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <UnheadProvider head={head}>
+        <Outlet />
+      </UnheadProvider>
     </QueryClientProvider>
   );
 }
