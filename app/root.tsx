@@ -10,6 +10,7 @@ import {
 import { UnheadProvider, createHead } from "@unhead/react/client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { CookiesProvider } from "react-cookie";
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -87,11 +88,13 @@ const head = createHead();
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <UnheadProvider head={head}>
-        <Outlet />
-      </UnheadProvider>
-    </QueryClientProvider>
+    <CookiesProvider>
+      <QueryClientProvider client={queryClient}>
+        <UnheadProvider head={head}>
+          <Outlet />
+        </UnheadProvider>
+      </QueryClientProvider>
+    </CookiesProvider>
   );
 }
 
