@@ -10,5 +10,6 @@ export default [
     index("./routes/home.tsx"),
     route("/analyze", "./routes/analyze/analyze.tsx"),
     route("/result", "./routes/result/result.tsx"),
+    route("/auth/kakao", "./routes/auth/kakao.tsx"),
   ]),
 ] satisfies RouteConfig;
