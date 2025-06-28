@@ -31,15 +31,17 @@ export default function Analyze() {
   });
 
   return (
-    <div className="relative flex h-full flex-col bg-forest">
-      <PaperTextureLayer />
-      <Header onPrevious={onPrev} />
-      <FormProvider {...methods}>
-        <Funnel className="grow">
-          <IntensitySelectPage field="intensity" onNext={onNext} />
-          <ImageStudioPage field="image" onNext={onNext} />
-        </Funnel>
-      </FormProvider>
-    </div>
+    <>
+      <div className="flex h-full flex-col bg-forest">
+        <Header onPrevious={onPrev} />
+        <FormProvider {...methods}>
+          <Funnel className="grow">
+            <IntensitySelectPage field="intensity" onNext={onNext} />
+            <ImageStudioPage field="image" onNext={onNext} />
+          </Funnel>
+        </FormProvider>
+        <PaperTextureLayer />
+      </div>
+    </>
   );
 }
