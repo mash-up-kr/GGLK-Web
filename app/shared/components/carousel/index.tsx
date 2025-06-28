@@ -83,14 +83,6 @@ const Carousel: React.FC<CarouselProps> = (props) => {
           </div>
         </div>
         <div className="mx-auto mt-4 flex w-full max-w-[150px] items-center justify-center">
-          {/* <div className="flex w-8 justify-center">
-            {showArrows && (
-              <PrevButton
-                onClick={onPrevButtonClick}
-                disabled={prevBtnDisabled}
-              />
-            )}
-          </div> */}
           <div className="mt-2 flex cursor-pointer items-center justify-center space-x-2">
             {slides.map((slide, index) => (
               <button
@@ -101,14 +93,6 @@ const Carousel: React.FC<CarouselProps> = (props) => {
               />
             ))}
           </div>
-          {/* <div className="flex w-8 justify-center">
-            {showArrows && (
-              <NextButton
-                onClick={onNextButtonClick}
-                disabled={nextBtnDisabled}
-              />
-            )}
-          </div> */}
         </div>
       </div>
     </section>
