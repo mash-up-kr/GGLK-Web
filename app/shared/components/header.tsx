@@ -7,9 +7,10 @@ import { cn } from "../utils/classname-utils";
 
 interface HeaderProps {
   onPrevious?: () => void;
+  className?: string;
 }
 
-export default function Header({ onPrevious }: HeaderProps) {
+export default function Header({ onPrevious, className }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   return (
@@ -17,6 +18,7 @@ export default function Header({ onPrevious }: HeaderProps) {
       <header
         className={cn(
           "flex items-center justify-between px-4 py-3.5",
+          className,
           isMenuOpen && "bg-black",
         )}
       >
