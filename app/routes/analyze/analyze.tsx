@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import Header from "~/shared/components/header";
+import PaperTextureLayer from "~/shared/components/paper-texture-layer";
 import useFunnelWithForm from "~/shared/hooks/use-funnel-with-form";
 import ImageStudioPage from "./image-studio";
 import IntensitySelectPage from "./intensity-select";
@@ -30,7 +31,8 @@ export default function Analyze() {
   });
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col bg-forest">
+      <PaperTextureLayer />
       <Header onPrevious={onPrev} />
       <FormProvider {...methods}>
         <Funnel className="grow">
