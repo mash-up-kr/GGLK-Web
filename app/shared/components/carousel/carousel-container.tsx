@@ -17,6 +17,7 @@ const CarouselContainer: React.FC<CarouselContainerProps> = ({
   return (
     <div className="mx-auto w-full max-w-lg">
       <Carousel
+        theme="dark"
         slides={slides}
         options={options}
         fullWidthSlide={fullWidthSlide}

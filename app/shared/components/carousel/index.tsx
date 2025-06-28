@@ -1,7 +1,7 @@
 import type { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState } from "react";
-import { NextButton, PrevButton, usePrevNextButtons } from "./carousel-buttons";
+import { usePrevNextButtons } from "./carousel-buttons";
 
 export type CarouselSlide = {
   id: number;
@@ -16,11 +16,13 @@ type CarouselProps = {
   // 이미지만 보이는 모드에서는 false, 화살표가 필요한 모드에서는 true로 설정해서 사용해주세요!
   fullWidthSlide?: boolean;
   onSelectIndexChange?: (index: number) => void;
+  theme?: "light" | "dark";
 };
 
 const Carousel: React.FC<CarouselProps> = (props) => {
   const { slides, options, fullWidthSlide } = props;
   const showArrows = props.showArrows ?? fullWidthSlide;
+  const theme = props.theme ?? "dark";
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const {
     prevBtnDisabled,
@@ -45,6 +47,13 @@ const Carousel: React.FC<CarouselProps> = (props) => {
       emblaApi?.off("select", onSelect);
     };
   }, [emblaApi, props.onSelectIndexChange]);
+
+  const getButtonColors = (isSelected: boolean) => {
+    if (theme === "light") {
+      return isSelected ? "bg-[#373737]" : "bg-white";
+    }
+    return isSelected ? "bg-white" : "bg-[#373737]";
+  };
 
   return (
     <section className="mx-auto">
@@ -73,36 +82,33 @@ const Carousel: React.FC<CarouselProps> = (props) => {
             ))}
           </div>
         </div>
-        <div className="mx-auto mt-4 flex w-full max-w-[150px] items-center justify-between">
-          <div className="flex w-8 justify-center">
+        <div className="mx-auto mt-4 flex w-full max-w-[150px] items-center justify-center">
+          {/* <div className="flex w-8 justify-center">
             {showArrows && (
               <PrevButton
                 onClick={onPrevButtonClick}
                 disabled={prevBtnDisabled}
               />
             )}
-          </div>
-          <div className="mt-2 flex items-center justify-center space-x-2">
+          </div> */}
+          <div className="mt-2 flex cursor-pointer items-center justify-center space-x-2">
             {slides.map((slide, index) => (
               <button
                 type="button"
                 key={slide.id}
                 onClick={() => emblaApi?.scrollTo(index)}
-                className={`h-2 w-2 rounded-full ${
-                  selectedIndex === index ? "bg-white" : "bg-[#373737]"
-                }
-                      `}
+                className={`h-2 w-2 rounded-full transition-colors duration-200 ${getButtonColors(selectedIndex === index)}`}
               />
             ))}
           </div>
-          <div className="flex w-8 justify-center">
+          {/* <div className="flex w-8 justify-center">
             {showArrows && (
               <NextButton
                 onClick={onNextButtonClick}
                 disabled={nextBtnDisabled}
               />
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
