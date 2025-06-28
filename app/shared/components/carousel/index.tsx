@@ -88,10 +88,8 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                 type="button"
                 key={slide.id}
                 onClick={() => emblaApi?.scrollTo(index)}
-                className={`h-2 w-2 rounded-full border ${
-                  selectedIndex === index
-                    ? "bg-black"
-                    : "border-gray-400 bg-white"
+                className={`h-2 w-2 rounded-full ${
+                  selectedIndex === index ? "bg-white" : "bg-[#373737]"
                 }
                       `}
               />
