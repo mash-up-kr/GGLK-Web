@@ -1,4 +1,4 @@
-import type { CarouselSlide } from "../components/carousel";
+import type { CarouselSlide } from "~/shared/components/carousel";
 
 export interface CarouselItemProps {
   slides: CarouselSlide[];
