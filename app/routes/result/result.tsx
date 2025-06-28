@@ -11,7 +11,7 @@ import ShareContent from "./share-content";
 const createSlides = (count: number): CarouselSlide[] => {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
-    image: `/public/png/${index + 1}.png`,
+    image: `/png/${index + 1}.png`,
     alt: `img-alt-${index + 1}`,
   }));
 };
