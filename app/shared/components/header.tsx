@@ -1,3 +1,6 @@
+import ChevronLeft from "~/assets/chevron-left.svg?react";
+import HamburgerMenu from "~/assets/hamburger-menu.svg?react";
+
 interface HeaderProps {
   onPrevious: () => void;
 }
@@ -6,10 +9,10 @@ export default function Header({ onPrevious }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-4 py-3.5">
       <button type="button" onClick={onPrevious} className="cursor-pointer">
-        이전
+        <ChevronLeft className="text-white" />
       </button>
       <button type="button" onClick={() => {}} className="cursor-pointer">
-        메뉴
+        <HamburgerMenu className="text-white" />
       </button>
     </header>
   );
