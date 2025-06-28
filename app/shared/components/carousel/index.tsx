@@ -1,7 +1,6 @@
 import type { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState } from "react";
-import { usePrevNextButtons } from "./carousel-buttons";
 
 export type CarouselSlide = {
   id: number;
@@ -12,7 +11,6 @@ export type CarouselSlide = {
 type CarouselProps = {
   slides: CarouselSlide[];
   options?: EmblaOptionsType;
-  showArrows?: boolean;
   // 이미지만 보이는 모드에서는 false, 화살표가 필요한 모드에서는 true로 설정해서 사용해주세요!
   fullWidthSlide?: boolean;
   onSelectIndexChange?: (index: number) => void;
@@ -21,15 +19,8 @@ type CarouselProps = {
 
 const Carousel: React.FC<CarouselProps> = (props) => {
   const { slides, options, fullWidthSlide } = props;
-  const showArrows = props.showArrows ?? fullWidthSlide;
   const theme = props.theme ?? "dark";
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
-  const {
-    prevBtnDisabled,
-    nextBtnDisabled,
-    onPrevButtonClick,
-    onNextButtonClick,
-  } = usePrevNextButtons(emblaApi);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
@@ -57,21 +48,21 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 
   return (
     <section className="mx-auto">
-      <div className="">
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className={`flex ${!fullWidthSlide ? "-ml-4" : ""}`}>
+      <div
+        className={`relative mx-auto ${fullWidthSlide ? "h-[670px] w-[375px]" : "h-[560px]"}`}
+      >
+        <div className="h-full overflow-hidden" ref={emblaRef}>
+          <div className={`flex h-full ${!fullWidthSlide ? "-ml-4" : ""}`}>
             {slides.map((slide, index) => (
               <div
                 className={`
-                  ${fullWidthSlide ? "w-full flex-none" : "flex-none pl-4"} max-h-full min-w-0 transform-gpu px-2 `}
+                  ${fullWidthSlide ? "w-full flex-none" : "w-[330px] flex-none bg-gray-200 pl-4"} h-full min-w-0 transform-gpu`}
                 key={slide.id}
               >
-                <div className="relative mx-auto aspect-[4/3] h-[511px] w-[306px]">
+                <div className="relative">
                   <img
-                    className={`h-full w-full rounded-md object-cover transition-all duration-300 ${
-                      selectedIndex === index
-                        ? "opacity-100 blur-0"
-                        : "opacity-70 blur-sm"
+                    className={`h-full w-full object-cover transition-all duration-300 ${
+                      selectedIndex === index ? "opacity-100" : "opacity-60"
                     }
                   `}
                     src={slide.image}
@@ -82,17 +73,15 @@ const Carousel: React.FC<CarouselProps> = (props) => {
             ))}
           </div>
         </div>
-        <div className="mx-auto mt-4 flex w-full max-w-[150px] items-center justify-center">
-          <div className="mt-2 flex cursor-pointer items-center justify-center space-x-2">
-            {slides.map((slide, index) => (
-              <button
-                type="button"
-                key={slide.id}
-                onClick={() => emblaApi?.scrollTo(index)}
-                className={`h-2 w-2 rounded-full transition-colors duration-200 ${getButtonColors(selectedIndex === index)}`}
-              />
-            ))}
-          </div>
+        <div className="-translate-x-1/2 absolute bottom-4 left-1/2 z-10 flex cursor-pointer items-center justify-center space-x-2">
+          {slides.map((slide, index) => (
+            <button
+              type="button"
+              key={slide.id}
+              onClick={() => emblaApi?.scrollTo(index)}
+              className={`h-2 w-2 rounded-full transition-colors duration-200 ${getButtonColors(selectedIndex === index)}`}
+            />
+          ))}
         </div>
       </div>
     </section>

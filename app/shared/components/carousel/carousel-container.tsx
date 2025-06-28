@@ -5,7 +5,6 @@ import Carousel from ".";
 type CarouselContainerProps = {
   slides: CarouselSlide[];
   options?: EmblaOptionsType;
-  showArrows?: boolean;
   fullWidthSlide?: boolean;
 };
 
