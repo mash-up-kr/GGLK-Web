@@ -14,6 +14,13 @@ interface ToastOptions {
   type?: ToastType;
 }
 
+interface ToastConfig {
+  offset?: {
+    x?: number;
+    y?: number;
+  };
+}
+
 const reducer = (state: Toast | null, action: ToastAction) => {
   switch (action.type) {
     case "set":
@@ -46,33 +53,41 @@ const getToast = () => toastStore;
 
 const genIdByTime = () => new Date().getTime().toString();
 
-const createToast = ({ message, type = "plain" }: ToastOptions) => {
+const createToast = ({
+  message,
+  type = "plain",
+  config,
+}: ToastOptions & { config?: ToastConfig }) => {
   return {
     id: genIdByTime(),
     message,
     type,
+    offset: config?.offset,
   };
 };
 
-const toast = (message: string) => {
+const toast = (message: string, config?: ToastConfig) => {
   const newToast = createToast({
     message,
+    config,
   });
   dispatch({ type: "set", payload: newToast });
 };
 
-toast.success = (message: string) => {
+toast.success = (message: string, config?: ToastConfig) => {
   const newToast = createToast({
     message,
     type: "success",
+    config,
   });
   dispatch({ type: "set", payload: newToast });
 };
 
-toast.error = (message: string) => {
+toast.error = (message: string, config?: ToastConfig) => {
   const newToast = createToast({
     message,
     type: "error",
+    config,
   });
   dispatch({ type: "set", payload: newToast });
 };

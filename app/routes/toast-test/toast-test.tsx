@@ -9,7 +9,11 @@ export default function ToastTestPage() {
         className="cursor-pointer rounded-full bg-green-700 px-5 py-1.5 font-medium text-white transition-colors hover:bg-green-800"
         type="button"
         onClick={() => {
-          toast("안녕하세요! 예시 토스트입니다");
+          toast("안녕하세요! 예시 토스트입니다", {
+            offset: {
+              y: 150,
+            },
+          });
         }}
       >
         토스트 만들기 🚀

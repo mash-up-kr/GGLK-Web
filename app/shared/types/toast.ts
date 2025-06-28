@@ -12,4 +12,8 @@ export type Toast = {
   id: string;
   message: string;
   type: ToastType;
+  offset?: {
+    x?: number;
+    y?: number;
+  };
 };
