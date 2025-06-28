@@ -6,12 +6,14 @@ type CarouselContainerProps = {
   slides: CarouselSlide[];
   options?: EmblaOptionsType;
   fullWidthSlide?: boolean;
+  onSelectIndexChange?: (index: number) => void;
 };
 
 const CarouselContainer: React.FC<CarouselContainerProps> = ({
   slides,
   options = { loop: true },
   fullWidthSlide,
+  onSelectIndexChange,
 }) => {
   return (
     <div className="mx-auto w-full max-w-lg">
@@ -20,6 +22,7 @@ const CarouselContainer: React.FC<CarouselContainerProps> = ({
         slides={slides}
         options={options}
         fullWidthSlide={fullWidthSlide}
+        onSelectIndexChange={onSelectIndexChange}
       />
     </div>
   );

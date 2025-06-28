@@ -18,8 +18,8 @@
     "pnpm": ">=10"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.0.1",
     "@fingerprintjs/fingerprintjs": "^4.6.2",
+    "@radix-ui/react-use-controllable-state": "^1.2.2",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
     "@t3-oss/env-core": "^0.13.4",

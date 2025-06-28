@@ -1,3 +1,4 @@
+import { useControllableState } from "@radix-ui/react-use-controllable-state";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import BottomSheet, {
@@ -7,13 +8,44 @@ import type { CarouselSlide } from "~/shared/components/carousel";
 import CarouselContainer from "~/shared/components/carousel/carousel-container";
 import ReanalyzeContent from "./reanalyze-content";
 import ShareContent from "./share-content";
+import Theme1 from "./theme-1";
+import Theme2 from "./theme-2";
+import Theme3 from "./theme-3";
 
-const createSlides = (count: number): CarouselSlide[] => {
-  return Array.from({ length: count }, (_, index) => ({
-    id: index,
-    image: `/png/${index + 1}.png`,
-    alt: `img-alt-${index + 1}`,
-  }));
+const createThemeSlides = (): CarouselSlide[] => {
+  return [
+    {
+      id: 0,
+      image: "/png/1.png",
+      alt: "theme-1",
+      themeComponent: Theme1,
+    },
+    {
+      id: 1,
+      image: "/png/2.png",
+      alt: "theme-2",
+      themeComponent: Theme2,
+    },
+    {
+      id: 2,
+      image: "/png/3.png",
+      alt: "theme-3",
+      themeComponent: Theme3,
+    },
+  ];
+};
+
+const getThemeBackgroundClass = (themeIndex: number): string => {
+  switch (themeIndex) {
+    case 0:
+      return "bg-[#181818]";
+    case 1:
+      return "bg-white";
+    case 2:
+      return "bg-orange-200";
+    default:
+      return "bg-[#181818]";
+  }
 };
 
 export default function ResultPage() {
@@ -21,12 +53,23 @@ export default function ResultPage() {
   const [contentType, setContentType] = useState<"share" | "reanalyze">(
     "share",
   );
-  const [slideCount] = useState(3); // 이번 스펙 기준 3장으로 설정
-  const slides = createSlides(slideCount);
+  const slides = createThemeSlides();
+
+  const [selectedThemeIndex, setSelectedThemeIndex] = useControllableState({
+    prop: undefined,
+    defaultProp: 0,
+    onChange: (index) => {
+      console.log("테마 변경:", index);
+    },
+  });
+
+  // 캐러셀 인덱스 변경되면 테마 인덱스도 변경
+  const handleSlideIndexChange = (index: number) => {
+    setSelectedThemeIndex(index);
+  };
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const handleCopyLink = async () => {
-    console.log("---------");
     try {
       const homeUrl = `${window.location.origin}/`; // 홈 URL
       await navigator.clipboard.writeText(homeUrl);
@@ -90,45 +133,55 @@ export default function ResultPage() {
   ];
 
   return (
-    <div className="h-full w-full">
-      <CarouselContainer slides={slides} fullWidthSlide={true} />
-      <div className="m-10 flex h-[46px] flex-row items-center justify-center gap-x-[10px]">
-        <button
-          type="button"
-          onClick={() => setIsBottomSheetOpen(true)}
-          className="flex h-[46px] w-[161px] items-center justify-center rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
-        >
-          <img
-            src="/png/IconShare2.png"
-            className="mr-1 h-[24px] w-[24px]"
-            alt="icon-share"
+    <div
+      className={`h-full w-full transition-colors duration-500 ${getThemeBackgroundClass(selectedThemeIndex)}`}
+    >
+      <div className="flex h-full flex-col">
+        <div className="flex-1">
+          <CarouselContainer
+            slides={slides}
+            fullWidthSlide={true}
+            onSelectIndexChange={handleSlideIndexChange}
           />
-          공유하기
-        </button>
-        <BottomSheet
-          isOpen={isBottomSheetOpen}
-          onClose={() => setIsBottomSheetOpen(false)}
-        >
-          {contentType === "share" ? (
-            <ShareContent
-              mainActions={mainActions}
-              secondaryActions={secondaryActions}
+        </div>
+        <div className="m-10 flex h-[46px] flex-row items-center justify-center gap-x-[10px]">
+          <button
+            type="button"
+            onClick={() => setIsBottomSheetOpen(true)}
+            className="flex h-[46px] w-[161px] items-center justify-center rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
+          >
+            <img
+              src="/png/IconShare2.png"
+              className="mr-1 h-[24px] w-[24px]"
+              alt="icon-share"
             />
-          ) : (
-            <ReanalyzeContent
-              onKakaoLogin={() => console.log("카카오 로그인 로직")} //handleKakaoLogin
-              onClose={() => setIsBottomSheetOpen(false)}
-            />
-          )}
-        </BottomSheet>
+            공유하기
+          </button>
+          <BottomSheet
+            isOpen={isBottomSheetOpen}
+            onClose={() => setIsBottomSheetOpen(false)}
+          >
+            {contentType === "share" ? (
+              <ShareContent
+                mainActions={mainActions}
+                secondaryActions={secondaryActions}
+              />
+            ) : (
+              <ReanalyzeContent
+                onKakaoLogin={() => console.log("카카오 로그인 로직")} //handleKakaoLogin
+                onClose={() => setIsBottomSheetOpen(false)}
+              />
+            )}
+          </BottomSheet>
 
-        <button
-          type="button"
-          onClick={() => navigate("/")}
-          className="h-[46px] w-[161px] rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
-        >
-          다시하기
-        </button>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="h-[46px] w-[161px] rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
+          >
+            다시하기
+          </button>
+        </div>
       </div>
     </div>
   );
