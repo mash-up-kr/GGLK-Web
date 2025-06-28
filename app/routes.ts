@@ -14,6 +14,5 @@ export default [
     ),
     route("/image-studio", "./routes/image-studio/image-studio.tsx"),
     route("/result", "./routes/result/result.tsx"),
-    route("/toast-test", "./routes/toast-test/toast-test.tsx"),
   ]),
 ] satisfies RouteConfig;
