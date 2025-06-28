@@ -5,7 +5,6 @@ import Carousel from ".";
 type CarouselContainerProps = {
   slides: CarouselSlide[];
   options?: EmblaOptionsType;
-  showArrows?: boolean;
   fullWidthSlide?: boolean;
 };
 
@@ -17,6 +16,7 @@ const CarouselContainer: React.FC<CarouselContainerProps> = ({
   return (
     <div className="mx-auto w-full max-w-lg">
       <Carousel
+        theme="dark"
         slides={slides}
         options={options}
         fullWidthSlide={fullWidthSlide}

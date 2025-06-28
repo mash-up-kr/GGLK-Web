@@ -90,7 +90,7 @@ export default function ResultPage() {
   ];
 
   return (
-    <div className="h-full w-full bg-[#181818] p-4">
+    <div className="h-full w-full">
       <CarouselContainer slides={slides} fullWidthSlide={true} />
       <div className="m-10 flex h-[46px] flex-row items-center justify-center gap-x-[10px]">
         <button
