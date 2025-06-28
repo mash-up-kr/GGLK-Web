@@ -22,4 +22,3 @@ RUN adduser --system --uid 1001 reactjs
 USER reactjs
 
 COPY --from=builder --chown=reactjs:reactjs /app/build ./build
-COPY --from=builder --chown=reactjs:reactjs /app/public ./build
