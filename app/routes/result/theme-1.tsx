@@ -7,57 +7,46 @@ export default function Theme1({
 }: CarouselItemProps) {
   return (
     <div className="relative h-full w-full overflow-hidden">
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <img
+          src="/png/theme1.png"
+          className="h-[626px] w-[290px] object-cover"
+          alt="theme1-background"
+        />
+      </div>
+
+      <div className="absolute inset-0 z-10">
         <div className="absolute top-4 left-4">
           <img
             src="/png/iconStarBlack.png"
-            className="h-6 w-6 opacity-60"
+            className="h-[24px] w-[24px]"
             alt="star"
           />
         </div>
-        <div className="absolute top-8 right-6">
-          <img
-            src="/png/iconCircle.png"
-            className="h-4 w-4 opacity-40"
-            alt="circle"
-          />
-        </div>
-
         <div className="absolute top-1/3 left-8">
           <img
             src="/png/iconSmile.png"
-            className="h-5 w-5 opacity-50"
+            className="top-5 left-5 h-[106px] w-[106px]"
             alt="smile"
           />
         </div>
-        <div className="absolute top-1/2 right-8">
-          <img
-            src="/png/iconRectangle.png"
-            className="h-3 w-3 opacity-30"
-            alt="rectangle"
-          />
+        <div className="absolute top-0 right-1/2">
+          <img src="/png/iconX.png" className="h-[85px] w-[85px]" alt="X" />
         </div>
 
-        <div className="absolute bottom-16 left-6">
+        <div className="absolute right-4 bottom-30 ">
           <img
-            src="/png/iconPin.png"
-            className="h-4 w-4 opacity-60"
-            alt="pin"
-          />
-        </div>
-        <div className="absolute right-4 bottom-8">
-          <img
-            src="/png/iconStarPearl.png"
-            className="h-5 w-5 opacity-50"
-            alt="star-pearl"
+            src="/png/iconDescription.png"
+            className="h-[48px] w-[142px]"
+            alt="iconDescription"
           />
         </div>
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="rotate-1 transform">
+        <div className="-rotate-1 transform">
           <img
-            className="h-[80%] w-auto object-contain shadow-lg"
+            className="h-[226px] w-[226px] object-contain"
             src={slides[slideIndex].image}
             alt={slides[slideIndex].alt}
           />

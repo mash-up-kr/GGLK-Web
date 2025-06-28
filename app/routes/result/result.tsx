@@ -18,19 +18,25 @@ const createThemeSlides = (): CarouselSlide[] => {
       id: 0,
       image: "/png/1.png",
       alt: "theme-1",
-      themeComponent: Theme1,
+      themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
+        <Theme1 slides={slides} slideIndex={slideIndex} />
+      ),
     },
     {
       id: 1,
       image: "/png/2.png",
       alt: "theme-2",
-      themeComponent: Theme2,
+      themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
+        <Theme2 slides={slides} slideIndex={slideIndex} />
+      ),
     },
     {
       id: 2,
       image: "/png/3.png",
       alt: "theme-3",
-      themeComponent: Theme3,
+      themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
+        <Theme3 slides={slides} slideIndex={slideIndex} />
+      ),
     },
   ];
 };
@@ -39,8 +45,6 @@ const getThemeBackgroundClass = (themeIndex: number): string => {
   switch (themeIndex) {
     case 0:
       return "bg-[#181818]";
-    case 1:
-      return "bg-white";
     case 2:
       return "bg-orange-200";
     default:
@@ -133,10 +137,20 @@ export default function ResultPage() {
   ];
 
   return (
-    <div
-      className={`h-full w-full transition-colors duration-500 ${getThemeBackgroundClass(selectedThemeIndex)}`}
-    >
-      <div className="flex h-full flex-col">
+    <div className="relative h-full w-full overflow-hidden transition-colors duration-500">
+      {selectedThemeIndex === 1 && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img
+            src="/png/theme2.png"
+            className="h-full w-full"
+            alt="theme2-background"
+          />
+        </div>
+      )}
+
+      <div
+        className={`relative z-10 flex h-full flex-col ${selectedThemeIndex === 1 ? "" : getThemeBackgroundClass(selectedThemeIndex)}`}
+      >
         <div className="flex-1">
           <CarouselContainer
             slides={slides}

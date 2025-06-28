@@ -1,16 +1,13 @@
 import type { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 export type CarouselSlide = {
   id: number;
   image: string;
   alt: string;
-  themeComponent?: React.ComponentType<{
-    slides: CarouselSlide[];
-    slideIndex: number;
-    onSelectIndexChange?: (index: number) => void;
-  }>;
+  themeComponent?: (slides: CarouselSlide[], slideIndex: number) => ReactNode;
 };
 
 type CarouselProps = {
@@ -65,11 +62,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
               >
                 <div className="relative h-full">
                   {slide.themeComponent ? (
-                    <slide.themeComponent
-                      slides={slides}
-                      slideIndex={index}
-                      onSelectIndexChange={props.onSelectIndexChange}
-                    />
+                    slide.themeComponent(slides, index)
                   ) : (
                     <img
                       className={`h-full w-full object-cover transition-all duration-300 ${
