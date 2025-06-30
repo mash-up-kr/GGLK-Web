@@ -1,5 +1,6 @@
 @import url("//cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.600/neodgm/style.css");
 @import url("https://font.elice.io/css?family=Elice+Digital+Baeum");
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -11,6 +12,7 @@
   --font-elice: "Elice Digital Baeum", sans-serif;
   --font-serif: "Georgia", "Times New Roman", serif;
   --font-mono: "Courier New", monospace;
+  --font-nanum-brush: "Nanum Brush Script", cursive;
 
   /* 피그마 배경색 종류 정의 */
   --color-lava: #ff4431;
