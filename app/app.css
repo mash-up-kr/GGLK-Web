@@ -1,15 +1,36 @@
+@import url("//cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.600/neodgm/style.css");
+@import url("https://font.elice.io/css?family=Elice+Digital+Baeum");
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-apple-gothic: "Apple SD Gothic Neo", sans-serif;
+  --font-sf: "SF Pro Display", sans-serif;
+  --font-neo: "NeoDunggeunmo", monospace;
+  --font-elice: "Elice Digital Baeum", sans-serif;
+  --font-serif: "Georgia", "Times New Roman", serif;
+  --font-mono: "Courier New", monospace;
+
+  /* 피그마 배경색 종류 정의 */
+  --color-lava: #ff4431;
+  --color-forest: #21dc71;
+  --color-ocean: #1c4ae4;
 }
 
+/* 전역 기본 폰트 설정 */
 html,
 body {
-  /* @apply bg-white dark:bg-gray-950;
+  font-family: "Apple SD Gothic Neo", "SF Pro Display", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  } */
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6); /* 어두운 반투명 배경 */
+  backdrop-filter: blur(2px);
+}
+
+/* margin: auto 추가로 모달 가운데 정렬 (tailwind preflight 때문에 추가) */
+dialog {
+  margin: auto;
 }
