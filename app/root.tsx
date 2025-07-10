@@ -22,7 +22,38 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  { rel: "icon", href: "/favicon.ico" },
 ];
+
+const META_TITLE = "OOTD";
+const META_DESCRIPTION = "Roast your style! OOTD Roasting By GGLK";
+const WEBSITE_URL = "https://ooootd.com";
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { charset: "utf-8" },
+    { name: "viewport", content: "width=device-width,initial-scale=1" },
+    { title: META_TITLE },
+    {
+      name: "description",
+      content: META_DESCRIPTION,
+    },
+    { name: "keywords", content: "OOTD, 매쉬업, Mashup, Roasting, Style" },
+    { name: "author", content: "gglk" },
+    { name: "robots", content: "index, follow" },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: WEBSITE_URL },
+    { property: "og:title", content: META_TITLE },
+    {
+      property: "og:description",
+      content: META_DESCRIPTION,
+    },
+    { property: "og:image", content: `${WEBSITE_URL}/og-image.png` },
+    { property: "og:image:width", content: "1280" },
+    { property: "og:image:height", content: "800" },
+    { property: "og:site_name", content: META_TITLE },
+  ];
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
