@@ -48,9 +48,14 @@ export const meta: Route.MetaFunction = () => {
       property: "og:description",
       content: META_DESCRIPTION,
     },
-    { property: "og:image", content: `${WEBSITE_URL}/og-image.png` },
+    { property: "og:image", content: `${WEBSITE_URL}/og-image-800-400.png` },
+    { property: "og:image:width", content: "800" },
+    { property: "og:image:height", content: "400" },
+
+    { property: "og:image", content: `${WEBSITE_URL}/og-image-1280-800.png` },
     { property: "og:image:width", content: "1280" },
     { property: "og:image:height", content: "800" },
+
     { property: "og:site_name", content: META_TITLE },
   ];
 };
