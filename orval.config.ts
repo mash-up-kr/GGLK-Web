@@ -1,4 +1,10 @@
+import { env } from "node:process";
+import { config } from "dotenv";
 import { defineConfig } from "orval";
+
+config();
+
+const target = env.SWAGGER_END_POINT as string;
 
 export default defineConfig({
   petstore: {
@@ -27,7 +33,7 @@ export default defineConfig({
       },
     },
     input: {
-      target: "./petstore.yaml",
+      target,
     },
   },
 });
