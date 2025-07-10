@@ -9,3 +9,4 @@ ignore:
   - "build"
   - "public"
   - ".react-router"
+  - "app/api/**/*"

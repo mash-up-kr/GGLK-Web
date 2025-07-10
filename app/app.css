@@ -1,23 +1,28 @@
-@import url('//cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.600/neodgm/style.css');
+@import url("//cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.600/neodgm/style.css");
 @import url("https://font.elice.io/css?family=Elice+Digital+Baeum");
 @import "tailwindcss";
-
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-apple-gothic: 'Apple SD Gothic Neo', sans-serif;
-    --font-sf: 'SF Pro Display', sans-serif;
-    --font-neo: 'NeoDunggeunmo', monospace;
-    --font-elice: 'Elice Digital Baeum', sans-serif;
-    --font-serif: 'Georgia', 'Times New Roman', serif;
-    --font-mono: 'Courier New', monospace;
-  }
+  --font-apple-gothic: "Apple SD Gothic Neo", sans-serif;
+  --font-sf: "SF Pro Display", sans-serif;
+  --font-neo: "NeoDunggeunmo", monospace;
+  --font-elice: "Elice Digital Baeum", sans-serif;
+  --font-serif: "Georgia", "Times New Roman", serif;
+  --font-mono: "Courier New", monospace;
 
-  
+  /* 피그마 배경색 종류 정의 */
+  --color-lava: #ff4431;
+  --color-forest: #21dc71;
+  --color-ocean: #1c4ae4;
+}
+
 /* 전역 기본 폰트 설정 */
-html, body {
-  font-family: 'Apple SD Gothic Neo', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+html,
+body {
+  font-family: "Apple SD Gothic Neo", "SF Pro Display", -apple-system,
+    BlinkMacSystemFont, sans-serif;
 }
 
 dialog::backdrop {

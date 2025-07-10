@@ -1,11 +1,11 @@
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { type UserConfig, defineConfig, mergeConfig } from "vite";
+import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 import type { ViteUserConfig as VitestUserConfig } from "vitest/config";
 
 const vitestConfig: VitestUserConfig = {
-
   test: {
     globals: true,
     environment: "jsdom",
@@ -15,6 +15,6 @@ const vitestConfig: VitestUserConfig = {
 
 export default defineConfig(
   mergeConfig(vitestConfig, {
-    plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+    plugins: [tailwindcss(), reactRouter(), tsconfigPaths(), svgr()],
   } satisfies UserConfig),
 );
