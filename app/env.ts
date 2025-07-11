@@ -6,6 +6,7 @@ export const env = createEnv({
   client: {
     VITE_API_URL: z.string().url(),
     VITE_KAKAO_JAVASCRIPT_KEY: z.string(),
+    VITE_KAKAO_REDIRECT_URI: z.string().url(),
   },
   runtimeEnv: import.meta.env,
 });
