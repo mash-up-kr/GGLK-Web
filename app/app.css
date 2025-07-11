@@ -18,6 +18,20 @@
   --color-lava: #ff4431;
   --color-forest: #21dc71;
   --color-ocean: #1c4ae4;
+
+  --animate-spin-slow: spin 6s linear infinite;
+  --animate-rotate-snap: rotate-snap 1.1s steps(1, end) infinite;
+
+  @keyframes rotate-snap {
+    0%,
+    100% {
+      transform: rotate(-20deg);
+    }
+    50% {
+      transform: rotate(20deg);
+    }
+  }
+  --breakpoint-xs: 24rem;
 }
 
 /* 전역 기본 폰트 설정 */

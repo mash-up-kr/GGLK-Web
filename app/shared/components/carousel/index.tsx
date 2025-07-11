@@ -1,11 +1,13 @@
 import type { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import { cn } from "~/shared/utils/classname-utils";
 
 export type CarouselSlide = {
   id: number;
-  image: string;
-  alt: string;
+  image?: string;
+  alt?: string;
+  children?: React.ReactNode;
 };
 
 type CarouselProps = {
@@ -47,33 +49,40 @@ const Carousel: React.FC<CarouselProps> = (props) => {
   };
 
   return (
-    <section className="mx-auto">
+    <section
+      className={cn(
+        fullWidthSlide ? "mx-auto" : "flex h-full flex-col overflow-hidden",
+      )}
+    >
       <div
-        className={`relative mx-auto ${fullWidthSlide ? "h-[670px] w-[375px]" : "h-[560px]"}`}
+        className={`relative mx-auto ${fullWidthSlide ? "h-[670px] w-[375px]" : "w-5/6 max-w-md grow border"}`}
       >
-        <div className="h-full overflow-hidden" ref={emblaRef}>
-          <div className={`flex h-full ${!fullWidthSlide ? "-ml-4" : ""}`}>
+        <div className="relative mx-auto h-full" ref={emblaRef}>
+          <div className="flex h-full">
             {slides.map((slide, index) => (
               <div
-                className={`
-                  ${fullWidthSlide ? "w-full flex-none" : "w-[330px] flex-none bg-gray-200 pl-4"} h-full min-w-0 transform-gpu`}
+                className={`flex-none ${fullWidthSlide ? "h-full w-full flex-none" : "flex w-full items-center justify-center"} min-w-0 transform-gpu`}
                 key={slide.id}
               >
-                <div className="relative">
-                  <img
-                    className={`h-full w-full object-cover transition-all duration-300 ${
-                      selectedIndex === index ? "opacity-100" : "opacity-60"
-                    }
+                {slide.children ? (
+                  <div className="h-9/10">{slide.children}</div>
+                ) : (
+                  <div className="relative">
+                    <img
+                      className={`h-full w-full object-cover transition-all duration-300 ${
+                        selectedIndex === index ? "opacity-100" : "opacity-60"
+                      }
                   `}
-                    src={slide.image}
-                    alt={slide.alt}
-                  />
-                </div>
+                      src={slide.image}
+                      alt={slide.alt}
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
-        <div className="-translate-x-1/2 absolute bottom-4 left-1/2 z-10 flex cursor-pointer items-center justify-center space-x-2">
+        <div className="-translate-x-1/2 absolute bottom-3 left-1/2 z-10 flex cursor-pointer items-center justify-center space-x-2">
           {slides.map((slide, index) => (
             <button
               type="button"
@@ -88,4 +97,4 @@ const Carousel: React.FC<CarouselProps> = (props) => {
   );
 };
 
-export default Carousel;
+export default memo(Carousel);

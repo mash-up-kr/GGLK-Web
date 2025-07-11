@@ -33,8 +33,6 @@ export default function useFunnelWithForm<D extends FieldValues = FieldValues>({
 
   const lastStepIndex = useRef<number>(null);
 
-  console.log(history.current);
-
   const canMoveToNext = useCallback(async () => {
     if (step >= (lastStepIndex.current ?? 0)) {
       return false;
@@ -64,6 +62,8 @@ export default function useFunnelWithForm<D extends FieldValues = FieldValues>({
         onStepChange?.();
       }
     }
+
+    console.log("🎯 onNext", step);
   }, [step, trigger, handleSubmit, onSubmit, canMoveToNext, onStepChange]);
 
   const onPrev = useCallback(() => {
@@ -112,6 +112,7 @@ export default function useFunnelWithForm<D extends FieldValues = FieldValues>({
   );
 
   return {
+    step,
     methods,
     Funnel,
     onNext,
