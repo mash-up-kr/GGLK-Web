@@ -1,3 +1,9 @@
+interface Position {
+  isOutside?: boolean;
+  top: number;
+  left: number;
+}
+
 export interface Intensity {
   id: number;
   value: "easy" | "normal" | "spicy";
@@ -6,4 +12,8 @@ export interface Intensity {
   backgroundColor: "bg-ocean" | "bg-forest" | "bg-lava";
   discription: string;
   aiFaceClassName?: string;
+  asterisks: {
+    defaultColor: "text-ocean" | "text-forest" | "text-lava";
+    positions: Position[];
+  };
 }

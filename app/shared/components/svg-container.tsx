@@ -16,6 +16,7 @@ interface SvgContainerProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  isKeepRatio?: boolean;
 }
 
 // SVG의 비율을 계산하는 유틸리티 함수들
@@ -58,6 +59,7 @@ export default function SvgContainer({
   children,
   className,
   onClick,
+  isKeepRatio = false,
   ...props
 }: SvgContainerProps & ComponentProps<SvgComponentType>) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -87,16 +89,20 @@ export default function SvgContainer({
         className={cn(
           "absolute inset-0 flex items-center justify-center",
           onClick && "pointer-events-none",
-          // ratio && `aspect-[${ratio}]`,
         )}
       >
-        <div
-          style={{
-            aspectRatio: ratio ?? 1,
-          }}
-        >
-          {children}
-        </div>
+        {isKeepRatio ? (
+          <div
+            style={{
+              aspectRatio: ratio ?? 1,
+            }}
+            className="relative"
+          >
+            {children}
+          </div>
+        ) : (
+          children
+        )}
       </div>
     </div>
   );

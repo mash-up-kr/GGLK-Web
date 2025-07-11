@@ -1,4 +1,5 @@
 import { useFormContext } from "react-hook-form";
+import Asterisk from "~/assets/analyze/asterisk.svg?react";
 import Badge from "~/assets/analyze/badge.svg?react";
 import IntensityContainer from "~/assets/analyze/intensity-container.svg?react";
 import SvgContainer from "~/shared/components/svg-container";
@@ -14,29 +15,55 @@ export default function IntensityItem({ intensity }: { intensity: Intensity }) {
     <SvgContainer
       SvgComponent={IntensityContainer}
       className="h-full select-none"
+      isKeepRatio
     >
-      <div className="flex h-full flex-col items-center p-13.5 xs:p-10 pb-16 xs:pb-13.5 font-elice">
+      <div className="flex h-full flex-col items-center p-10 pb-13.5 font-elice">
         <div className="flex w-full justify-between">
-          <div className="font-bold text-xl xs:text-2xl [@media(max-height:600px)]:text-xl">
-            No.{level}
-          </div>
+          <div className="font-bold text-xl xs:text-2xl">No.{level}</div>
           <IntensityBadge value={value} level={level} />
         </div>
         <div className="flex grow items-center justify-center">
           <SvgContainer SvgComponent={MainIcon}>
-            <div className="flex h-full w-full items-center justify-center">
+            <div className="relative flex h-full w-full items-center justify-center">
               <img
                 src={`/png/ai-face/${value}.png`}
                 alt="person-image-placeholder"
-                className={cn(
-                  "w-28 xs:w-33 animate-rotate-snap",
-                  aiFaceClassName,
-                )}
+                className={cn("w-1/2 animate-rotate-snap", aiFaceClassName)}
               />
+              {intensity.asterisks.positions
+                .filter((asterisk) => !asterisk.isOutside)
+                .map((asterisk, index) => (
+                  <Asterisk
+                    key={index + value}
+                    className={cn(
+                      "absolute size-[35px] xs:size-[40px] animate-spin-slow",
+                      intensity.asterisks.defaultColor,
+                    )}
+                    style={{
+                      top: `${asterisk.top}%`,
+                      left: `${asterisk.left}%`,
+                    }}
+                  />
+                ))}
             </div>
           </SvgContainer>
         </div>
         <IntensityDescription description={discription} />
+        {intensity.asterisks.positions
+          .filter((asterisk) => asterisk.isOutside)
+          .map((asterisk, index) => (
+            <Asterisk
+              key={index + value}
+              className={cn(
+                "absolute size-[35px] xs:size-[40px] animate-spin-slow",
+                intensity.asterisks.defaultColor,
+              )}
+              style={{
+                top: `${asterisk.top}%`,
+                left: `${asterisk.left}%`,
+              }}
+            />
+          ))}
       </div>
     </SvgContainer>
   );
@@ -45,19 +72,13 @@ export default function IntensityItem({ intensity }: { intensity: Intensity }) {
 function IntensityBadge({ value, level }: { value: string; level: number }) {
   return (
     <div className="flex flex-col items-center justify-center font-nanum-brush">
-      <SvgContainer
-        SvgComponent={Badge}
-        className="h-6 xs:h-8 [@media(max-height:600px)]:h-6"
-      >
-        <div className="flex h-full w-full items-center justify-center text-sm xs:text-lg [@media(max-height:600px)]:text-sm">
+      <SvgContainer SvgComponent={Badge} className="h-6 xs:h-8">
+        <div className="flex h-full w-full items-center justify-center text-sm xs:text-lg [@media(max-height:)]:text-sm">
           {value}
         </div>
       </SvgContainer>
-      <SvgContainer
-        SvgComponent={Badge}
-        className="h-6 xs:h-8 [@media(max-height:600px)]:h-6"
-      >
-        <div className="flex h-full w-full items-center justify-center text-sm xs:text-lg [@media(max-height:600px)]:text-sm">
+      <SvgContainer SvgComponent={Badge} className="h-6 xs:h-8">
+        <div className="flex h-full w-full items-center justify-center text-sm xs:text-lg [@media(max-height:)]:text-sm">
           Version 0{level}
         </div>
       </SvgContainer>
@@ -69,7 +90,7 @@ function IntensityDescription({ description }: { description: string }) {
   return (
     <div className="flex flex-col font-elice">
       <div className="text-sm opacity-70">예시</div>
-      <div className="text-pretty break-keep font-bold text-base xs:text-xl [@media(max-height:600px)]:text-base">
+      <div className="text-pretty break-keep font-bold text-base xs:text-xl [@media(max-height:650px)]:text-base">
         {description}
       </div>
     </div>

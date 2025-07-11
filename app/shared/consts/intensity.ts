@@ -11,6 +11,20 @@ export const intensities: Intensity[] = [
     MainIcon: ChatBubbleShape,
     discription: "MZ사이에서 통하는 현실적인 하이브리드 공감형 평가 버전",
     backgroundColor: "bg-forest",
+    asterisks: {
+      defaultColor: "text-forest",
+      positions: [
+        {
+          top: 2,
+          left: 70,
+        },
+        {
+          isOutside: true,
+          top: 69,
+          left: -1,
+        },
+      ],
+    },
   },
   {
     id: 2,
@@ -19,6 +33,20 @@ export const intensities: Intensity[] = [
     MainIcon: StarShape,
     discription: "깐깐한 패션 디렉터의 눈으로 골져스한 평가 버전",
     backgroundColor: "bg-lava",
+    asterisks: {
+      defaultColor: "text-lava",
+      positions: [
+        {
+          top: 2,
+          left: 70,
+        },
+        {
+          isOutside: true,
+          top: 69,
+          left: -1,
+        },
+      ],
+    },
   },
   {
     id: 3,
@@ -28,5 +56,18 @@ export const intensities: Intensity[] = [
     discription: "다정하고 칭찬을 아끼지 않는 패션 입문자를 위한 평가 버전",
     backgroundColor: "bg-ocean",
     aiFaceClassName: "pb-4",
+    asterisks: {
+      defaultColor: "text-ocean",
+      positions: [
+        {
+          top: 0,
+          left: 4,
+        },
+        {
+          top: 0,
+          left: 78,
+        },
+      ],
+    },
   },
 ];
