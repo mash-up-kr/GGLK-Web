@@ -19,6 +19,12 @@ export default function Kakao() {
       throw new Error(codeParseResult.error.message);
     }
 
+    /**
+     * @TODO
+     * error 처리 위치 option, 추후 논의 후 결정 및 통일 필요
+     * 1. 사용하는 곳
+     * 2. axios interceptor
+     */
     (async () => {
       const data: KakakoLoginRequestDto = {
         code: codeParseResult.data,
