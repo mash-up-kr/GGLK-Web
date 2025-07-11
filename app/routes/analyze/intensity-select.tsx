@@ -16,8 +16,7 @@ function IntensitySelectPage({
   field: Path<AnalyzeFormData>;
   onNext: () => void;
 }) {
-  const { register, watch, setValue, getValues } =
-    useFormContext<AnalyzeFormData>();
+  const { watch, setValue } = useFormContext<AnalyzeFormData>();
 
   const handleSelectIndexChange = useCallback(
     (index: number) => {

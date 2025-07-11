@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import Header from "~/shared/components/header";
@@ -33,17 +32,8 @@ export default function Analyze() {
     },
   });
 
-  const [bgColor, setBgColor] = useState<string | undefined>(undefined);
-
   // watch로 intensity 값을 실시간으로 감지
   const selectedIntensity = methods.watch("intensity");
-
-  useLayoutEffect(() => {
-    setBgColor(
-      intensities.find((intensity) => intensity.value === selectedIntensity)
-        ?.backgroundColor,
-    );
-  }, [selectedIntensity]);
 
   return (
     <>
