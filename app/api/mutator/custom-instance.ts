@@ -1,6 +1,8 @@
 import Axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 
-export const AXIOS_INSTANCE = Axios.create({ baseURL: "<BACKEND URL>" }); // use your own URL here or environment variable
+export const AXIOS_INSTANCE = Axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
 export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
   const source = Axios.CancelToken.source();
