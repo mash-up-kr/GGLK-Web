@@ -25,6 +25,7 @@ export const intensities: Intensity[] = [
         },
       ],
     },
+    labelClassName: "left-5 -bottom-2.5 rotate-5",
   },
   {
     id: 2,
@@ -47,6 +48,7 @@ export const intensities: Intensity[] = [
         },
       ],
     },
+    labelClassName: "left-10 -bottom-6 rotate-17",
   },
   {
     id: 3,
@@ -69,5 +71,6 @@ export const intensities: Intensity[] = [
         },
       ],
     },
+    labelClassName: "left-14 -bottom-4 rotate-41",
   },
 ];

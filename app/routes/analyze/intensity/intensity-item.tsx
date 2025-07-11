@@ -30,6 +30,14 @@ export default function IntensityItem({ intensity }: { intensity: Intensity }) {
                 alt="person-image-placeholder"
                 className={cn("w-1/2 animate-rotate-snap", aiFaceClassName)}
               />
+              <div
+                className={cn(
+                  "absolute font-nanum-brush text-[25px]",
+                  intensity.labelClassName,
+                )}
+              >
+                {value[0].toUpperCase() + value.slice(1)}
+              </div>
               {intensity.asterisks.positions
                 .filter((asterisk) => !asterisk.isOutside)
                 .map((asterisk, index) => (

@@ -56,11 +56,7 @@ function IntensitySelectPage({
           alt="person-image-placeholder"
           className="-rotate-15"
         />
-        <SvgContainer
-          SvgComponent={SpeechBubble}
-          className="min-w-60"
-          onClick={onNext}
-        >
+        <SvgContainer SvgComponent={SpeechBubble} onClick={onNext}>
           <div className="flex h-full w-full cursor-pointer items-center justify-center font-bold text-sm text-white">
             선택완료
           </div>

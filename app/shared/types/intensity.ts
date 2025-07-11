@@ -16,4 +16,5 @@ export interface Intensity {
     defaultColor: "text-ocean" | "text-forest" | "text-lava";
     positions: Position[];
   };
+  labelClassName: string;
 }
