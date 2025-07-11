@@ -1,7 +1,16 @@
-import type { EmblaOptionsType } from "embla-carousel";
+import type {
+  EmblaCarouselType,
+  EmblaEventType,
+  EmblaOptionsType,
+} from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "~/shared/utils/classname-utils";
+
+const TWEEN_FACTOR_BASE = 0.84;
+
+const numberWithinRange = (number: number, min: number, max: number): number =>
+  Math.min(Math.max(number, min), max);
 
 export type CarouselSlide = {
   id: number;
@@ -32,7 +41,6 @@ const Carousel: React.FC<CarouselProps> = (props) => {
       setSelectedIndex((prev) => (prev !== newIndex ? newIndex : prev));
       props.onSelectIndexChange?.(newIndex);
     };
-
     emblaApi?.on("select", onSelect);
     onSelect();
 
@@ -40,6 +48,64 @@ const Carousel: React.FC<CarouselProps> = (props) => {
       emblaApi?.off("select", onSelect);
     };
   }, [emblaApi, props.onSelectIndexChange]);
+
+  const tweenFactor = useRef(0);
+
+  const tweenOpacity = useCallback(
+    (emblaApi: EmblaCarouselType, eventName?: EmblaEventType) => {
+      const engine = emblaApi.internalEngine();
+      const scrollProgress = emblaApi.scrollProgress();
+      const slidesInView = emblaApi.slidesInView();
+      const isScrollEvent = eventName === "scroll";
+
+      emblaApi.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+        let diffToTarget = scrollSnap - scrollProgress;
+        const slidesInSnap = engine.slideRegistry[snapIndex];
+
+        for (const slideIndex of slidesInSnap) {
+          if (isScrollEvent && !slidesInView.includes(slideIndex)) return;
+
+          if (engine.options.loop) {
+            for (const loopItem of engine.slideLooper.loopPoints) {
+              const target = loopItem.target();
+
+              if (slideIndex === loopItem.index && target !== 0) {
+                const sign = Math.sign(target);
+
+                if (sign === -1) {
+                  diffToTarget = scrollSnap - (1 + scrollProgress);
+                }
+                if (sign === 1) {
+                  diffToTarget = scrollSnap + (1 - scrollProgress);
+                }
+              }
+            }
+          }
+
+          const tweenValue = 1 - Math.abs(diffToTarget * tweenFactor.current);
+          const opacity = numberWithinRange(tweenValue, 0.3, 1).toString();
+          emblaApi.slideNodes()[slideIndex].style.opacity = opacity;
+        }
+      });
+    },
+    [],
+  );
+
+  const setTweenFactor = useCallback((emblaApi: EmblaCarouselType) => {
+    tweenFactor.current = TWEEN_FACTOR_BASE * emblaApi.scrollSnapList().length;
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    setTweenFactor(emblaApi);
+    tweenOpacity(emblaApi);
+    emblaApi
+      .on("reInit", setTweenFactor)
+      .on("reInit", tweenOpacity)
+      .on("scroll", tweenOpacity)
+      .on("slideFocus", tweenOpacity);
+  }, [emblaApi, setTweenFactor, tweenOpacity]);
 
   const getButtonColors = (isSelected: boolean) => {
     if (theme === "light") {
@@ -96,5 +162,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
     </section>
   );
 };
+
+Carousel.displayName = "Carousel";
 
 export default memo(Carousel);

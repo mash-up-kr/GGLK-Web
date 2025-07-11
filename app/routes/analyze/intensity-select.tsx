@@ -16,7 +16,7 @@ function IntensitySelectPage({
   field: Path<AnalyzeFormData>;
   onNext: () => void;
 }) {
-  const { watch, setValue } = useFormContext<AnalyzeFormData>();
+  const { setValue, getValues } = useFormContext<AnalyzeFormData>();
 
   const handleSelectIndexChange = useCallback(
     (index: number) => {
@@ -25,9 +25,7 @@ function IntensitySelectPage({
     [field, setValue],
   );
 
-  const selectedIntensity = watch(field);
-
-  // // slides 배열 메모제이션
+  // slides 배열 메모제이션
   const slides = useMemo(
     () =>
       intensities.map((intensity) => ({
@@ -37,6 +35,14 @@ function IntensitySelectPage({
     [], // intensities는 상수이므로 의존성 배열이 비어있음
   );
 
+  const startIndex = useMemo(
+    () =>
+      intensities.findIndex(
+        (intensity) => intensity.value === getValues(field),
+      ) ?? 0,
+    [field, getValues],
+  );
+
   return (
     <div className="flex h-full grow flex-col items-center">
       <div className="flex w-full grow flex-col">
@@ -44,6 +50,7 @@ function IntensitySelectPage({
           slides={slides}
           options={{
             loop: false,
+            startIndex: startIndex,
           }}
           onSelectIndexChange={handleSelectIndexChange}
         />
@@ -65,5 +72,7 @@ function IntensitySelectPage({
     </div>
   );
 }
+
+IntensitySelectPage.displayName = "IntensitySelectPage";
 
 export default memo(IntensitySelectPage);

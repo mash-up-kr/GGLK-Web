@@ -1,15 +1,12 @@
-import { useFormContext } from "react-hook-form";
 import Asterisk from "~/assets/analyze/asterisk.svg?react";
 import Badge from "~/assets/analyze/badge.svg?react";
 import IntensityContainer from "~/assets/analyze/intensity-container.svg?react";
 import SvgContainer from "~/shared/components/svg-container";
 import type { Intensity } from "~/shared/types/intensity";
 import { cn } from "~/shared/utils/classname-utils";
-import type { AnalyzeFormData } from "../analyze";
 
 export default function IntensityItem({ intensity }: { intensity: Intensity }) {
   const { MainIcon, level, value, discription, aiFaceClassName } = intensity;
-  const { watch } = useFormContext<AnalyzeFormData>();
 
   return (
     <SvgContainer

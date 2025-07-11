@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import Header from "~/shared/components/header";
@@ -35,15 +36,19 @@ export default function Analyze() {
   // watch로 intensity 값을 실시간으로 감지
   const selectedIntensity = methods.watch("intensity");
 
+  const backgroundColor = useMemo(
+    () =>
+      intensities.find((intensity) => intensity.value === selectedIntensity)
+        ?.backgroundColor,
+    [selectedIntensity],
+  );
+
   return (
     <>
       <div
         className={cn(
-          "flex h-full flex-col transition-colors duration-700",
-          step === 0 &&
-            intensities.find(
-              (intensity) => intensity.value === selectedIntensity,
-            )?.backgroundColor,
+          "flex h-full flex-col bg-white transition-colors duration-700",
+          step === 0 && backgroundColor,
         )}
       >
         <Header onPrevious={onPrev} />
