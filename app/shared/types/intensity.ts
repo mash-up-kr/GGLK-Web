@@ -9,7 +9,12 @@ export interface Intensity {
   value: "easy" | "normal" | "spicy";
   level: 1 | 2 | 3;
   MainIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  backgroundColor: "bg-ocean" | "bg-forest" | "bg-lava";
+  colorClassName: {
+    text: "text-ocean" | "text-forest" | "text-lava";
+    darkText: "text-ocean-dark" | "text-forest-dark" | "text-lava-dark";
+    background: "bg-ocean" | "bg-forest" | "bg-lava";
+  };
+  Highlight: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   discription: string;
   aiFaceClassName?: string;
   asterisks: {

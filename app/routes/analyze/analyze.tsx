@@ -39,7 +39,7 @@ export default function Analyze() {
   const backgroundColor = useMemo(
     () =>
       intensities.find((intensity) => intensity.value === selectedIntensity)
-        ?.backgroundColor,
+        ?.colorClassName.background,
     [selectedIntensity],
   );
 

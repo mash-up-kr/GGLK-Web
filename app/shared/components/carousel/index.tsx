@@ -121,7 +121,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
       )}
     >
       <div
-        className={`relative mx-auto ${fullWidthSlide ? "h-[670px] w-[375px]" : "w-5/6 min-w-[280px] max-w-md grow border"}`}
+        className={`relative mx-auto ${fullWidthSlide ? "h-[670px] w-[375px]" : "w-5/6 min-w-[280px] max-w-md grow"}`}
       >
         <div className="relative mx-auto h-full" ref={emblaRef}>
           <div className="flex h-full">
