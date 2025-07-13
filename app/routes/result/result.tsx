@@ -46,7 +46,7 @@ const getThemeBackgroundClass = (themeIndex: number): string => {
     case 0:
       return "bg-[#181818]";
     case 2:
-      return "bg-orange-200";
+      return "";
     default:
       return "bg-[#181818]";
   }
@@ -62,7 +62,7 @@ export default function ResultPage() {
   const [selectedThemeIndex, setSelectedThemeIndex] = useControllableState({
     prop: undefined,
     defaultProp: 0,
-    onChange: (index) => {
+    onChange: (index: number) => {
       console.log("테마 변경:", index);
     },
   });
@@ -144,6 +144,15 @@ export default function ResultPage() {
             src="/png/theme2.png"
             className="h-full w-full"
             alt="theme2-background"
+          />
+        </div>
+      )}
+      {selectedThemeIndex === 2 && (
+        <div className="absolute inset-0 flex items-center justify-center bg-[#FFFFFF]">
+          <img
+            src="/png/theme3.png"
+            className="z-10 h-full w-full"
+            alt="theme3-background"
           />
         </div>
       )}
