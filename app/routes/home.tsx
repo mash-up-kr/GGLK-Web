@@ -18,6 +18,7 @@ import LogoOcean from "~/assets/logo-ocean.svg?react";
 import LogoWhite from "~/assets/logo-white.svg?react";
 import PaperTextureLayer from "~/shared/components/paper-texture-layer";
 import { useInterval } from "~/shared/hooks/use-interval";
+import { useKakaoScript } from "~/shared/hooks/use-kakao-script";
 import { cn } from "~/shared/utils/classname-utils";
 
 type HomeHeaderProps = {
@@ -69,6 +70,8 @@ type HomeNavMenuProps = {
 };
 
 const HomeNavMenu = ({ backgroundColor }: HomeNavMenuProps) => {
+  const { authorize } = useKakaoScript();
+
   return (
     <>
       <div
@@ -78,7 +81,9 @@ const HomeNavMenu = ({ backgroundColor }: HomeNavMenuProps) => {
         <PaperTextureLayer />
         <div className="flex flex-col space-y-2.5 py-10 font-extrabold font-sf text-6xl text-white [&>a]:leading-[1.2]">
           <Link to="/">Home</Link>
-          <Link to="#">Login</Link>
+          <Link to="#" onClick={() => authorize()}>
+            Login
+          </Link>
           <Link to="#">Profile</Link>
           <Link to="#">Contact</Link>
         </div>

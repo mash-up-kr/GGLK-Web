@@ -1,17 +1,21 @@
 import { useEffect } from "react";
+
 import { useCookies } from "react-cookie";
 import { useNavigate, useSearchParams } from "react-router";
 import { z } from "zod";
-import type { KakakoLoginRequestDto } from "~/api/model";
-import { customInstance } from "~/api/mutator/custom-instance";
+import { useAuthControllerKakaoLoginHandler } from "~/api/endpoints/api";
+import { AUTH_KEY } from "~/shared/constants";
 
 export default function Kakao() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [_, setCookie] = useCookies();
 
+  const kakaoLoginHandler = useAuthControllerKakaoLoginHandler();
+
   const code = searchParams.get("code");
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const codeParseResult = z.string().safeParse(code);
 
@@ -19,37 +23,31 @@ export default function Kakao() {
       throw new Error(codeParseResult.error.message);
     }
 
-    /**
-     * @TODO
-     * error 처리 위치 option, 추후 논의 후 결정 및 통일 필요
-     * 1. 사용하는 곳
-     * 2. axios interceptor
-     */
-    (async () => {
-      const data: KakakoLoginRequestDto = {
-        code: codeParseResult.data,
-        redirectUri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
-      };
+    kakaoLoginHandler.mutate(
+      {
+        data: {
+          code: codeParseResult.data,
+          redirectUri: `${window.location.origin}/auth/kakao`,
+        },
+      },
+      {
+        onSuccess: (data: unknown) => {
+          const dataParseResult = z
+            .object({ data: z.object({ token: z.string() }) })
+            .safeParse(data);
 
-      try {
-        const token = await customInstance<{ data: { token: string } }>({
-          method: "POST",
-          url: "/auth/kakao",
-          data,
-        });
-
-        setCookie("Authorization", token.data.token);
-
-        navigate("/", {
-          replace: true,
-        });
-      } catch (e) {
-        if (e instanceof Error) {
-          console.error(e.message);
-        }
-      }
-    })();
-  }, [code, setCookie, navigate]);
+          if (dataParseResult.success) {
+            setCookie(AUTH_KEY, dataParseResult.data.data.token);
+          }
+        },
+        onSettled: () => {
+          navigate("/", {
+            replace: true,
+          });
+        },
+      },
+    );
+  }, [code, navigate, setCookie]);
 
   return null;
 }
