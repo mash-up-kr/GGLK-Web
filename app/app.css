@@ -223,3 +223,7 @@ dialog::backdrop {
 dialog {
   margin: auto;
 }
+dialog::backdrop {
+  background-color: black;
+  opacity: 0.6;
+}

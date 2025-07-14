@@ -54,7 +54,10 @@ function Close({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Content({ children }: { children: React.ReactNode }) {
+function Content({
+  children,
+  className,
+}: { children: React.ReactNode; className?: string }) {
   const { isOpen } = useModal();
   const dialogRef = useRef<ComponentRef<typeof motion.dialog>>(null);
 
@@ -80,6 +83,7 @@ function Content({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className={className}
             transition={{ duration: 0.25, ease: "easeInOut" }}
           >
             {children}
