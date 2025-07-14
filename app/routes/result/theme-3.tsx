@@ -8,9 +8,19 @@ export default function Theme3({ slides, slideIndex }: CarouselItemProps) {
       </div>
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <img
-          src="/png/photobooth.png"
+          src="/png/photoboothLarge.png"
           className="h-[420px] w-[320px] object-contain"
-          alt="photobooth"
+          alt="photoboothLarge"
+        />
+      </div>
+      <div className="absolute bottom-10 z-50 w-[257px] translate-x-1/2">
+        <img src="/png/photoboothSmall.png" alt="photoboothSmall" />
+      </div>
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <img
+          src="/png/photoboothSmall.png"
+          className="h-[420px] w-[320px] object-contain"
+          alt="photoboothSmall"
         />
       </div>
 
@@ -25,26 +35,19 @@ export default function Theme3({ slides, slideIndex }: CarouselItemProps) {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-32 left-16 z-20">
+      <div className="absolute bottom-20 left-30 z-20">
         <img
-          src="/png/iconFile.png"
-          className="h-[40px] w-[40px]"
-          alt="iconFile"
+          src="/png/iconFolder.png"
+          className="h-[52px] w-[48px]"
+          alt="iconFolder"
         />
       </div>
 
-      <div className="absolute bottom-28 left-20 z-20">
+      <div className="absolute bottom-30 left-13 z-20">
         <img
-          src="/png/iconFile.png"
-          className="h-[35px] w-[35px]"
-          alt="iconFile"
-        />
-      </div>
-      <div className="absolute right-8 bottom-36 z-5">
-        <img
-          src="/png/iconFile.png"
-          className="h-[30px] w-[30px]"
-          alt="iconFile"
+          src="/png/iconFolder.png"
+          className="h-[52px] w-[48px]"
+          alt="iconFolder"
         />
       </div>
 
