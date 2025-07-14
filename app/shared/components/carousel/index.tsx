@@ -4,6 +4,7 @@ import type {
   EmblaOptionsType,
 } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
+import type { ReactNode } from "react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "~/shared/utils/classname-utils";
 
@@ -17,12 +18,12 @@ export type CarouselSlide = {
   image?: string;
   alt?: string;
   children?: React.ReactNode;
+  themeComponent?: (slides: CarouselSlide[], slideIndex: number) => ReactNode;
 };
 
 type CarouselProps = {
   slides: CarouselSlide[];
   options?: EmblaOptionsType;
-  // 이미지만 보이는 모드에서는 false, 화살표가 필요한 모드에서는 true로 설정해서 사용해주세요!
   fullWidthSlide?: boolean;
   onSelectIndexChange?: (index: number) => void;
   theme?: "light" | "dark";
@@ -133,15 +134,18 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                 {slide.children ? (
                   <div className="h-9/10">{slide.children}</div>
                 ) : (
-                  <div className="relative">
-                    <img
-                      className={`h-full w-full object-cover transition-all duration-300 ${
-                        selectedIndex === index ? "opacity-100" : "opacity-60"
-                      }
-                  `}
-                      src={slide.image}
-                      alt={slide.alt}
-                    />
+                  <div className="relative h-full">
+                    {slide.themeComponent ? (
+                      slide.themeComponent(slides, index)
+                    ) : (
+                      <img
+                        className={`h-full w-full object-cover transition-all duration-300 ${
+                          selectedIndex === index ? "opacity-100" : "opacity-60"
+                        }`}
+                        src={slide.image}
+                        alt={slide.alt}
+                      />
+                    )}
                   </div>
                 )}
               </div>
@@ -153,7 +157,9 @@ const Carousel: React.FC<CarouselProps> = (props) => {
             <button
               type="button"
               key={slide.id}
-              onClick={() => emblaApi?.scrollTo(index)}
+              onClick={() => {
+                emblaApi?.scrollTo(index);
+              }}
               className={`h-2 w-2 rounded-full transition-colors duration-200 ${getButtonColors(selectedIndex === index)}`}
             />
           ))}
