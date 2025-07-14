@@ -1,9 +1,15 @@
 import Modal from "../modal";
 
-export default function ImageSelectGuideModal() {
+interface ImageSelectGuideModalProps {
+  triggerComponent: React.ReactNode;
+}
+
+export default function ImageSelectGuideModal({
+  triggerComponent,
+}: ImageSelectGuideModalProps) {
   return (
     <Modal.Root>
-      <Modal.Trigger>모달 열기</Modal.Trigger>
+      <Modal.Trigger>{triggerComponent}</Modal.Trigger>
       <Modal.Content>
         <div className="flex h-[519px] w-[335px] flex-col">
           <div className="p-4">
