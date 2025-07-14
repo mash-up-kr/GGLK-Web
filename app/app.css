@@ -191,6 +191,7 @@
   --color-stone-700: #44403c;
   --color-stone-800: #292524;
   --color-stone-900: #1c1917;
+  --color-grayscale: #d9d9d9;
 
   --animate-spin-slow: spin 6s linear infinite;
   --animate-rotate-snap: rotate-snap 1.1s steps(1, end) infinite;
