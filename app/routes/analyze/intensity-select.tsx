@@ -51,6 +51,7 @@ function IntensitySelectPage({
             loop: false,
             startIndex: startIndex,
           }}
+          smoothTransition
           onSelectIndexChange={handleSelectIndexChange}
         />
       </div>

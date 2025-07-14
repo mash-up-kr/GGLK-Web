@@ -27,10 +27,11 @@ type CarouselProps = {
   fullWidthSlide?: boolean;
   onSelectIndexChange?: (index: number) => void;
   theme?: "light" | "dark";
+  smoothTransition?: boolean;
 };
 
 const Carousel: React.FC<CarouselProps> = (props) => {
-  const { slides, options, fullWidthSlide } = props;
+  const { slides, options, fullWidthSlide, smoothTransition = false } = props;
   const theme = props.theme ?? "dark";
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -99,14 +100,16 @@ const Carousel: React.FC<CarouselProps> = (props) => {
   useEffect(() => {
     if (!emblaApi) return;
 
-    setTweenFactor(emblaApi);
-    tweenOpacity(emblaApi);
-    emblaApi
-      .on("reInit", setTweenFactor)
-      .on("reInit", tweenOpacity)
-      .on("scroll", tweenOpacity)
-      .on("slideFocus", tweenOpacity);
-  }, [emblaApi, setTweenFactor, tweenOpacity]);
+    if (smoothTransition) {
+      setTweenFactor(emblaApi);
+      tweenOpacity(emblaApi);
+      emblaApi
+        .on("reInit", setTweenFactor)
+        .on("reInit", tweenOpacity)
+        .on("scroll", tweenOpacity)
+        .on("slideFocus", tweenOpacity);
+    }
+  }, [emblaApi, setTweenFactor, tweenOpacity, smoothTransition]);
 
   const getButtonColors = (isSelected: boolean) => {
     if (theme === "light") {
@@ -122,13 +125,28 @@ const Carousel: React.FC<CarouselProps> = (props) => {
       )}
     >
       <div
-        className={`relative mx-auto ${fullWidthSlide ? "h-[670px] w-[375px]" : "w-5/6 min-w-[280px] max-w-md grow"}`}
+        className={cn(
+          "relative mx-auto",
+          fullWidthSlide
+            ? "h-[670px] w-[375px]"
+            : "w-5/6 min-w-[280px] max-w-md grow",
+        )}
       >
-        <div className="relative mx-auto h-full" ref={emblaRef}>
+        <div
+          className={cn(
+            fullWidthSlide ? "h-full overflow-hidden" : "relative h-full",
+          )}
+          ref={emblaRef}
+        >
           <div className="flex h-full">
             {slides.map((slide, index) => (
               <div
-                className={`flex-none ${fullWidthSlide ? "h-full w-full flex-none" : "flex w-full items-center justify-center"} min-w-0 transform-gpu`}
+                className={cn(
+                  "w-full min-w-0 flex-none transform-gpu",
+                  fullWidthSlide
+                    ? "h-full"
+                    : "flex w-full items-center justify-center",
+                )}
                 key={slide.id}
               >
                 {slide.children ? (
@@ -139,9 +157,12 @@ const Carousel: React.FC<CarouselProps> = (props) => {
                       slide.themeComponent(slides, index)
                     ) : (
                       <img
-                        className={`h-full w-full object-cover transition-all duration-300 ${
-                          selectedIndex === index ? "opacity-100" : "opacity-60"
-                        }`}
+                        className={cn(
+                          "h-full w-full object-cover transition-all duration-300",
+                          selectedIndex === index
+                            ? "opacity-100"
+                            : "opacity-60",
+                        )}
                         src={slide.image}
                         alt={slide.alt}
                       />
@@ -160,7 +181,10 @@ const Carousel: React.FC<CarouselProps> = (props) => {
               onClick={() => {
                 emblaApi?.scrollTo(index);
               }}
-              className={`h-2 w-2 rounded-full transition-colors duration-200 ${getButtonColors(selectedIndex === index)}`}
+              className={cn(
+                "h-2 w-2 rounded-full transition-colors duration-200",
+                getButtonColors(selectedIndex === index),
+              )}
             />
           ))}
         </div>

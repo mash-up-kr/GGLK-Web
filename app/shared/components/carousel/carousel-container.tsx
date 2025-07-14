@@ -7,6 +7,7 @@ type CarouselContainerProps = {
   slides: CarouselSlide[];
   options?: EmblaOptionsType;
   fullWidthSlide?: boolean;
+  smoothTransition?: boolean;
   onSelectIndexChange?: (index: number) => void;
 };
 
@@ -14,6 +15,7 @@ const CarouselContainer: React.FC<CarouselContainerProps> = ({
   slides,
   options = { loop: true },
   fullWidthSlide,
+  smoothTransition,
   onSelectIndexChange,
 }) => {
   return (
@@ -23,6 +25,7 @@ const CarouselContainer: React.FC<CarouselContainerProps> = ({
         slides={slides}
         options={options}
         fullWidthSlide={fullWidthSlide}
+        smoothTransition={smoothTransition}
         onSelectIndexChange={onSelectIndexChange}
       />
     </div>
