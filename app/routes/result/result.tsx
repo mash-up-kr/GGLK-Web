@@ -5,7 +5,7 @@ import {
   useEvaluationControllerCheckIfGuestUserUseChance,
   useEvaluationControllerGetEvaluationById,
 } from "~/api/endpoints/api";
-import type { EvaluationItemResponseDto } from "~/api/model";
+import type { EvaluationItemResponseDto, Picture } from "~/api/model";
 import BottomSheet, {
   type BottomSheetAction,
   BOTTOM_SHEET_HEIGHT,
@@ -42,35 +42,76 @@ const mockEvaluationData: EvaluationItemResponseDto = {
 const createThemeSlides = (
   evaluationData?: EvaluationItemResponseDto,
 ): CarouselSlide[] => {
-  const dataToUse = evaluationData || mockEvaluationData;
+  const roastedResult = evaluationData || mockEvaluationData;
+
+  // API 데이터에서 이미지 URL을 가져오거나 기본값 사용
+  const getImageUrl = (index: number) => {
+    if (
+      roastedResult?.picture &&
+      typeof roastedResult.picture === "object" &&
+      "url" in roastedResult.picture
+    ) {
+      const picture = roastedResult.picture as Picture;
+      const url = picture.url;
+      if (typeof url === "string") {
+        return url;
+      }
+    }
+    // FIXME: 기본 이미지들 (API 데이터가 없을 때 사용)
+    const defaultImages = ["/png/1.png", "/png/2.png", "/png/3.png"];
+    return defaultImages[index] || "/png/1.png";
+  };
+
+  const getImageAlt = () => {
+    if (
+      roastedResult?.picture &&
+      typeof roastedResult.picture === "object" &&
+      "alt" in roastedResult.picture
+    ) {
+      const picture = roastedResult.picture as Picture;
+      const alt = picture.alt;
+      if (typeof alt === "string") {
+        return alt;
+      }
+    }
+    return "theme-image";
+  };
 
   return [
     {
       id: 0,
-      image: "/png/1.png",
-      alt: "theme-1",
+      image: getImageUrl(0),
+      alt: getImageAlt(),
       themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
         <Theme1
           slides={slides}
           slideIndex={slideIndex}
-          evaluationData={dataToUse}
+          evaluationData={roastedResult}
         />
       ),
     },
     {
       id: 1,
-      image: "/png/2.png",
-      alt: "theme-2",
+      image: getImageUrl(1),
+      alt: getImageAlt(),
       themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
-        <Theme2 slides={slides} slideIndex={slideIndex} />
+        <Theme2
+          slides={slides}
+          slideIndex={slideIndex}
+          evaluationData={roastedResult}
+        />
       ),
     },
     {
       id: 2,
-      image: "/png/3.png",
-      alt: "theme-3",
+      image: getImageUrl(2),
+      alt: getImageAlt(),
       themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
-        <Theme3 slides={slides} slideIndex={slideIndex} />
+        <Theme3
+          slides={slides}
+          slideIndex={slideIndex}
+          evaluationData={roastedResult}
+        />
       ),
     },
   ];
