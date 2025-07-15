@@ -11,5 +11,6 @@ export * from "./getUserResponseDto";
 export * from "./kakakoLoginRequestDto";
 export * from "./ootdRoastingRequestDto";
 export * from "./picture";
+export * from "./pictureControllerUploadPicture201";
 export * from "./pictureControllerUploadPictureBody";
 export * from "./tokenResponseDto";

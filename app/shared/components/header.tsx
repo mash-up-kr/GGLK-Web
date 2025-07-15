@@ -30,7 +30,7 @@ export default function Header({ onPrevious, className }: HeaderProps) {
             (!onPrevious || isMenuOpen) && "invisible",
           )}
         >
-          <ChevronLeft className="text-white" />
+          <ChevronLeft />
         </button>
         {isMenuOpen ? (
           <button
@@ -46,7 +46,7 @@ export default function Header({ onPrevious, className }: HeaderProps) {
             onClick={() => setIsMenuOpen((prev) => !prev)}
             className="cursor-pointer"
           >
-            <HamburgerMenu className="text-white" />
+            <HamburgerMenu />
           </button>
         )}
       </header>

@@ -21,6 +21,7 @@
   --color-forest-dark: #00682c;
   --color-ocean: #1c4ae4;
   --color-ocean-dark: #002393;
+  --color-grayscale: #d9d9d9;
 
   /* FIXME: oklch 색상을 hex 색상으로 재정의 (html2canvas 호환성) */
   --color-gray-50: #f9fafb;
@@ -221,4 +222,8 @@ dialog::backdrop {
 /* margin: auto 추가로 모달 가운데 정렬 (tailwind preflight 때문에 추가) */
 dialog {
   margin: auto;
+}
+dialog::backdrop {
+  background-color: black;
+  opacity: 0.6;
 }

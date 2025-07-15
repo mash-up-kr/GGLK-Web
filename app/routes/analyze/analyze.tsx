@@ -11,8 +11,8 @@ import ImageStudioPage from "./image-studio";
 import IntensitySelectPage from "./intensity-select";
 
 const analyzeSchema = z.object({
-  intensity: z.enum(["easy", "normal", "spicy"]),
-  image: z.string().nonempty("이미지를 선택해주세요"),
+  spicyLevel: z.enum(["easy", "normal", "spicy"]),
+  imageId: z.number(),
 });
 
 export type AnalyzeFormData = z.infer<typeof analyzeSchema>;
@@ -34,7 +34,7 @@ export default function Analyze() {
   });
 
   // watch로 intensity 값을 실시간으로 감지
-  const selectedIntensity = methods.watch("intensity");
+  const selectedIntensity = methods.watch("spicyLevel");
 
   const backgroundColor = useMemo(
     () =>
@@ -47,21 +47,39 @@ export default function Analyze() {
     <>
       <div
         className={cn(
-          "flex h-full flex-col bg-white transition-colors duration-700",
+          "flex h-full grow flex-col bg-grayscale text-black transition-colors duration-700",
           step === 0 && backgroundColor,
         )}
       >
-        <Header onPrevious={onPrev} />
+        <Header
+          onPrevious={onPrev}
+          className={cn(step === 0 ? "text-white" : "")}
+        />
 
         <FormProvider {...methods}>
           <Funnel className="grow">
-            <IntensitySelectPage field="intensity" onNext={onNext} />
-            <ImageStudioPage field="image" onNext={onNext} />
+            <IntensitySelectPage field="spicyLevel" onNext={onNext} />
+            <ImageStudioPage field="imageId" onNext={onNext} />
           </Funnel>
         </FormProvider>
 
         <PaperTextureLayer />
       </div>
+    </>
+  );
+}
+
+function ResultContent() {
+  return (
+    <>
+      <img
+        src="/png/ai-face/spicy.png"
+        alt="ai-character"
+        className="size-32.5 xs:size-38 animate-rotate-snap"
+      />
+      <p className="text-center font-bold font-sf text-lg">
+        이제 곧 결과가 나올거야 <br /> 잠시만 기다리라구!
+      </p>
     </>
   );
 }
