@@ -10,9 +10,24 @@ import { cn } from "~/shared/utils/classname-utils";
 import ImageStudioPage from "./image-studio";
 import IntensitySelectPage from "./intensity-select";
 
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+];
+
 const analyzeSchema = z.object({
   intensity: z.enum(["easy", "normal", "spicy"]),
-  image: z.string().nonempty("이미지를 선택해주세요"),
+  image: z
+    .any()
+    .refine((files) => files && files.length > 0, "이미지를 선택해주세요.")
+    .refine(
+      (files) => files && ACCEPTED_IMAGE_TYPES.includes(files[0]?.type),
+      "Only .jpg, .jpeg, .png, .heic, .heif and .webp formats are supported.",
+    ),
 });
 
 export type AnalyzeFormData = z.infer<typeof analyzeSchema>;
@@ -47,11 +62,14 @@ export default function Analyze() {
     <>
       <div
         className={cn(
-          "flex h-full flex-col bg-grayscale transition-colors duration-700",
+          "flex grow flex-col bg-grayscale text-black transition-colors duration-700",
           step === 0 && backgroundColor,
         )}
       >
-        <Header onPrevious={onPrev} />
+        <Header
+          onPrevious={onPrev}
+          className={cn(step === 0 ? "text-white" : "")}
+        />
 
         <FormProvider {...methods}>
           <Funnel className="grow">
