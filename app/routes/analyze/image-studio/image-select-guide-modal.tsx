@@ -25,22 +25,24 @@ const guideTexts = [
 interface ImageSelectGuideModalProps {
   triggerComponent: React.ReactNode;
   onStart: () => Promise<void> | void;
+  closeModalRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 export default function ImageSelectGuideModal({
   triggerComponent,
   onStart,
+  closeModalRef,
 }: ImageSelectGuideModalProps) {
   return (
     <Modal.Root>
       <Modal.Trigger asChild>{triggerComponent}</Modal.Trigger>
-      <Modal.Content className="w-[335px] bg-transparent">
+      <Modal.Content className="flex w-[326px] items-center justify-center bg-transparent">
         <SvgContainer
           SvgComponent={IntensityContainer}
-          className="min-w-[280px] select-none"
+          className="xs:w-full select-none"
           isKeepRatio
         >
-          <div className="flex h-full flex-col items-center justify-center space-y-8 xs:space-y-12 p-6 font-sf">
+          <div className="flex h-full flex-col items-center justify-between break-keep px-8 py-14 font-sf">
             <div className="flex flex-col items-center font-bold text-lg xs:text-xl ">
               <div className="flex items-center space-x-2">
                 <ExclamationMark className="size-4 xs:size-5" />
@@ -61,12 +63,14 @@ export default function ImageSelectGuideModal({
               ))}
             </div>
 
-            <Modal.Close onClick={onStart}>
+            <button type="button" onClick={onStart}>
               <div className="font-bold text-base xs:text-lg">
                 진짜 시작하기
               </div>
               <Underline />
-            </Modal.Close>
+            </button>
+
+            <Modal.Close ref={closeModalRef} />
           </div>
         </SvgContainer>
       </Modal.Content>
