@@ -5,7 +5,7 @@
     "preinstall": "npx only-allow pnpm",
     "postinstall": "[ -n \"$CI\" ] || lefthook install",
     "commit": "cz",
-    "orval": "orval",
+    "orval": "orval && biome check --write --unsafe app/api/",
     "build": "ls-lint && react-router build",
     "dev": "ls-lint && react-router dev",
     "start": "ls-lint && react-router-serve ./build/server/index.js",
