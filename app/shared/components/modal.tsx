@@ -1,5 +1,13 @@
 import { AnimatePresence, motion } from "motion/react";
-import { type ComponentRef, useEffect, useRef, useState } from "react";
+import {
+  type ComponentProps,
+  type ComponentRef,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createContext } from "../contexts/create-context";
 import ReactPortal from "./react-portal";
 
@@ -28,8 +36,24 @@ function Root({ children, defaultOpen = false }: RootProps) {
   );
 }
 
-function Trigger({ children }: { children: React.ReactNode }) {
+function Trigger({
+  children,
+  asChild,
+}: { children: React.ReactNode; asChild?: boolean }) {
   const { setIsOpen } = useModal();
+  if (asChild && isValidElement(children)) {
+    const childElement = children as React.ReactElement<{
+      onClick?: (e: React.MouseEvent) => void;
+    }>;
+    return cloneElement(childElement, {
+      onClick: (e: React.MouseEvent) => {
+        if (typeof childElement.props.onClick === "function") {
+          childElement.props.onClick(e);
+        }
+        setIsOpen(true);
+      },
+    });
+  }
   return (
     <button
       type="button"
@@ -41,12 +65,18 @@ function Trigger({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Close({ children }: { children: React.ReactNode }) {
+function Close({ children, onClick, ...rest }: ComponentProps<"button">) {
   const { setIsOpen } = useModal();
   return (
     <button
       type="button"
-      onClick={() => setIsOpen(false)}
+      {...rest}
+      onClick={(e) => {
+        if (typeof onClick === "function") {
+          onClick(e);
+        }
+        setIsOpen(false);
+      }}
       className="cursor-pointer"
     >
       {children}
