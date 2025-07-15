@@ -1,11 +1,16 @@
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useEvaluationControllerCheckIfGuestUserUseChance } from "~/api/endpoints/api";
 import BottomSheet, {
   type BottomSheetAction,
+  BOTTOM_SHEET_HEIGHT,
 } from "~/shared/components/bottomSheet/bottom-sheet";
 import type { CarouselSlide } from "~/shared/components/carousel";
 import CarouselContainer from "~/shared/components/carousel/carousel-container";
+import { useAuthentication } from "~/shared/hooks/use-authentication";
+import { useKakaoScript } from "~/shared/hooks/use-kakao-script";
+import { toast } from "~/shared/stores/toast-store";
 import ReanalyzeContent from "./reanalyze-content";
 import ShareContent from "./share-content";
 import Theme1 from "./theme-1";
@@ -54,6 +59,10 @@ const getThemeBackgroundClass = (themeIndex: number): string => {
 
 export default function ResultPage() {
   const navigate = useNavigate();
+  const { authorize, sendDefault } = useKakaoScript();
+  const { isAuthenticated } = useAuthentication();
+  const guestUsedCheck = useEvaluationControllerCheckIfGuestUserUseChance();
+
   const [contentType, setContentType] = useState<"share" | "reanalyze">(
     "share",
   );
@@ -73,26 +82,94 @@ export default function ResultPage() {
   };
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
   const handleCopyLink = async () => {
     try {
       const homeUrl = `${window.location.origin}/`; // 홈 URL
       await navigator.clipboard.writeText(homeUrl);
-      alert("홈 링크 복사됨");
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.success("링크 복사 완료!", {
+        offset: { y: bottomSheetHeight + 4 },
+      });
       console.log("copy!");
     } catch (err) {
-      alert("링크 복사 실패 ㅠ");
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.error("링크 복사 실패 ㅠ", {
+        offset: { y: bottomSheetHeight + 4 },
+      });
       console.error(err);
     }
   };
 
-  // FIXME: 카카오톡 공유 로직
+  // 카카오톡 공유 로직
   const handleKakaoShare = async () => {
     try {
-      // TODO
-      console.log("카카오톡 공유 func 실행");
-      alert("카카오톡 공유");
+      // mock data
+      const shareData = {
+        objectType: "feed" as const,
+        content: {
+          title: "OOTD 로스팅 결과",
+          description: "내 스타일을 로스팅해보세요!",
+          imageUrl: `${window.location.origin}/png/og-image-800-400.png`,
+          link: {
+            webUrl: window.location.origin,
+            mobileWebUrl: window.location.origin,
+          },
+        },
+        buttons: [
+          {
+            title: "분석하기",
+            link: {
+              webUrl: window.location.origin,
+              mobileWebUrl: window.location.origin,
+            },
+          },
+        ],
+      };
+
+      sendDefault(shareData);
     } catch (err) {
       console.error("카카오톡 공유 실패:", err);
+    }
+  };
+
+  // 카카오 로그인 처리
+  const handleKakaoLogin = async () => {
+    try {
+      authorize();
+    } catch (error) {
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.error("카카오 로그인 실패", {
+        offset: { y: bottomSheetHeight + 4 },
+      });
+      console.error("카카오 로그인 실패:", error);
+    }
+  };
+
+  // 다시하기 버튼 클릭 시 게스트 사용 여부 확인하게
+  const handleReanalyze = async () => {
+    if (isAuthenticated) {
+      // 로그인된 사용자는 바로 홈으로 이동
+      navigate("/");
+      return;
+    }
+
+    // 게스트 사용자라면 사용 여부 확인하게
+    try {
+      guestUsedCheck.refetch().then((result) => {
+        if (result.data) {
+          // 이미 기회를 사용한 경우 - 카카오 로그인 필요
+          setContentType("reanalyze");
+          setIsBottomSheetOpen(true);
+        } else {
+          // 아직 기회가 남아있는 경우 - 홈으로 이동
+          navigate("/");
+        }
+      });
+    } catch (error) {
+      console.error("게스트 사용 여부 확인 실패:", error);
+      // 에러 발생 시 홈으로 이동
+      navigate("/");
     }
   };
 
@@ -101,8 +178,13 @@ export default function ResultPage() {
     try {
       // TODO
       console.log("이미지 저장 func 실행");
-      alert("이미지 저장");
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.success("이미지 저장 완료!", {
+        offset: { y: bottomSheetHeight + 4 },
+      });
     } catch (err) {
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.error("이미지 저장 실패", { offset: { y: bottomSheetHeight + 4 } });
       console.error("이미지 저장 실패:", err);
     }
   };
@@ -112,14 +194,14 @@ export default function ResultPage() {
     {
       id: "copy-link",
       label: "링크 복사",
-      icon: "/public/png/iconShare.png",
+      icon: "/png/IconShare.png",
       onClick: handleCopyLink,
       disabled: false,
     },
     {
       id: "kakao-share",
       label: "카카오톡",
-      icon: "/public/png/iconKaKaoTalk.png",
+      icon: "/png/IconKaKaoTalk.png",
       onClick: handleKakaoShare,
       disabled: false,
     },
@@ -130,7 +212,7 @@ export default function ResultPage() {
     {
       id: "save-image",
       label: "이미지 저장",
-      icon: "/public/png/iconSave.png",
+      icon: "/png/IconSave.png",
       onClick: handleSaveImage,
       disabled: false,
     },
@@ -171,7 +253,7 @@ export default function ResultPage() {
           <button
             type="button"
             onClick={() => setIsBottomSheetOpen(true)}
-            className="flex h-[46px] w-[161px] items-center justify-center rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
+            className="flex h-[46px] w-[161px] cursor-pointer items-center justify-center rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
           >
             <img
               src="/png/IconShare2.png"
@@ -191,7 +273,7 @@ export default function ResultPage() {
               />
             ) : (
               <ReanalyzeContent
-                onKakaoLogin={() => console.log("카카오 로그인 로직")} //handleKakaoLogin
+                onKakaoLogin={handleKakaoLogin}
                 onClose={() => setIsBottomSheetOpen(false)}
               />
             )}
@@ -199,8 +281,8 @@ export default function ResultPage() {
 
           <button
             type="button"
-            onClick={() => navigate("/")}
-            className="h-[46px] w-[161px] rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
+            onClick={handleReanalyze}
+            className="h-[46px] w-[161px] cursor-pointer rounded-tr-xl rounded-bl-xl bg-[#373737] py-3 text-sm text-white"
           >
             다시하기
           </button>
