@@ -25,6 +25,7 @@ export default function ImageStudioPage({
   const {
     mutate: uploadPicture,
     isPending,
+    isError,
     data: pictureData,
   } = usePictureControllerUploadPicture();
 
@@ -103,6 +104,7 @@ export default function ImageStudioPage({
           <PreviewContent
             isLoading={isPending}
             isConverting={isConverting}
+            isError={isError}
             imageRef={imageRef}
             placeholderImageUrl={tempImageUrl}
             imgSrc={pictureData?.data?.url}

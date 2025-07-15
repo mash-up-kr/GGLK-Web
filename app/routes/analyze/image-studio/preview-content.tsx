@@ -1,4 +1,5 @@
 import Lottie from "react-lottie";
+import ExclamationMark from "~/assets/image-studio/exclamation-mark.svg?react";
 import loadingLottie from "~/assets/loading.json";
 import SpeechBubbleButton from "~/shared/components/buttons/speech-bubble-button";
 import { cn } from "~/shared/utils/classname-utils";
@@ -6,6 +7,7 @@ import { cn } from "~/shared/utils/classname-utils";
 export default function PreviewContent({
   isLoading,
   isConverting,
+  isError,
   placeholderImageUrl,
   imageRef,
   imgSrc,
@@ -13,30 +15,51 @@ export default function PreviewContent({
 }: {
   isLoading: boolean;
   isConverting: boolean;
+  isError: boolean;
   placeholderImageUrl: string | null;
   imageRef: React.RefObject<HTMLInputElement | null>;
   imgSrc?: string;
   onNext: () => void;
 }) {
-  const isLoadingOrNoImage = isLoading || !imgSrc;
   return (
     <>
       <p className="font-bold font-sf text-xl">이 사진으로 평가받을 거 맞지?</p>
       <div className="flex items-center justify-center [@media(max-height:768px)]:grow">
-        <div className="relative flex h-full w-full items-center justify-center ">
+        <div className="relative flex h-full w-full items-center justify-center">
           {isConverting ? (
-            <div className="aspect-square w-[70vw] border bg-black/10 sm:w-3/5" />
+            <div className="flex size-50 items-center justify-center">
+              <Lottie
+                options={{
+                  loop: true,
+                  autoplay: true,
+                  animationData: loadingLottie,
+                }}
+                height={100}
+                width={100}
+              />
+            </div>
           ) : (
             <img
-              src={placeholderImageUrl ?? ""}
+              src={imgSrc ?? placeholderImageUrl ?? ""}
               alt="preview"
               className={cn(
                 "w-4/5 sm:w-3/5",
-                isLoadingOrNoImage ? "opacity-80 brightness-60" : "border",
+                isLoading || !imgSrc ? "opacity-80 brightness-60" : "border",
               )}
             />
           )}
-          {isLoadingOrNoImage && (
+          {isError && (
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 z-50">
+              <div className="flex space-x-2">
+                <ExclamationMark className="size-7" />
+                <p className="text-center font-bold font-sf text-xl">
+                  업로드 실패
+                </p>
+              </div>
+            </div>
+          )}
+
+          {isLoading && (
             <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 z-50 ">
               <Lottie
                 options={{
