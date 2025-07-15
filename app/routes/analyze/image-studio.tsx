@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { type Path, useFormContext } from "react-hook-form";
 import { usePictureControllerUploadPicture } from "~/api/endpoints/api";
-import { useAuthentication } from "~/shared/hooks/use-authentication";
 import { toast } from "~/shared/stores/toast-store";
 import { convertHeicToJpeg, isHeicFile } from "~/shared/utils/image-utils";
 import type { AnalyzeFormData } from "./analyze";
@@ -21,8 +20,8 @@ export default function ImageStudioPage({
   const closeModalRef = useRef<HTMLButtonElement>(null);
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
   const [isConverting, setIsConverting] = useState(false);
-  // FIXME: 게스트 토큰 쿠키 생성 미들웨어로 변경
-  const { isAuthenticated } = useAuthentication();
+  // // FIXME: 게스트 토큰 쿠키 생성 미들웨어로 변경
+  // const { isAuthenticated } = useAuthentication();
 
   const {
     mutate: uploadPicture,
