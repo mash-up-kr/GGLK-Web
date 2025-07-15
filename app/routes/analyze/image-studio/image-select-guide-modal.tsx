@@ -63,7 +63,7 @@ export default function ImageSelectGuideModal({
               ))}
             </div>
 
-            <button type="button" onClick={onStart}>
+            <button type="button" onClick={onStart} className="cursor-pointer">
               <div className="font-bold text-base xs:text-lg">
                 진짜 시작하기
               </div>
