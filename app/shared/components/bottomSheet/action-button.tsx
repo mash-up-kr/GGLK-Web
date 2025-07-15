@@ -23,7 +23,7 @@ export function ActionButton({ action, variant }: ActionButtonProps) {
         type="button"
         onClick={handleClick}
         disabled={action.disabled}
-        className="flex flex-col items-center gap-2 rounded-lg p-2 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex cursor-pointer flex-col items-center gap-2 rounded-lg p-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {action.icon && (
           <img src={action.icon} alt={action.label} className="h-12 w-12" />
@@ -38,7 +38,7 @@ export function ActionButton({ action, variant }: ActionButtonProps) {
       type="button"
       onClick={handleClick}
       disabled={action.disabled}
-      className="w-full rounded-lg px-[16px] text-start font-medium text-[#B9B9B9] transition-colors hover:bg-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
+      className="w-full cursor-pointer rounded-lg px-[16px] text-start font-medium text-[#B9B9B9] disabled:cursor-not-allowed disabled:opacity-50"
     >
       <div className="flex flex-row items-center gap-x-3">
         {action.icon && (
