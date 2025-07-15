@@ -1,9 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import Header from "~/shared/components/header";
 import PaperTextureLayer from "~/shared/components/paper-texture-layer";
+import { intensities } from "~/shared/consts/intensity";
 import useFunnelWithForm from "~/shared/hooks/use-funnel-with-form";
+import { cn } from "~/shared/utils/classname-utils";
 import ImageStudioPage from "./image-studio";
 import IntensitySelectPage from "./intensity-select";
 
@@ -19,7 +22,7 @@ export default function Analyze() {
     resolver: zodResolver(analyzeSchema),
   });
 
-  const { Funnel, onNext, onPrev } = useFunnelWithForm<AnalyzeFormData>({
+  const { step, Funnel, onNext, onPrev } = useFunnelWithForm<AnalyzeFormData>({
     methods,
     onSubmit: (data) => {
       // 여기서 폼 데이터를 서버로 전송하거나 원하는 처리를 수행
@@ -30,16 +33,33 @@ export default function Analyze() {
     },
   });
 
+  // watch로 intensity 값을 실시간으로 감지
+  const selectedIntensity = methods.watch("intensity");
+
+  const backgroundColor = useMemo(
+    () =>
+      intensities.find((intensity) => intensity.value === selectedIntensity)
+        ?.colorClassName.background,
+    [selectedIntensity],
+  );
+
   return (
     <>
-      <div className="flex h-full flex-col bg-forest">
+      <div
+        className={cn(
+          "flex h-full flex-col bg-white transition-colors duration-700",
+          step === 0 && backgroundColor,
+        )}
+      >
         <Header onPrevious={onPrev} />
+
         <FormProvider {...methods}>
           <Funnel className="grow">
             <IntensitySelectPage field="intensity" onNext={onNext} />
             <ImageStudioPage field="image" onNext={onNext} />
           </Funnel>
         </FormProvider>
+
         <PaperTextureLayer />
       </div>
     </>

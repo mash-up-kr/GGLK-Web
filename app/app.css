@@ -1,5 +1,6 @@
 @import url("//cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.600/neodgm/style.css");
 @import url("https://font.elice.io/css?family=Elice+Digital+Baeum");
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -11,11 +12,29 @@
   --font-elice: "Elice Digital Baeum", sans-serif;
   --font-serif: "Georgia", "Times New Roman", serif;
   --font-mono: "Courier New", monospace;
+  --font-nanum-brush: "Nanum Brush Script", cursive;
 
   /* 피그마 배경색 종류 정의 */
   --color-lava: #ff4431;
+  --color-lava-dark: #a61506;
   --color-forest: #21dc71;
+  --color-forest-dark: #00682c;
   --color-ocean: #1c4ae4;
+  --color-ocean-dark: #002393;
+
+  --animate-spin-slow: spin 6s linear infinite;
+  --animate-rotate-snap: rotate-snap 1.1s steps(1, end) infinite;
+
+  @keyframes rotate-snap {
+    0%,
+    100% {
+      transform: rotate(-20deg);
+    }
+    50% {
+      transform: rotate(20deg);
+    }
+  }
+  --breakpoint-xs: 24rem;
 }
 
 /* 전역 기본 폰트 설정 */

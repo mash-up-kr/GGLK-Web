@@ -1,5 +1,6 @@
 import React, {
   Children,
+  useCallback,
   useRef,
   useState,
   type ComponentPropsWithoutRef,
@@ -32,21 +33,19 @@ export default function useFunnelWithForm<D extends FieldValues = FieldValues>({
 
   const lastStepIndex = useRef<number>(null);
 
-  console.log(history.current);
-
-  const canMoveToNext = async () => {
+  const canMoveToNext = useCallback(async () => {
     if (step >= (lastStepIndex.current ?? 0)) {
       return false;
     }
 
     return await trigger([...new Set(history.current)]);
-  };
+  }, [step, trigger]);
 
-  const canMoveToPrevious = () => {
+  const canMoveToPrevious = useCallback(() => {
     return step > 0;
-  };
+  }, [step]);
 
-  const onNext = async () => {
+  const onNext = useCallback(async () => {
     const isLastStep = step === (lastStepIndex.current ?? 0);
 
     if (isLastStep) {
@@ -63,51 +62,57 @@ export default function useFunnelWithForm<D extends FieldValues = FieldValues>({
         onStepChange?.();
       }
     }
-  };
 
-  const onPrev = () => {
+    console.log("🎯 onNext", step);
+  }, [step, trigger, handleSubmit, onSubmit, canMoveToNext, onStepChange]);
+
+  const onPrev = useCallback(() => {
     if (canMoveToPrevious()) {
       setStep((prev) => prev - 1);
       onStepChange?.();
       history.current.pop();
     }
-  };
+  }, [canMoveToPrevious, onStepChange]);
 
-  const Funnel = ({ children, className, ...props }: FunnelProps) => {
-    if (lastStepIndex.current === null) {
-      lastStepIndex.current = Children.toArray(children).length - 1;
-    }
+  const Funnel = useCallback(
+    ({ children, className, ...props }: FunnelProps) => {
+      if (lastStepIndex.current === null) {
+        lastStepIndex.current = Children.toArray(children).length - 1;
+      }
 
-    const targetStep = Children.toArray(children)[
-      step
-    ] as React.ReactElement<StepProps>;
+      const targetStep = Children.toArray(children)[
+        step
+      ] as React.ReactElement<StepProps>;
 
-    // targetStep이 없거나 유효하지 않은 요소인 경우 렌더링하지 않음
-    if (!targetStep || !React.isValidElement(targetStep)) {
-      return null;
-    }
+      // targetStep이 없거나 유효하지 않은 요소인 경우 렌더링하지 않음
+      if (!targetStep || !React.isValidElement(targetStep)) {
+        return null;
+      }
 
-    const { field } = targetStep.props;
+      const { field } = targetStep.props;
 
-    // field 검증
-    if (!field) {
-      throw new Error(
-        "Funnel 컴포넌트의 자식 컴포넌트들은 반드시 field 속성을 가져야 합니다.",
+      // field 검증
+      if (!field) {
+        throw new Error(
+          "Funnel 컴포넌트의 자식 컴포넌트들은 반드시 field 속성을 가져야 합니다.",
+        );
+      }
+
+      if (!history.current.includes(field as Path<D>)) {
+        history.current.push(field as Path<D>);
+      }
+
+      return (
+        <div className={className} {...props}>
+          {targetStep}
+        </div>
       );
-    }
-
-    if (!history.current.includes(field as Path<D>)) {
-      history.current.push(field as Path<D>);
-    }
-
-    return (
-      <div className={className} {...props}>
-        {targetStep}
-      </div>
-    );
-  };
+    },
+    [step],
+  );
 
   return {
+    step,
     methods,
     Funnel,
     onNext,
