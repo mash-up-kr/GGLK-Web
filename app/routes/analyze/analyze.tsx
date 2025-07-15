@@ -62,7 +62,7 @@ export default function Analyze() {
     <>
       <div
         className={cn(
-          "flex grow flex-col bg-grayscale text-black transition-colors duration-700",
+          "flex h-full grow flex-col bg-grayscale text-black transition-colors duration-700",
           step === 0 && backgroundColor,
         )}
       >
