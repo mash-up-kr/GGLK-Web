@@ -12,7 +12,7 @@ AXIOS_INSTANCE.interceptors.request.use((config) => {
   const token = cookies.get(AUTH_KEY);
 
   if (token) {
-    config.headers.Authorization = token;
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
   return config;
