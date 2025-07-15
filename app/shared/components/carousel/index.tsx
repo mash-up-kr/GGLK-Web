@@ -173,7 +173,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
             ))}
           </div>
         </div>
-        <div className="-translate-x-1/2 absolute bottom-3 left-1/2 z-10 flex cursor-pointer items-center justify-center space-x-2">
+        <div className="-translate-x-1/2 absolute bottom-0 left-1/2 z-10 flex cursor-pointer items-center justify-center space-x-2">
           {slides.map((slide, index) => (
             <button
               type="button"

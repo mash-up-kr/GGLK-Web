@@ -1,7 +1,11 @@
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { useEvaluationControllerCheckIfGuestUserUseChance } from "~/api/endpoints/api";
+import { useCallback, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
+import {
+  useEvaluationControllerCheckIfGuestUserUseChance,
+  useEvaluationControllerGetEvaluationById,
+} from "~/api/endpoints/api";
+import type { EvaluationItemResponseDto, Picture } from "~/api/model";
 import BottomSheet, {
   type BottomSheetAction,
   BOTTOM_SHEET_HEIGHT,
@@ -17,30 +21,97 @@ import Theme1 from "./theme-1";
 import Theme2 from "./theme-2";
 import Theme3 from "./theme-3";
 
-const createThemeSlides = (): CarouselSlide[] => {
+// API 데이터가 없을 때 사용할  mock data
+const mockEvaluationData: EvaluationItemResponseDto = {
+  id: 1,
+  title: "너무 과하지도 않고, 너무 밋밋하지도 않게, 정말 인상적이야!",
+  nickname: "자연주의 패셔니스타",
+  hashtagList: [
+    "#개성마핑크패션",
+    "#승강기보다넓은바지통",
+    "#그레이딩자켓고무장화",
+    "#패션자신감인정",
+  ],
+  totalScore: 85,
+  picture: {
+    url: "/png/1.png",
+    alt: "스타일 이미지",
+  },
+};
+
+const createThemeSlides = (
+  evaluationData?: EvaluationItemResponseDto,
+): CarouselSlide[] => {
+  const roastedResult = evaluationData || mockEvaluationData;
+
+  // API 데이터에서 이미지 URL을 가져오거나 기본값 사용
+  const getImageUrl = (index: number) => {
+    if (
+      roastedResult?.picture &&
+      typeof roastedResult.picture === "object" &&
+      "url" in roastedResult.picture
+    ) {
+      const picture = roastedResult.picture as Picture;
+      const url = picture.url;
+      if (typeof url === "string") {
+        return url;
+      }
+    }
+    // FIXME: 기본 이미지들 (API 데이터가 없을 때 사용)
+    const defaultImages = ["/png/1.png", "/png/2.png", "/png/3.png"];
+    return defaultImages[index] || "/png/1.png";
+  };
+
+  const getImageAlt = () => {
+    if (
+      roastedResult?.picture &&
+      typeof roastedResult.picture === "object" &&
+      "alt" in roastedResult.picture
+    ) {
+      const picture = roastedResult.picture as Picture;
+      const alt = picture.alt;
+      if (typeof alt === "string") {
+        return alt;
+      }
+    }
+    return "theme-image";
+  };
+
   return [
     {
       id: 0,
-      image: "/png/1.png",
-      alt: "theme-1",
+      image: getImageUrl(0),
+      alt: getImageAlt(),
       themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
-        <Theme1 slides={slides} slideIndex={slideIndex} />
+        <Theme1
+          slides={slides}
+          slideIndex={slideIndex}
+          evaluationData={roastedResult}
+        />
       ),
     },
     {
       id: 1,
-      image: "/png/2.png",
-      alt: "theme-2",
+      image: getImageUrl(1),
+      alt: getImageAlt(),
       themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
-        <Theme2 slides={slides} slideIndex={slideIndex} />
+        <Theme2
+          slides={slides}
+          slideIndex={slideIndex}
+          evaluationData={roastedResult}
+        />
       ),
     },
     {
       id: 2,
-      image: "/png/3.png",
-      alt: "theme-3",
+      image: getImageUrl(2),
+      alt: getImageAlt(),
       themeComponent: (slides: CarouselSlide[], slideIndex: number) => (
-        <Theme3 slides={slides} slideIndex={slideIndex} />
+        <Theme3
+          slides={slides}
+          slideIndex={slideIndex}
+          evaluationData={roastedResult}
+        />
       ),
     },
   ];
@@ -59,14 +130,34 @@ const getThemeBackgroundClass = (themeIndex: number): string => {
 
 export default function ResultPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { authorize, sendDefault } = useKakaoScript();
   const { isAuthenticated } = useAuthentication();
   const guestUsedCheck = useEvaluationControllerCheckIfGuestUserUseChance();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  // URL에서 evaluation ID를 가져옴
+  const evaluationId = searchParams.get("id");
+
+  // 실제 API 데이터 가져오기 (ID가 있을 때만 호출)
+  const {
+    data: evaluationData,
+    isLoading,
+    error,
+  } = useEvaluationControllerGetEvaluationById(
+    evaluationId ? Number.parseInt(evaluationId) : 0,
+    {
+      query: {
+        enabled: !!evaluationId,
+      },
+    },
+  );
 
   const [contentType, setContentType] = useState<"share" | "reanalyze">(
     "share",
   );
-  const slides = createThemeSlides();
+  const slides = createThemeSlides(evaluationData);
 
   const [selectedThemeIndex, setSelectedThemeIndex] = useControllableState({
     prop: undefined,
@@ -83,6 +174,124 @@ export default function ResultPage() {
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
+  if (isLoading) {
+    return <div>로딩중</div>;
+  }
+
+  if (error && evaluationId) {
+    return <div>데이터를 불러올 수 없습니다.</div>;
+  }
+
+  // 브라우저 정보 감지
+  const getBrowserInfo = useCallback(() => {
+    const userAgent = navigator.userAgent;
+    if (userAgent.includes("CriOS")) {
+      return "Chrome (iOS)";
+    }
+    if (userAgent.includes("Chrome")) {
+      return "Chrome";
+    }
+    if (userAgent.includes("Safari")) {
+      return "Safari";
+    }
+    return "Unknown";
+  }, []);
+
+  // 이미지 추출 및 저장 로직
+  const handleSaveImage = useCallback(async () => {
+    try {
+      const container = containerRef.current;
+      if (!container) {
+        const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+        toast.error("이미지 저장 실패", {
+          offset: { y: bottomSheetHeight + 4 },
+        });
+        return;
+      }
+
+      // 바텀시트가 열려있으면 닫기
+      if (isBottomSheetOpen) {
+        setIsBottomSheetOpen(false);
+        // 바텀시트가 완전히 닫힐 때까지 잠시 대기
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
+
+      // 캡처할 영역 계산 (전체 컨테이너를 캡처하되 슬라이드 영역만 잘라내기)
+      const slideContainer = container.querySelector(
+        '[class*="h-full overflow-hidden"]',
+      ) as HTMLElement | null;
+
+      if (!slideContainer) {
+        const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+        toast.error("이미지 저장 실패", {
+          offset: { y: bottomSheetHeight + 4 },
+        });
+        return;
+      }
+
+      const html2canvas = (await import("html2canvas")).default;
+
+      // 전체 컨테이너를 캡처 (테마 배경 이미지 포함)
+      const fullCanvas = await html2canvas(container, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        scrollY: -window.scrollY,
+      });
+
+      // 슬라이드 영역만 잘라내기
+      const slideTop = slideContainer.offsetTop;
+      const slideHeight = slideContainer.offsetHeight;
+      const containerWidth = container.offsetWidth;
+
+      const cropCanvas = document.createElement("canvas");
+      const finalWidth = 375; // 375 * 2 (scale 2 적용)
+      const finalHeight = 670; // 670 * 2 (scale 2 적용)
+
+      cropCanvas.width = finalWidth;
+      cropCanvas.height = finalHeight;
+
+      const ctx = cropCanvas.getContext("2d");
+      if (!ctx) {
+        const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+        toast.error("이미지 저장 실패", {
+          offset: { y: bottomSheetHeight + 4 },
+        });
+        return;
+      }
+
+      // 전체 캔버스에서 슬라이드 영역만 잘라내기 (375×670 크기로 고정)
+      ctx.drawImage(
+        fullCanvas,
+        0,
+        slideTop * 2,
+        containerWidth * 2,
+        slideHeight * 2, // src (잘라낼 영역)
+        0,
+        0,
+        finalWidth,
+        finalHeight, // dest (375×670 크기로 고정)
+      );
+
+      // 이미지 다운로드
+      const link = document.createElement("a");
+      const browserInfo = getBrowserInfo().toLowerCase().replace(/\s+/g, "-");
+      link.download = `ootd-result-${browserInfo}-${Date.now()}.png`;
+      link.href = cropCanvas.toDataURL("image/png");
+      link.click();
+
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.success("이미지 저장 완료!", {
+        offset: { y: bottomSheetHeight + 4 },
+      });
+    } catch (err) {
+      console.error("이미지 저장 실패:", err);
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.error("이미지 저장 실패", { offset: { y: bottomSheetHeight + 4 } });
+    }
+  }, [getBrowserInfo, isBottomSheetOpen]);
+
   const handleCopyLink = async () => {
     try {
       const homeUrl = `${window.location.origin}/`; // 홈 URL
@@ -91,7 +300,6 @@ export default function ResultPage() {
       toast.success("링크 복사 완료!", {
         offset: { y: bottomSheetHeight + 4 },
       });
-      console.log("copy!");
     } catch (err) {
       const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
       toast.error("링크 복사 실패 ㅠ", {
@@ -173,22 +381,6 @@ export default function ResultPage() {
     }
   };
 
-  // FIXME: 이미지 저장 로직
-  const handleSaveImage = async () => {
-    try {
-      // TODO
-      console.log("이미지 저장 func 실행");
-      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
-      toast.success("이미지 저장 완료!", {
-        offset: { y: bottomSheetHeight + 4 },
-      });
-    } catch (err) {
-      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
-      toast.error("이미지 저장 실패", { offset: { y: bottomSheetHeight + 4 } });
-      console.error("이미지 저장 실패:", err);
-    }
-  };
-
   // 메인 액션
   const mainActions: BottomSheetAction[] = [
     {
@@ -219,7 +411,10 @@ export default function ResultPage() {
   ];
 
   return (
-    <div className="relative h-full w-full overflow-hidden transition-colors duration-500">
+    <div
+      className="relative h-full w-full overflow-hidden transition-colors duration-500"
+      ref={containerRef}
+    >
       {selectedThemeIndex === 1 && (
         <div className="absolute inset-0 flex items-center justify-center">
           <img
@@ -249,7 +444,7 @@ export default function ResultPage() {
             onSelectIndexChange={handleSlideIndexChange}
           />
         </div>
-        <div className="m-10 flex h-[46px] flex-row items-center justify-center gap-x-[10px]">
+        <div className="button-section m-10 flex h-[46px] flex-row items-center justify-center gap-x-[10px]">
           <button
             type="button"
             onClick={() => setIsBottomSheetOpen(true)}

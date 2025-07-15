@@ -673,19 +673,6 @@ export function useEvaluationControllerCheckIfGuestUserUseChance<
   return query;
 }
 
-// Mock data
-const mockEvaluationData: EvaluationItemResponseDto = {
-  id: 1,
-  title: "당신의 스타일은 정말 독특하네요!",
-  nickname: "스타일리스트",
-  hashtagList: ["#패션", "#스타일", "#OOTD", "#로스팅"],
-  totalScore: 85,
-  picture: {
-    url: "/png/1.png",
-    alt: "스타일 이미지",
-  },
-};
-
 /**
  * Post 허고 이거 쓰쇼잉
  * @summary Get Ai Roasted data
@@ -694,10 +681,6 @@ export const evaluationControllerGetEvaluationById = (
   id: number,
   signal?: AbortSignal,
 ) => {
-  if (process.env.NODE_ENV === "development") {
-    return Promise.resolve(mockEvaluationData);
-  }
-
   return customInstance<EvaluationItemResponseDto>({
     url: `/evaluation/${id}`,
     method: "GET",
@@ -847,16 +830,7 @@ export function useEvaluationControllerGetEvaluationById<
 } {
   const queryOptions = getEvaluationControllerGetEvaluationByIdQueryOptions(
     id,
-    {
-      ...options,
-      query: {
-        ...options?.query,
-        initialData:
-          process.env.NODE_ENV === "development"
-            ? mockEvaluationData
-            : undefined,
-      },
-    },
+    options,
   );
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
