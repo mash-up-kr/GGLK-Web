@@ -24,39 +24,47 @@ const guideTexts = [
 
 interface ImageSelectGuideModalProps {
   triggerComponent: React.ReactNode;
+  onStart: () => Promise<void> | void;
 }
 
 export default function ImageSelectGuideModal({
   triggerComponent,
+  onStart,
 }: ImageSelectGuideModalProps) {
   return (
     <Modal.Root>
-      <Modal.Trigger>{triggerComponent}</Modal.Trigger>
-      <Modal.Content className="w-[335px] bg-transparent ">
-        <SvgContainer SvgComponent={IntensityContainer} className="select-none">
-          <div className="flex h-full flex-col items-center justify-between px-4 py-14 font-sf">
-            <div className="flex flex-col items-center font-bold text-xl ">
+      <Modal.Trigger asChild>{triggerComponent}</Modal.Trigger>
+      <Modal.Content className="w-[335px] bg-transparent">
+        <SvgContainer
+          SvgComponent={IntensityContainer}
+          className="min-w-[280px] select-none"
+          isKeepRatio
+        >
+          <div className="flex h-full flex-col items-center justify-center space-y-8 xs:space-y-12 p-6 font-sf">
+            <div className="flex flex-col items-center font-bold text-lg xs:text-xl ">
               <div className="flex items-center space-x-2">
-                <ExclamationMark className="size-5" />
+                <ExclamationMark className="size-4 xs:size-5" />
                 <div>잠시</div>
-                <ExclamationMark className="size-5" />
+                <ExclamationMark className="size-4 xs:size-5" />
               </div>
-              <div>이미지를 올리기 전에 꼭 확인해</div>
+              <div className="text-center">이미지를 올리기 전에 꼭 확인해</div>
             </div>
-            <div className="flex flex-col space-y-8 font-bold text-sm">
+            <div className="flex flex-col space-y-5 font-bold text-sm">
               {guideTexts.map(({ Icon, description }) => (
                 <div
                   key={description}
                   className="flex items-center space-x-3.5"
                 >
-                  <Icon className="size-14" />
+                  <Icon className="size-12 xs:size-14" />
                   <p>{description}</p>
                 </div>
               ))}
             </div>
 
-            <Modal.Close>
-              <div className="font-bold text-lg">진짜 시작하기</div>
+            <Modal.Close onClick={onStart}>
+              <div className="font-bold text-base xs:text-lg">
+                진짜 시작하기
+              </div>
               <Underline />
             </Modal.Close>
           </div>
