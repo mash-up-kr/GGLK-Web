@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { type Path, useFormContext } from "react-hook-form";
 import { usePictureControllerUploadPicture } from "~/api/endpoints/api";
+import { toast } from "~/shared/stores/toast-store";
+import { convertHeicToJpeg, isHeicFile } from "~/shared/utils/image-utils";
 import type { AnalyzeFormData } from "./analyze";
 import InitialContent from "./image-studio/initial-contnet";
 import PreviewContent from "./image-studio/preview-content";
@@ -17,6 +19,7 @@ export default function ImageStudioPage({
   const { setValue } = useFormContext<AnalyzeFormData>();
   const closeModalRef = useRef<HTMLButtonElement>(null);
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
   // const { isAuthenticated } = useAuthentication();
 
   const {
@@ -40,6 +43,10 @@ export default function ImageStudioPage({
             setValue(field, id);
           }
         },
+        onError: (error) => {
+          console.error(error);
+          toast.error("이미지 업로드 실패");
+        },
       },
     );
   };
@@ -56,13 +63,27 @@ export default function ImageStudioPage({
   const handleLocalImageChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const imageFile = e.target.files?.[0];
-    const tempImageUrl = URL.createObjectURL(imageFile as Blob);
-
-    setTempImageUrl(tempImageUrl);
+    let imageFile = e.target.files?.[0];
+    if (!imageFile) return;
     if (closeModalRef.current) {
       closeModalRef.current.click();
     }
+    if (isHeicFile(imageFile)) {
+      try {
+        setIsConverting(true);
+        imageFile = await convertHeicToJpeg(imageFile);
+      } catch (error) {
+        toast.error("HEIC 변환 실패");
+        return;
+      } finally {
+        setIsConverting(false);
+      }
+    }
+
+    const tempImageUrl = URL.createObjectURL(imageFile as Blob);
+
+    setTempImageUrl(tempImageUrl);
+
     await handleImageUpload(imageFile);
   };
 
@@ -78,9 +99,10 @@ export default function ImageStudioPage({
         onChange={handleLocalImageChange}
       />
       <div className="z-50 flex grow select-none flex-col items-center justify-center space-y-4 border-box p-4">
-        {tempImageUrl ? (
+        {tempImageUrl || isConverting ? (
           <PreviewContent
             isLoading={isPending}
+            isConverting={isConverting}
             imageRef={imageRef}
             placeholderImageUrl={tempImageUrl}
             imgSrc={pictureData?.data?.url}

@@ -5,13 +5,15 @@ import { cn } from "~/shared/utils/classname-utils";
 
 export default function PreviewContent({
   isLoading,
+  isConverting,
   placeholderImageUrl,
   imageRef,
   imgSrc,
   onNext,
 }: {
   isLoading: boolean;
-  placeholderImageUrl: string;
+  isConverting: boolean;
+  placeholderImageUrl: string | null;
   imageRef: React.RefObject<HTMLInputElement | null>;
   imgSrc?: string;
   onNext: () => void;
@@ -21,15 +23,19 @@ export default function PreviewContent({
     <>
       <p className="font-bold font-sf text-xl">이 사진으로 평가받을 거 맞지?</p>
       <div className="flex items-center justify-center [@media(max-height:768px)]:grow">
-        <div className="relative flex h-full w-full items-center justify-center">
-          <img
-            src={isLoadingOrNoImage ? placeholderImageUrl : imgSrc}
-            alt="preview"
-            className={cn(
-              "w-4/5 sm:w-3/5",
-              isLoadingOrNoImage ? "opacity-80 brightness-60" : "border",
-            )}
-          />
+        <div className="relative flex h-full w-full items-center justify-center ">
+          {isConverting ? (
+            <div className="aspect-square w-[70vw] border bg-black/10 sm:w-3/5" />
+          ) : (
+            <img
+              src={placeholderImageUrl ?? ""}
+              alt="preview"
+              className={cn(
+                "w-4/5 sm:w-3/5",
+                isLoadingOrNoImage ? "opacity-80 brightness-60" : "border",
+              )}
+            />
+          )}
           {isLoadingOrNoImage && (
             <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 z-50 ">
               <Lottie
