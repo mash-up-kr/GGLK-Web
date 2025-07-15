@@ -11,7 +11,6 @@ export function ActionButton({ action, variant }: ActionButtonProps) {
     if (action.disabled) return;
     try {
       await action.onClick();
-      console.log("?????");
     } catch (error) {
       console.error(`액션 실행 실패: ${action.id}`, error);
     }
