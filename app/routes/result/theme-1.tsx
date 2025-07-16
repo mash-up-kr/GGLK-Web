@@ -6,28 +6,14 @@ interface EvaluationTextProps {
 }
 
 function EvaluationText({ evaluationData }: EvaluationTextProps) {
-  // title을 3줄로 나누기
-  const titleWords = evaluationData.title.split(" ");
-  const titleLines = [];
-  const wordsPerLine = Math.ceil(titleWords.length / 3);
-
-  for (let i = 0; i < titleWords.length; i += wordsPerLine) {
-    titleLines.push(titleWords.slice(i, i + wordsPerLine).join(" "));
-  }
-
   return (
     <div className="absolute inset-0 z-10 flex items-center justify-center">
       <div className="relative h-[626px] w-[290px]">
         <div className="-rotate-1 absolute top-20 right-8 left-8">
           <div className="mb-2 text-left">
-            {titleLines.map((line, index) => (
-              <div
-                key={`title-${line.substring(0, 10)}-${index}`}
-                className="font-['Elice_Digital_Baeum'] font-bold text-[22px] text-black leading-tight"
-              >
-                {line}
-              </div>
-            ))}
+            <div className="font-['Elice_Digital_Baeum'] font-bold text-[22px] text-black leading-tight">
+              {evaluationData.title}
+            </div>
           </div>
           <div className="mb-2 h-px w-full border-[#676767] border-t border-dashed" />
           <div className="mb-2 text-left">

@@ -6,14 +6,6 @@ interface EvaluationTextProps {
 }
 
 function EvaluationText({ evaluationData }: EvaluationTextProps) {
-  const titleWords = evaluationData.title.split(" ");
-  const titleLines = [];
-  const wordsPerLine = Math.ceil(titleWords.length / 3);
-
-  for (let i = 0; i < titleWords.length; i += wordsPerLine) {
-    titleLines.push(titleWords.slice(i, i + wordsPerLine).join(" "));
-  }
-
   const leftHashtags = evaluationData.hashtagList.slice(0, 2);
   const rightHashtags = evaluationData.hashtagList.slice(2, 4);
 
@@ -21,16 +13,11 @@ function EvaluationText({ evaluationData }: EvaluationTextProps) {
     <div className="absolute inset-0 top-[130px] z-20 flex items-center justify-center">
       <div className="mt-75 flex w-[280px] flex-col space-y-4">
         <div className="text-left">
-          {titleLines.map((line, index) => (
-            <div
-              key={`title-${line.substring(0, 10)}-${index}`}
-              className="font-['Elice_Digital_Baeum'] font-bold text-[22px] text-black leading-tight"
-            >
-              {line}
-            </div>
-          ))}
+          <div className="font-['Elice_Digital_Baeum'] font-bold text-[22px] text-black leading-tight">
+            {evaluationData.title}
+          </div>
         </div>
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-center gap-x-auto">
           <div className="flex flex-col gap-y-1">
             {leftHashtags.map((hashtag) => (
               <div
