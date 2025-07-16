@@ -26,7 +26,7 @@ function BottomSheet({
   onClose,
   children,
   // className = "",
-  width = "w-[359px]",
+  width,
 }: ShareBottomSheetProps) {
   const [_, setIsVisible] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -77,9 +77,14 @@ function BottomSheet({
       />
       {/* 시트 */}
       <div
-        className={`pointer-events-auto relative ${width} max-w-md transform rounded-t-2xl bg-[#212121] py-[8px] shadow-2xl transition-transform duration-300 ${
+        className={`pointer-events-auto relative w-[359px] max-w-[678px] transform rounded-t-2xl bg-[#212121] py-[8px] shadow-2xl transition-transform duration-300 ${
           isOpen ? "translate-y-0" : "translate-y-full"
-        }`}
+        } ${width || ""}`}
+        style={{
+          width: width
+            ? undefined
+            : "clamp(359px, calc(359px + (100vw - 375px) * (678 - 359) / (700 - 375)), 678px)",
+        }}
         ref={sheetRef}
         role="alert"
         aria-modal="true"
