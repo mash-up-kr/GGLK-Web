@@ -1,14 +1,23 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { useEvaluationControllerDoOotdRoasting } from "~/api/endpoints/api";
+import {
+  evaluationControllerCheckIfGuestUserUseChance,
+  useEvaluationControllerDoOotdRoasting,
+} from "~/api/endpoints/api";
+import BottomSheet, {
+  BOTTOM_SHEET_HEIGHT,
+} from "~/shared/components/bottomSheet/bottom-sheet";
 import Header from "~/shared/components/header";
 import PaperTextureLayer from "~/shared/components/paper-texture-layer";
 import { intensities } from "~/shared/consts/intensity";
 import useFunnelWithForm from "~/shared/hooks/use-funnel-with-form";
+import { useKakaoScript } from "~/shared/hooks/use-kakao-script";
+import { toast } from "~/shared/stores/toast-store";
 import { cn } from "~/shared/utils/classname-utils";
+import ReanalyzeContent from "../result/reanalyze-content";
 import ImageStudioPage from "./image-studio";
 import StickersBackground from "./image-studio/stickers-background";
 import IntensitySelectPage from "./intensity-select";
@@ -25,6 +34,8 @@ export default function Analyze() {
   const methods = useForm<AnalyzeFormData>({
     resolver: zodResolver(analyzeSchema),
   });
+  const { authorize } = useKakaoScript();
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const {
     mutate: doOotdRoasting,
@@ -38,20 +49,49 @@ export default function Analyze() {
         }
         console.log("success", data);
       },
+      onError: (error) => {
+        console.error("OOTD roasting failed:", error);
+        toast.error("다시 시도해주세요");
+      },
     },
   });
 
+  // 카카오 로그인 처리
+  const handleKakaoLogin = async () => {
+    try {
+      authorize();
+    } catch (error) {
+      const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
+      toast.error("카카오 로그인 실패", {
+        offset: { y: bottomSheetHeight + 4 },
+      });
+      console.error("카카오 로그인 실패:", error);
+    }
+  };
+
   const { step, Funnel, onNext, onPrev } = useFunnelWithForm<AnalyzeFormData>({
     methods,
-    onSubmit: (data) => {
+    onSubmit: async (data) => {
       // 여기서 폼 데이터를 서버로 전송하거나 원하는 처리를 수행
-      console.log("Form submitted:", data);
-      doOotdRoasting({
-        data: {
-          imageId: data.imageId,
-          spicyLevel: data.spicyLevel,
-        },
-      });
+      try {
+        const { data: hasUsedChance } =
+          await evaluationControllerCheckIfGuestUserUseChance();
+
+        if (hasUsedChance) {
+          setIsBottomSheetOpen(true);
+        } else {
+          console.log("Form submitted:", data);
+          doOotdRoasting({
+            data: {
+              imageId: data.imageId,
+              spicyLevel: data.spicyLevel,
+            },
+          });
+        }
+      } catch (error) {
+        console.error("게스트 사용 여부 확인 실패:", error);
+        toast.error("다시 시도해주세요");
+      }
     },
     onStepChange: () => {
       console.log("step changed");
@@ -94,6 +134,15 @@ export default function Analyze() {
           </FormProvider>
         )}
         <PaperTextureLayer />
+        <BottomSheet
+          isOpen={isBottomSheetOpen}
+          onClose={() => setIsBottomSheetOpen(false)}
+        >
+          <ReanalyzeContent
+            onKakaoLogin={handleKakaoLogin}
+            onClose={() => setIsBottomSheetOpen(false)}
+          />
+        </BottomSheet>
       </div>
     </>
   );
