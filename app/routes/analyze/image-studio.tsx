@@ -91,7 +91,11 @@ export default function ImageStudioPage({
 
   return (
     <div className="relative flex h-full grow flex-col">
-      <StickersBackground />
+      <StickersBackground
+        firstStickerClassName="-translate-x-1/2 -rotate-30 top-1/12 left-0"
+        secondStickerClassName="right-0 bottom-1/4 right-0 translate-x-1/2"
+        thirdStickerClassName="-translate-x-1/2 bottom-1/12 left-0 rotate-30"
+      />
       <input
         id="picture"
         type="file"
