@@ -157,7 +157,7 @@ export default function ResultPage() {
   const [contentType, setContentType] = useState<"share" | "reanalyze">(
     "share",
   );
-  const slides = createThemeSlides(evaluationData);
+  const slides = createThemeSlides(evaluationData?.data);
 
   const [selectedThemeIndex, setSelectedThemeIndex] = useControllableState({
     prop: undefined,
