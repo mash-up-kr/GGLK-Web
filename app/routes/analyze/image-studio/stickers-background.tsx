@@ -1,20 +1,41 @@
-export default function StickersBackground() {
+import { tv } from "tailwind-variants";
+
+const stickers = tv({
+  slots: {
+    container:
+      "absolute inset-0 px-2 py-1 flex flex-col gap-0.5 pointer-events-none z-[9999] overflow-hidden",
+    sticker: "absolute size-20 xs:size-24",
+  },
+});
+
+interface StickersBackgroundProps {
+  firstStickerClassName: string;
+  secondStickerClassName: string;
+  thirdStickerClassName: string;
+}
+
+export default function StickersBackground({
+  firstStickerClassName,
+  secondStickerClassName,
+  thirdStickerClassName,
+}: StickersBackgroundProps) {
+  const { container, sticker } = stickers();
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className={container()}>
       <img
         src="/png/iconSmile.png"
         alt="IconSmile"
-        className="-translate-x-1/2 -rotate-30 absolute top-1/12 left-0 size-20 xs:size-24"
+        className={sticker({ class: firstStickerClassName })}
       />
       <img
         src="/png/iconSmile.png"
         alt="IconSmile"
-        className="absolute right-0 bottom-3/12 size-20 xs:size-24 translate-x-1/2"
+        className={sticker({ class: secondStickerClassName })}
       />
       <img
         src="/png/iconSmile.png"
         alt="IconSmile"
-        className="-translate-x-1/2 absolute bottom-1/12 left-0 size-20 xs:size-24 rotate-30"
+        className={sticker({ class: thirdStickerClassName })}
       />
     </div>
   );
