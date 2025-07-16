@@ -25,11 +25,11 @@ export default function IntensityItem({ intensity }: { intensity: Intensity }) {
       <div className="flex h-full flex-col items-center p-10 pb-13.5 font-elice">
         <div className="flex w-full items-start justify-between">
           <div className="relative w-fit font-bold text-xl xs:text-2xl">
-            <div className={colorClassName.darkText}>No.{level}</div>
+            <div className={colorClassName.darkText}>No.{level + 1}</div>
             <Highlight className="-top-1/3 -left-2/5 absolute h-[190%] w-[200%]" />
           </div>
 
-          <IntensityBadge value={value} level={level} />
+          <IntensityBadge value={value} level={level + 1} />
         </div>
         <div className="flex grow items-center justify-center">
           <SvgContainer SvgComponent={MainIcon}>

@@ -19,7 +19,7 @@ function IntensitySelectPage({
 
   const handleSelectIndexChange = useCallback(
     (index: number) => {
-      setValue(field, intensities[index].value);
+      setValue(field, intensities[index].level);
     },
     [field, setValue],
   );
@@ -37,7 +37,7 @@ function IntensitySelectPage({
   const startIndex = useMemo(
     () =>
       intensities.findIndex(
-        (intensity) => intensity.value === getValues(field),
+        (intensity) => intensity.level === getValues(field),
       ) ?? 0,
     [field, getValues],
   );

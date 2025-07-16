@@ -16,7 +16,7 @@ export default function InitialContent({
         alt="ai-character"
         className="size-32.5 xs:size-38 animate-rotate-snap"
       />
-      <p className="font-bold font-sf text-lg">
+      <p className="text-balance break-keep text-center font-bold font-sf text-lg">
         이제 평가받고 싶은 이미지를 올려봐!
       </p>
       <ImageSelectGuideModal
