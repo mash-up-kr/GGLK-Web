@@ -3,7 +3,7 @@ import { tv } from "tailwind-variants";
 const stickers = tv({
   slots: {
     container:
-      "absolute inset-0 px-2 py-1 flex flex-col gap-0.5 pointer-events-none z-[9999] overflow-hidden",
+      "absolute inset-0 px-2 py-1 flex flex-col gap-0.5 pointer-events-none z-40 overflow-hidden",
     sticker: "absolute size-20 xs:size-24",
   },
 });

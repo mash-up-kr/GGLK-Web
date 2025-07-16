@@ -20,8 +20,6 @@ export default function ImageStudioPage({
   const closeModalRef = useRef<HTMLButtonElement>(null);
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
   const [isConverting, setIsConverting] = useState(false);
-  // // FIXME: 게스트 토큰 쿠키 생성 미들웨어로 변경
-  // const { isAuthenticated } = useAuthentication();
 
   const {
     mutate: uploadPicture,
@@ -104,7 +102,7 @@ export default function ImageStudioPage({
         ref={imageRef}
         onChange={handleLocalImageChange}
       />
-      <div className="z-50 flex grow select-none flex-col items-center justify-center space-y-4 border-box p-4">
+      <div className="flex grow select-none flex-col items-center justify-center space-y-4 border-box p-4">
         {tempImageUrl || isConverting ? (
           <PreviewContent
             isLoading={isPending}
