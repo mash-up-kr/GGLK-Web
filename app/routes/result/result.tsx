@@ -12,7 +12,6 @@ import BottomSheet, {
 } from "~/shared/components/bottomSheet/bottom-sheet";
 import type { CarouselSlide } from "~/shared/components/carousel";
 import CarouselContainer from "~/shared/components/carousel/carousel-container";
-import { useAuthentication } from "~/shared/hooks/use-authentication";
 import { useKakaoScript } from "~/shared/hooks/use-kakao-script";
 import { toast } from "~/shared/stores/toast-store";
 import ReanalyzeContent from "./reanalyze-content";
@@ -132,7 +131,7 @@ export default function ResultPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { authorize, sendDefault } = useKakaoScript();
-  const { isAuthenticated } = useAuthentication();
+  // const { isAuthenticated } = useAuthentication();
   const guestUsedCheck = useEvaluationControllerCheckIfGuestUserUseChance();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -157,6 +156,7 @@ export default function ResultPage() {
   const [contentType, setContentType] = useState<"share" | "reanalyze">(
     "share",
   );
+
   const slides = createThemeSlides(evaluationData?.data);
 
   const [selectedThemeIndex, setSelectedThemeIndex] = useControllableState({
@@ -173,14 +173,6 @@ export default function ResultPage() {
   };
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-
-  if (isLoading) {
-    return <div>로딩중</div>;
-  }
-
-  if (error && evaluationId) {
-    return <div>데이터를 불러올 수 없습니다.</div>;
-  }
 
   // 브라우저 정보 감지
   const getBrowserInfo = useCallback(() => {
@@ -356,11 +348,11 @@ export default function ResultPage() {
 
   // 다시하기 버튼 클릭 시 게스트 사용 여부 확인하게
   const handleReanalyze = async () => {
-    if (isAuthenticated) {
-      // 로그인된 사용자는 바로 홈으로 이동
-      navigate("/");
-      return;
-    }
+    // if (isAuthenticated) {
+    //   // 로그인된 사용자는 바로 홈으로 이동
+    //   navigate("/");
+    //   return;
+    // }
 
     // 게스트 사용자라면 사용 여부 확인하게
     try {
@@ -409,6 +401,15 @@ export default function ResultPage() {
       disabled: false,
     },
   ];
+
+  // 조건부 반환문들을 모든 Hook 이후에 배치
+  if (isLoading) {
+    return <div>로딩중</div>;
+  }
+
+  if (error && evaluationId) {
+    return <div>데이터를 불러올 수 없습니다.</div>;
+  }
 
   return (
     <div
