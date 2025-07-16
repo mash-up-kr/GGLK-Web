@@ -1,5 +1,5 @@
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import {
   useEvaluationControllerCheckIfGuestUserUseChance,
@@ -405,6 +405,21 @@ export default function ResultPage() {
   // 조건부 반환문들을 모든 Hook 이후에 배치
   if (isLoading) {
     return <div>로딩중</div>;
+  }
+
+  // evaluationId가 없는 경우만 홈으로 리다이렉트
+  if (!evaluationId) {
+    useEffect(() => {
+      navigate("/");
+    }, [navigate]);
+    return <div>잘못된 접근입니다.</div>;
+  }
+
+  if (!isLoading && !evaluationData?.data) {
+    useEffect(() => {
+      navigate("/");
+    }, [navigate]);
+    return <div>데이터를 찾을 수 없습니다.</div>;
   }
 
   if (error && evaluationId) {
