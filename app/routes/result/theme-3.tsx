@@ -1,78 +1,4 @@
-import type { EvaluationItemResponseDto } from "~/api/model";
 import type { CarouselItemProps } from "~/shared/types/carousel-item";
-
-interface EvaluationTextProps {
-  evaluationData: EvaluationItemResponseDto;
-}
-
-function EvaluationText({ evaluationData }: EvaluationTextProps) {
-  const titleWords = evaluationData.title.split(" ");
-  const titleLines = [];
-  const wordsPerLine = Math.ceil(titleWords.length / 3);
-
-  for (let i = 0; i < titleWords.length; i += wordsPerLine) {
-    titleLines.push(titleWords.slice(i, i + wordsPerLine).join(" "));
-  }
-
-  return (
-    <div className="absolute bottom-20 z-60 w-[257px] translate-x-1/2 gap-y-3">
-      <div className="relative flex h-full w-full flex-col justify-between p-2">
-        <div className="flex flex-col space-y-1 text-gray-600">
-          <div className="font-medium text-xs">Title</div>
-          <div className="font-bold text-lg">
-            {titleLines.map((line, index) => (
-              <div
-                key={`title-${line.substring(0, 10)}-${index}`}
-                className="font-['Elice_Digital_Baeum'] font-bold text-[10px] text-black leading-tight"
-              >
-                {line}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-row items-start justify-center gap-x-1">
-            <div className="font-medium text-xs">Name: </div>
-            <div className="flex flex-row items-start gap-x-1 text-xs">
-              <span className="font-['Elice_Digital_Baeum'] font-bold text-black">
-                CODE NAME:
-              </span>
-              <span className="font-['Elice_Digital_Baeum'] font-bold text-black">
-                {evaluationData.nickname}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-row items-start justify-center gap-x-1">
-            <div className="font-medium text-xs">Hash Tag:</div>
-            <div className="flex flex-row items-start gap-x-1 text-md">
-              <div className="grid grid-cols-2 gap-x-1">
-                {evaluationData.hashtagList.map((hashtag) => (
-                  <span
-                    key={`hashtag-${hashtag}`}
-                    className="font-['Elice_Digital_Baeum'] font-normal text-blue-500 text-xs leading-tight"
-                  >
-                    {hashtag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col space-y-1">
-          <hr className="w-full border-[#676767] border-t border-dashed" />
-          <div className="text-center">
-            <span className="font-['NeoDunggeunmo'] text-black text-sm">
-              Score:{" "}
-            </span>
-            <span className="font-['NeoDunggeunmo'] font-bold text-black text-sm">
-              {evaluationData.totalScore.toString().padStart(2, "0")}점
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Theme3({
   slides,
@@ -102,7 +28,56 @@ export default function Theme3({
       </div>
       <div className="absolute bottom-10 z-50 w-[257px] translate-x-1/2">
         <img src="/png/photoboothSmall.png" alt="photoboothSmall" />
+        <div className="absolute inset-0 flex flex-col justify-between p-4">
+          <div
+            className="flex flex-col space-y-1 p-2 text-gray-300"
+            style={{ marginTop: "10%" }}
+          >
+            <div className="flex flex-col items-start justify-start gap-x-1">
+              <div className="text-[9px]">Title</div>
+
+              <div className="font-['AppleSDGothicNeo'] font-bold text-black text-lg leading-tight">
+                {evaluationData.title}
+              </div>
+            </div>
+            <div className="flex flex-row items-start gap-x-1 text-[9px]">
+              <span>Name: </span>
+              <span className="flex flex-row items-start gap-x-1">
+                <span className="font-['AppleSDGothicNeo'] text-black">
+                  {evaluationData.nickname}
+                </span>
+              </span>
+            </div>
+            <div className="flex flex-row items-start gap-x-1">
+              <div className="text-[9px]">Hash Tag:</div>
+              <div className="flex flex-row items-start gap-x-1 text-[9px]">
+                <div className="grid grid-cols-2 gap-x-0.5">
+                  {evaluationData.hashtagList.map((hashtag) => (
+                    <span
+                      key={`hashtag-${hashtag}`}
+                      className="font-['Elice_Digital_Baeum'] font-normal text-[9px] text-blue-500"
+                    >
+                      {hashtag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col space-y-1">
+            <hr className="w-full border-[#676767] border-t" />
+            <div className="text-center">
+              <span className="font-['NeoDunggeunmo'] text-[17px] text-black">
+                Score:{" "}
+              </span>
+              <span className="font-['NeoDunggeunmo'] font-bold text-[17px] text-black">
+                {evaluationData.totalScore.toString().padStart(2, "0")}점
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <img
           src="/png/photoboothSmall.png"
@@ -146,8 +121,6 @@ export default function Theme3({
           />
         </div>
       </div>
-
-      <EvaluationText evaluationData={evaluationData} />
     </div>
   );
 }

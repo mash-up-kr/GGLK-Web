@@ -7,7 +7,7 @@ import {
   useInView,
 } from "motion/react";
 import { type ComponentRef, useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import CloseIcon from "~/assets/close.svg?react";
 import HamburgerMenu from "~/assets/hamburger-menu.svg?react";
 import IconFirst from "~/assets/icon-first.svg?react";
@@ -349,6 +349,7 @@ const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
   const isInView = useInView(imageRef, {
     once: true,
   });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -396,6 +397,7 @@ const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
                 type="button"
                 className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
                 style={{ borderColor: textColor }}
+                onClick={() => navigate("/analyze")}
               >
                 <span
                   className="font-bold text-[15px] leading-[1.2]"
@@ -471,6 +473,7 @@ const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
   const isInView = useInView(imageRef, {
     once: true,
   });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -518,6 +521,7 @@ const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
                 type="button"
                 className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
                 style={{ borderColor: textColor }}
+                onClick={() => navigate("/analyze")}
               >
                 <span
                   className="font-bold text-[15px] leading-[1.2]"
@@ -592,6 +596,7 @@ const ThirdStep = ({ backgroundColor, textColor }: StepProps) => {
   const isInView = useInView(imageRef, {
     once: true,
   });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -639,6 +644,7 @@ const ThirdStep = ({ backgroundColor, textColor }: StepProps) => {
                 type="button"
                 className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
                 style={{ borderColor: textColor }}
+                onClick={() => navigate("/analyze")}
               >
                 <span
                   className="font-bold text-[15px] leading-[1.2]"
