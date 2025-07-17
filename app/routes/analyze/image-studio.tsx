@@ -1,6 +1,12 @@
+import { useEffect, useRef, useState } from "react";
 import { type Path, useFormContext } from "react-hook-form";
-import ImageSelectGuideModal from "~/shared/components/analyze/image-select-guide-modal";
+import { usePictureControllerUploadPicture } from "~/api/endpoints/api";
+import { toast } from "~/shared/stores/toast-store";
+import { convertHeicToJpeg, isHeicFile } from "~/shared/utils/image-utils";
 import type { AnalyzeFormData } from "./analyze";
+import InitialContent from "./image-studio/initial-contnet";
+import PreviewContent from "./image-studio/preview-content";
+import StickersBackground from "./image-studio/stickers-background";
 
 export default function ImageStudioPage({
   field,
@@ -9,18 +15,108 @@ export default function ImageStudioPage({
   field: Path<AnalyzeFormData>;
   onNext: () => void;
 }) {
-  const { register } = useFormContext<AnalyzeFormData>();
+  const imageRef = useRef<HTMLInputElement>(null);
+  const { setValue } = useFormContext<AnalyzeFormData>();
+  const closeModalRef = useRef<HTMLButtonElement>(null);
+  const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
+
+  const {
+    mutate: uploadPicture,
+    isPending,
+    isError,
+    data: pictureData,
+  } = usePictureControllerUploadPicture();
+
+  const handleImageUpload = async (imageFile: File | undefined) => {
+    if (!imageFile) return;
+
+    uploadPicture(
+      {
+        data: {
+          image: imageFile,
+        },
+      },
+      {
+        onSuccess: ({ data: { id, url } }) => {
+          if (id) {
+            setValue(field, id);
+          }
+        },
+        onError: (error) => {
+          console.error(error);
+          toast.error("이미지 업로드 실패");
+        },
+      },
+    );
+  };
+
+  // unmount 시 이미지 메모리 해제
+  useEffect(() => {
+    return () => {
+      if (tempImageUrl) {
+        URL.revokeObjectURL(tempImageUrl);
+      }
+    };
+  }, [tempImageUrl]);
+
+  const handleLocalImageChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    let imageFile = e.target.files?.[0];
+    if (!imageFile) return;
+    if (closeModalRef.current) {
+      closeModalRef.current.click();
+    }
+    if (isHeicFile(imageFile)) {
+      try {
+        setIsConverting(true);
+        imageFile = await convertHeicToJpeg(imageFile);
+      } catch (error) {
+        toast.error("HEIC 변환 실패");
+        return;
+      } finally {
+        setIsConverting(false);
+      }
+    }
+
+    const tempImageUrl = URL.createObjectURL(imageFile as Blob);
+
+    setTempImageUrl(tempImageUrl);
+
+    await handleImageUpload(imageFile);
+  };
 
   return (
-    <div className="flex h-full flex-col items-center border">
-      <div>이미지 수정</div>
-
-      <input type="text" {...register(field)} className="border" />
-      <ImageSelectGuideModal />
-
-      <button type="button" onClick={onNext}>
-        다음
-      </button>
+    <div className="relative flex h-full grow flex-col">
+      <StickersBackground
+        firstStickerClassName="-translate-x-1/2 -rotate-30 top-1/12 left-0"
+        secondStickerClassName="right-0 bottom-1/4 right-0 translate-x-1/2"
+        thirdStickerClassName="-translate-x-1/2 bottom-1/12 left-0 rotate-30"
+      />
+      <input
+        id="picture"
+        type="file"
+        className="hidden"
+        accept="image/*"
+        ref={imageRef}
+        onChange={handleLocalImageChange}
+      />
+      <div className="flex grow select-none flex-col items-center justify-center space-y-4 border-box p-4">
+        {tempImageUrl || isConverting ? (
+          <PreviewContent
+            isLoading={isPending}
+            isConverting={isConverting}
+            isError={isError}
+            imageRef={imageRef}
+            placeholderImageUrl={tempImageUrl}
+            imgSrc={pictureData?.data?.url}
+            onNext={onNext}
+          />
+        ) : (
+          <InitialContent imageRef={imageRef} closeModalRef={closeModalRef} />
+        )}
+      </div>
     </div>
   );
 }

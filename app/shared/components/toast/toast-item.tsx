@@ -29,7 +29,7 @@ export default function ToastItem({ toast }: ToastItemProps) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
       className={
-        "relative w-fit max-w-full rounded-3xl border bg-black px-5 py-2.5 text-center text-sm text-white"
+        "relative z-50 w-fit max-w-full rounded-3xl bg-black px-5 py-2.5 text-center text-sm text-white"
       }
       style={{
         bottom: offset?.y,

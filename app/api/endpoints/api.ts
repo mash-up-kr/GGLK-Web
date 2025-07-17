@@ -4,6 +4,7 @@
  * 깔깔룩위원회 API OpenAPI Document
  * OpenAPI spec version: 0.0.1
  */
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,7 +19,6 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
   EvaluationItemResponseDto,
@@ -26,12 +26,13 @@ import type {
   GetUserResponseDto,
   KakakoLoginRequestDto,
   OotdRoastingRequestDto,
+  PictureControllerUploadPicture201,
   PictureControllerUploadPictureBody,
   TokenResponseDto,
 } from "../model";
 
-import type { ErrorType } from "../mutator/custom-instance";
 import { customInstance } from "../mutator/custom-instance";
+import type { ErrorType } from "../mutator/custom-instance";
 
 export const appControllerGetHello = (signal?: AbortSignal) => {
   return customInstance<void>({ url: "/", method: "GET", signal });
@@ -944,7 +945,7 @@ export const pictureControllerUploadPicture = (
     formData.append("image", pictureControllerUploadPictureBody.image);
   }
 
-  return customInstance<number>({
+  return customInstance<PictureControllerUploadPicture201>({
     url: "/picture",
     method: "POST",
     headers: { "Content-Type": "multipart/form-data" },

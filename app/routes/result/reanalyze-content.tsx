@@ -33,7 +33,7 @@ export function ReanalyzeContent({
           className="flex w-full flex-row items-center justify-center gap-x-3 rounded-lg bg-[#FEE500] px-4 py-3 font-medium"
         >
           <img
-            src={"/public/png/iconKaKaoLogo.png"}
+            src={"/png/IconKakaoLogo.png"}
             alt="kakao-icon"
             className="h-[20px] w-[20px]"
           />

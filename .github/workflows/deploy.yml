@@ -28,6 +28,8 @@ jobs:
       - name: Create .env file
         run: |
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+          echo "VITE_KAKAO_JAVASCRIPT_KEY=${{ secrets.VITE_KAKAO_JAVASCRIPT_KEY }}" >> .env
+          echo "VITE_KAKAO_REDIRECT_URI=${{ secrets.VITE_KAKAO_REDIRECT_URI }}" >> .env
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3

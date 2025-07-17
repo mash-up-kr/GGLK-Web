@@ -1,0 +1,33 @@
+<svg width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_g_1094_1217)">
+<rect x="1" y="1" width="56" height="56" rx="10" fill="white"/>
+<rect x="2" y="2" width="54" height="54" rx="9" stroke="black" stroke-width="2"/>
+</g>
+<g opacity="0.9">
+<rect x="24.9092" y="40.9873" width="8.18182" height="1.08002" fill="#BCBCBC"/>
+<rect x="24.9092" y="45.3071" width="8.18182" height="1.08002" fill="#BCBCBC"/>
+<rect x="21.6362" y="42.0679" width="14.7273" height="1.08002" fill="#BCBCBC"/>
+<rect x="21.6362" y="44.2275" width="14.7273" height="1.08002" fill="#BCBCBC"/>
+<rect x="20" y="43.1479" width="18" height="1.08002" fill="#BCBCBC"/>
+<rect x="25.0625" y="14" width="7.0875" height="2.3625" fill="black"/>
+<rect x="22.7" y="16.3623" width="3.9375" height="1.575" fill="black"/>
+<rect x="30.575" y="16.3623" width="3.9375" height="1.575" fill="black"/>
+<rect x="30.575" y="23.4502" width="3.9375" height="1.575" fill="black"/>
+<rect x="29" y="25.0249" width="3.9375" height="1.575" fill="black"/>
+<rect x="32.9375" y="17.9375" width="3.15" height="5.5125" fill="black"/>
+<rect x="27.425" y="26.6001" width="3.15" height="5.5125" fill="black"/>
+<rect x="27.425" y="34.4751" width="3.15" height="3.15" fill="black"/>
+<rect x="21.125" y="17.9375" width="3.15" height="5.5125" fill="black"/>
+</g>
+<defs>
+<filter id="filter0_g_1094_1217" x="0" y="0" width="58" height="58" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.25 0.25" numOctaves="3" seed="1304" />
+<feDisplacementMap in="shape" scale="2" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_1094_1217">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+</defs>
+</svg>

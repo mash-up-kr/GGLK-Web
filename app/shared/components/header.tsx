@@ -17,7 +17,7 @@ export default function Header({ onPrevious, className }: HeaderProps) {
     <>
       <header
         className={cn(
-          "flex items-center justify-between px-4 py-3.5",
+          "z-50 flex items-center justify-between px-4 py-3.5",
           className,
           isMenuOpen && "bg-black",
         )}
@@ -30,7 +30,7 @@ export default function Header({ onPrevious, className }: HeaderProps) {
             (!onPrevious || isMenuOpen) && "invisible",
           )}
         >
-          <ChevronLeft className="text-white" />
+          <ChevronLeft />
         </button>
         {isMenuOpen ? (
           <button
@@ -46,7 +46,7 @@ export default function Header({ onPrevious, className }: HeaderProps) {
             onClick={() => setIsMenuOpen((prev) => !prev)}
             className="cursor-pointer"
           >
-            <HamburgerMenu className="text-white" />
+            <HamburgerMenu />
           </button>
         )}
       </header>
@@ -58,7 +58,7 @@ export default function Header({ onPrevious, className }: HeaderProps) {
 
 function NavMenu() {
   return (
-    <div className="absolute inset-0 mt-13 bg-black px-4">
+    <div className="absolute inset-0 z-50 mt-13 bg-black px-4">
       <div className="flex flex-col space-y-2.5 py-10 font-extrabold font-sf text-6xl text-white [&>a]:leading-[1.2]">
         <Link to="/">Home</Link>
         <Link to="#">Login</Link>

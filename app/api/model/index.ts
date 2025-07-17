@@ -5,20 +5,12 @@
  * OpenAPI spec version: 0.0.1
  */
 
-export * from "./createPetsBody";
-export * from "./error";
-export * from "./listPetsNestedArrayParams";
-export * from "./listPetsParams";
-export * from "./pet";
-export * from "./petCallingCode";
-export * from "./petCountry";
-export * from "./petsArray";
-export * from "./petsNestedArray";
 export * from "./evaluationItemResponseDto";
 export * from "./evaluationResponseDto";
 export * from "./getUserResponseDto";
 export * from "./kakakoLoginRequestDto";
 export * from "./ootdRoastingRequestDto";
 export * from "./picture";
+export * from "./pictureControllerUploadPicture201";
 export * from "./pictureControllerUploadPictureBody";
 export * from "./tokenResponseDto";

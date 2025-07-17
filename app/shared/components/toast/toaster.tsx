@@ -6,7 +6,7 @@ import type { ToastPosition } from "~/shared/types/toast";
 import ToastItem from "./toast-item";
 
 const toaster = tv({
-  base: "absolute inset-0 px-2 py-1 flex flex-col gap-0.5 pointer-events-none",
+  base: "absolute inset-0 px-2 py-1 flex flex-col gap-0.5 pointer-events-none z-[9999]",
   variants: {
     position: {
       "top-center": "items-center justify-start",
