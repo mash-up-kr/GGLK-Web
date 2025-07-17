@@ -7,8 +7,7 @@ import {
   useInView,
 } from "motion/react";
 import { type ComponentRef, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import CloseIcon from "~/assets/close.svg?react";
+import { useNavigate } from "react-router";
 import HamburgerMenu from "~/assets/hamburger-menu.svg?react";
 import IconFirst from "~/assets/icon-first.svg?react";
 import IconSecond from "~/assets/icon-second.svg?react";
@@ -17,8 +16,8 @@ import LogoForest from "~/assets/logo-forest.svg?react";
 import LogoOcean from "~/assets/logo-ocean.svg?react";
 import LogoWhite from "~/assets/logo-white.svg?react";
 import PaperTextureLayer from "~/shared/components/paper-texture-layer";
+import { Sidebar } from "~/shared/components/sidebar";
 import { useInterval } from "~/shared/hooks/use-interval";
-import { useKakaoScript } from "~/shared/hooks/use-kakao-script";
 import { cn } from "~/shared/utils/classname-utils";
 
 type HomeHeaderProps = {
@@ -54,43 +53,6 @@ const HomeHeader = ({
         <HamburgerMenu className="text-white" />
       </button>
     </header>
-  );
-};
-
-type SidebarProps = {
-  toggleOpen: () => void;
-};
-
-const Sidebar = ({ toggleOpen }: SidebarProps) => {
-  const { authorize } = useKakaoScript();
-  return (
-    <motion.aside
-      className="absolute inset-0 z-50 bg-black"
-      initial={{ x: "100%" }}
-      animate={{ x: "0%" }}
-      exit={{ x: "100%" }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-    >
-      <header className="flex h-[54px] items-center justify-between pr-4 pl-1.5">
-        <LogoWhite />
-        <CloseIcon onClick={() => toggleOpen()} />
-      </header>
-      <ul className="flex flex-col space-y-2.5 px-4 py-10 font-extrabold font-sf text-6xl text-white [&>a]:leading-[1.2]">
-        <Link to="/">
-          <li>Home</li>
-        </Link>
-
-        <Link to="#" onClick={() => authorize()}>
-          <li>Login</li>
-        </Link>
-        <Link to="#">
-          <li>Profile</li>
-        </Link>
-        <Link to="#">
-          <li>Contact</li>
-        </Link>
-      </ul>
-    </motion.aside>
   );
 };
 
