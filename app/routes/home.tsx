@@ -7,8 +7,7 @@ import {
   useInView,
 } from "motion/react";
 import { type ComponentRef, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import CloseIcon from "~/assets/close.svg?react";
+import { useNavigate } from "react-router";
 import HamburgerMenu from "~/assets/hamburger-menu.svg?react";
 import IconFirst from "~/assets/icon-first.svg?react";
 import IconSecond from "~/assets/icon-second.svg?react";
@@ -17,78 +16,43 @@ import LogoForest from "~/assets/logo-forest.svg?react";
 import LogoOcean from "~/assets/logo-ocean.svg?react";
 import LogoWhite from "~/assets/logo-white.svg?react";
 import PaperTextureLayer from "~/shared/components/paper-texture-layer";
+import { Sidebar } from "~/shared/components/sidebar";
 import { useInterval } from "~/shared/hooks/use-interval";
-import { useKakaoScript } from "~/shared/hooks/use-kakao-script";
 import { cn } from "~/shared/utils/classname-utils";
 
 type HomeHeaderProps = {
   className?: string;
   backgroundColor: string;
   logo: React.ReactNode;
+  toggleOpenSidebar: () => void;
 };
 
-const HomeHeader = ({ className, backgroundColor, logo }: HomeHeaderProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+const HomeHeader = ({
+  className,
+  backgroundColor,
+  logo,
+  toggleOpenSidebar,
+}: HomeHeaderProps) => {
   return (
-    <>
-      <header
-        className={cn(
-          "flex items-center justify-between py-0.25 pr-4 pl-1.5",
-          className,
-          isMenuOpen && "bg-black",
-        )}
-        style={{ background: backgroundColor }}
+    <header
+      className={cn(
+        "flex items-center justify-between py-0.25 pr-4 pl-1.5",
+        className,
+      )}
+      style={{ background: backgroundColor }}
+    >
+      <button type="button" className="cursor-pointer">
+        {logo}
+      </button>
+
+      <button
+        type="button"
+        onClick={() => toggleOpenSidebar()}
+        className="cursor-pointer"
       >
-        <button type="button" className="cursor-pointer">
-          {logo}
-        </button>
-        {isMenuOpen ? (
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            className="cursor-pointer"
-          >
-            <CloseIcon />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            className="cursor-pointer"
-          >
-            <HamburgerMenu className="text-white" />
-          </button>
-        )}
-      </header>
-      {isMenuOpen && <HomeNavMenu backgroundColor={backgroundColor} />}
-    </>
-  );
-};
-
-type HomeNavMenuProps = {
-  backgroundColor: string;
-};
-
-const HomeNavMenu = ({ backgroundColor }: HomeNavMenuProps) => {
-  const { authorize } = useKakaoScript();
-
-  return (
-    <>
-      <div
-        className="absolute inset-0 z-50 mt-13 bg-black px-4"
-        style={{ background: backgroundColor }}
-      >
-        <PaperTextureLayer />
-        <div className="flex flex-col space-y-2.5 py-10 font-extrabold font-sf text-6xl text-white [&>a]:leading-[1.2]">
-          <Link to="/">Home</Link>
-          <Link to="#" onClick={() => authorize()}>
-            Login
-          </Link>
-          <Link to="#">Profile</Link>
-          <Link to="#">Contact</Link>
-        </div>
-      </div>
-    </>
+        <HamburgerMenu className="text-white" />
+      </button>
+    </header>
   );
 };
 
@@ -341,20 +305,30 @@ const DCharMotionComponent = ({
 type StepProps = {
   backgroundColor: string;
   textColor: string;
+  toggleOpenSidebar: () => void;
 };
 
-const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
+const FirstStep = ({
+  backgroundColor,
+  textColor,
+  toggleOpenSidebar,
+}: StepProps) => {
   const [containerHeight, setContainerHeight] = useState(0);
   const imageRef = useRef<ComponentRef<"img">>(null);
   const isInView = useInView(imageRef, {
     once: true,
   });
+
   const navigate = useNavigate();
 
   return (
     <>
       <PaperTextureLayer />
-      <HomeHeader backgroundColor={backgroundColor} logo={<LogoOcean />} />
+      <HomeHeader
+        backgroundColor={backgroundColor}
+        logo={<LogoOcean />}
+        toggleOpenSidebar={toggleOpenSidebar}
+      />
       <div
         className="flex h-full w-full flex-col justify-between pb-10"
         style={{ background: backgroundColor }}
@@ -424,7 +398,7 @@ const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
         </div>
         <div className="h-1/2 pb-10">
           <div
-            className="flex h-full justify-center gap-2 overflow-hidden"
+            className="flex h-full justify-center gap-2"
             ref={(containerRef) => {
               if (containerRef) {
                 setContainerHeight(containerRef.clientHeight);
@@ -455,7 +429,7 @@ const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
                 transition={{ delay: 3 }}
                 src="/png/home-face.png"
                 alt="엘리스 제인"
-                className="absolute right-2 bottom-47.5"
+                className="absolute right-2 bottom-47.5 z-50 animate-rotate-snap"
                 width={100}
                 height={100}
               />
@@ -467,7 +441,11 @@ const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
   );
 };
 
-const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
+const SecondStep = ({
+  backgroundColor,
+  textColor,
+  toggleOpenSidebar,
+}: StepProps) => {
   const [containerHeight, setContainerHeight] = useState(0);
   const imageRef = useRef<ComponentRef<"img">>(null);
   const isInView = useInView(imageRef, {
@@ -478,7 +456,11 @@ const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
   return (
     <>
       <PaperTextureLayer />
-      <HomeHeader backgroundColor={backgroundColor} logo={<LogoForest />} />
+      <HomeHeader
+        backgroundColor={backgroundColor}
+        logo={<LogoForest />}
+        toggleOpenSidebar={toggleOpenSidebar}
+      />
       <div
         className="flex h-full w-full flex-col justify-between pb-10"
         style={{ background: backgroundColor }}
@@ -579,7 +561,7 @@ const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
                 transition={{ delay: 3 }}
                 src="/png/home-face.png"
                 alt="엘리스 제인"
-                className="absolute right-2 bottom-47.5"
+                className="absolute right-2 bottom-47.5 animate-rotate-snap"
                 width={100}
                 height={100}
               />
@@ -590,7 +572,11 @@ const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
     </>
   );
 };
-const ThirdStep = ({ backgroundColor, textColor }: StepProps) => {
+const ThirdStep = ({
+  backgroundColor,
+  textColor,
+  toggleOpenSidebar,
+}: StepProps) => {
   const [containerHeight, setContainerHeight] = useState(0);
   const imageRef = useRef<ComponentRef<"img">>(null);
   const isInView = useInView(imageRef, {
@@ -601,7 +587,11 @@ const ThirdStep = ({ backgroundColor, textColor }: StepProps) => {
   return (
     <>
       <PaperTextureLayer />
-      <HomeHeader backgroundColor={backgroundColor} logo={<LogoWhite />} />
+      <HomeHeader
+        backgroundColor={backgroundColor}
+        logo={<LogoWhite />}
+        toggleOpenSidebar={toggleOpenSidebar}
+      />
       <div
         className="flex h-full w-full flex-col justify-between pb-10"
         style={{ background: backgroundColor }}
@@ -702,7 +692,7 @@ const ThirdStep = ({ backgroundColor, textColor }: StepProps) => {
                 transition={{ delay: 3 }}
                 src="/png/home-face.png"
                 alt="엘리스 제인"
-                className="absolute right-2 bottom-47.5"
+                className="absolute right-2 bottom-47.5 z-auto animate-rotate-snap"
                 width={100}
                 height={100}
               />
@@ -745,46 +735,54 @@ export default function Home() {
     ],
   );
 
+  const [isOpenSidebar, toggleOpenSidebar] = useCycle(false, true);
+
   useInterval(() => {
     toNextStep();
   }, 8000);
 
   return (
-    <div
-      className="h-full overflow-hidden"
-      style={{
-        background: step.backgroundColor,
-      }}
-    >
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={step.name}
-          variants={sliderVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="h-full w-full"
-        >
-          {step.name === "first" && (
-            <FirstStep
-              backgroundColor={step.backgroundColor}
-              textColor={step.textColor}
-            />
-          )}
-          {step.name === "second" && (
-            <SecondStep
-              backgroundColor={step.backgroundColor}
-              textColor={step.textColor}
-            />
-          )}
-          {step.name === "third" && (
-            <ThirdStep
-              backgroundColor={step.backgroundColor}
-              textColor={step.textColor}
-            />
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+    <>
+      <div
+        className="relative h-full overflow-hidden"
+        style={{
+          background: step.backgroundColor,
+        }}
+      >
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={step.name}
+            variants={sliderVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="h-full w-full"
+          >
+            {step.name === "first" && (
+              <FirstStep
+                backgroundColor={step.backgroundColor}
+                textColor={step.textColor}
+                toggleOpenSidebar={toggleOpenSidebar}
+              />
+            )}
+            {step.name === "second" && (
+              <SecondStep
+                backgroundColor={step.backgroundColor}
+                textColor={step.textColor}
+                toggleOpenSidebar={toggleOpenSidebar}
+              />
+            )}
+            {step.name === "third" && (
+              <ThirdStep
+                backgroundColor={step.backgroundColor}
+                textColor={step.textColor}
+                toggleOpenSidebar={toggleOpenSidebar}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
+        {isOpenSidebar && <Sidebar toggleOpen={toggleOpenSidebar} />}
+      </div>
+    </>
   );
 }

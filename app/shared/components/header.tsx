@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router";
 import ChevronLeft from "~/assets/chevron-left.svg?react";
 import CloseIcon from "~/assets/close.svg?react";
 import HamburgerMenu from "~/assets/hamburger-menu.svg?react";
 import { cn } from "../utils/classname-utils";
+import { Sidebar } from "./sidebar";
 
 interface HeaderProps {
   onPrevious?: () => void;
@@ -19,7 +19,6 @@ export default function Header({ onPrevious, className }: HeaderProps) {
         className={cn(
           "z-50 flex items-center justify-between px-4 py-3.5",
           className,
-          isMenuOpen && "bg-black",
         )}
       >
         <button
@@ -50,21 +49,9 @@ export default function Header({ onPrevious, className }: HeaderProps) {
           </button>
         )}
       </header>
-
-      {isMenuOpen && <NavMenu />}
+      {isMenuOpen && (
+        <Sidebar toggleOpen={() => setIsMenuOpen((prev) => !prev)} />
+      )}
     </>
-  );
-}
-
-function NavMenu() {
-  return (
-    <div className="absolute inset-0 z-50 mt-13 bg-black px-4">
-      <div className="flex flex-col space-y-2.5 py-10 font-extrabold font-sf text-6xl text-white [&>a]:leading-[1.2]">
-        <Link to="/">Home</Link>
-        <Link to="#">Login</Link>
-        <Link to="#">Profile</Link>
-        <Link to="#">Contact</Link>
-      </div>
-    </div>
   );
 }
