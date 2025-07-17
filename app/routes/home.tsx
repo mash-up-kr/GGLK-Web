@@ -1,14 +1,19 @@
 import {
   AnimatePresence,
-  type Variants,
   motion,
   useAnimate,
   useCycle,
   useInView,
 } from "motion/react";
-import { type ComponentRef, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import CloseIcon from "~/assets/close.svg?react";
+import {
+  type ComponentRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useNavigate } from "react-router";
 import HamburgerMenu from "~/assets/hamburger-menu.svg?react";
 import IconFirst from "~/assets/icon-first.svg?react";
 import IconSecond from "~/assets/icon-second.svg?react";
@@ -17,110 +22,44 @@ import LogoForest from "~/assets/logo-forest.svg?react";
 import LogoOcean from "~/assets/logo-ocean.svg?react";
 import LogoWhite from "~/assets/logo-white.svg?react";
 import PaperTextureLayer from "~/shared/components/paper-texture-layer";
+import { Sidebar } from "~/shared/components/sidebar";
+import { TypingEffect } from "~/shared/components/typing-effect";
 import { useInterval } from "~/shared/hooks/use-interval";
-import { useKakaoScript } from "~/shared/hooks/use-kakao-script";
 import { cn } from "~/shared/utils/classname-utils";
 
 type HomeHeaderProps = {
   className?: string;
   backgroundColor: string;
   logo: React.ReactNode;
+  toggleOpenSidebar: () => void;
 };
 
-const HomeHeader = ({ className, backgroundColor, logo }: HomeHeaderProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+const HomeHeader = ({
+  className,
+  backgroundColor,
+  logo,
+  toggleOpenSidebar,
+}: HomeHeaderProps) => {
   return (
-    <>
-      <header
-        className={cn(
-          "flex items-center justify-between py-0.25 pr-4 pl-1.5",
-          className,
-          isMenuOpen && "bg-black",
-        )}
-        style={{ background: backgroundColor }}
+    <header
+      className={cn(
+        "flex items-center justify-between py-0.25 pr-4 pl-1.5",
+        className,
+      )}
+      style={{ background: backgroundColor }}
+    >
+      <button type="button" className="cursor-pointer">
+        {logo}
+      </button>
+
+      <button
+        type="button"
+        onClick={() => toggleOpenSidebar()}
+        className="cursor-pointer"
       >
-        <button type="button" className="cursor-pointer">
-          {logo}
-        </button>
-        {isMenuOpen ? (
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            className="cursor-pointer"
-          >
-            <CloseIcon />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            className="cursor-pointer"
-          >
-            <HamburgerMenu className="text-white" />
-          </button>
-        )}
-      </header>
-      {isMenuOpen && <HomeNavMenu backgroundColor={backgroundColor} />}
-    </>
-  );
-};
-
-type HomeNavMenuProps = {
-  backgroundColor: string;
-};
-
-const HomeNavMenu = ({ backgroundColor }: HomeNavMenuProps) => {
-  const { authorize } = useKakaoScript();
-
-  return (
-    <>
-      <div
-        className="absolute inset-0 z-50 mt-13 bg-black px-4"
-        style={{ background: backgroundColor }}
-      >
-        <PaperTextureLayer />
-        <div className="flex flex-col space-y-2.5 py-10 font-extrabold font-sf text-6xl text-white [&>a]:leading-[1.2]">
-          <Link to="/">Home</Link>
-          <Link to="#" onClick={() => authorize()}>
-            Login
-          </Link>
-          <Link to="#">Profile</Link>
-          <Link to="#">Contact</Link>
-        </div>
-      </div>
-    </>
-  );
-};
-
-type RevealProps = {
-  children: React.ReactNode;
-  duration?: number;
-  delay?: number;
-};
-
-const Reveal = ({ children, duration = 1.5, delay = 0.15 }: RevealProps) => {
-  const ref = useRef<ComponentRef<"div">>(null);
-
-  const isInView = useInView(ref, {
-    once: true,
-  });
-
-  const variants: Variants = {
-    hidden: { clipPath: "inset(0 100% 0 0)" },
-    visible: { clipPath: "inset(0 0 0 0)" },
-  };
-
-  return (
-    <div ref={ref} className="relative overflow-hidden">
-      <motion.div
-        variants={variants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        transition={{ duration, delay, ease: "linear" }}
-      >
-        {children}
-      </motion.div>
-    </div>
+        <HamburgerMenu className="text-white" />
+      </button>
+    </header>
   );
 };
 
@@ -175,7 +114,7 @@ const FirstOCharMotionComponent = ({
       viewBox="0 0 80 180"
       fill="none"
       style={{
-        opacity: isInView ? 1 : 0,
+        opacity: 0,
       }}
     >
       <path
@@ -226,7 +165,7 @@ const SecondOCharMotionComponent = ({
       height="180"
       viewBox="0 0 80 180"
       fill="none"
-      initial={{
+      style={{
         opacity: 0,
       }}
     >
@@ -278,7 +217,7 @@ const TCharMotionComponent = ({
       height="179"
       viewBox="0 0 80 179"
       fill="none"
-      initial={{
+      style={{
         opacity: 0,
       }}
     >
@@ -326,7 +265,7 @@ const DCharMotionComponent = ({
       height="180"
       viewBox="0 0 79 180"
       fill="none"
-      initial={{
+      style={{
         opacity: 0,
       }}
     >
@@ -341,90 +280,89 @@ const DCharMotionComponent = ({
 type StepProps = {
   backgroundColor: string;
   textColor: string;
+  toggleOpenSidebar: () => void;
 };
 
-const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
+const FirstStep = ({
+  backgroundColor,
+  textColor,
+  toggleOpenSidebar,
+}: StepProps) => {
   const [containerHeight, setContainerHeight] = useState(0);
   const imageRef = useRef<ComponentRef<"img">>(null);
-  const isInView = useInView(imageRef, {
-    once: true,
-  });
+
   const navigate = useNavigate();
+  const content = useMemo(
+    () => [
+      ["반가워", <IconFirst key="icon-first" />],
+      ["패션 매거진 편집장"],
+      ["엘리스 제인이야"],
+    ],
+    [],
+  );
+
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+
+  const handleTypingComplete = useCallback(() => {
+    setIsTypingComplete(true);
+  }, []);
 
   return (
     <>
       <PaperTextureLayer />
-      <HomeHeader backgroundColor={backgroundColor} logo={<LogoOcean />} />
+      <HomeHeader
+        backgroundColor={backgroundColor}
+        logo={<LogoOcean />}
+        toggleOpenSidebar={toggleOpenSidebar}
+      />
       <div
         className="flex h-full w-full flex-col justify-between pb-10"
         style={{ background: backgroundColor }}
       >
         <div>
           <div className="h-8" />
-          <div className="relative px-4">
-            <Reveal delay={1}>
-              <div className="flex gap-1">
-                <span
-                  className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                  style={{ color: textColor }}
-                >
-                  반가워
-                </span>
-                <IconFirst />
-              </div>
-            </Reveal>
-            <Reveal delay={2}>
-              <p
-                className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                style={{ color: textColor }}
-              >
-                패션 매거진 편집장
-              </p>
-            </Reveal>
-            <Reveal delay={3}>
-              <span
-                className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                style={{ color: textColor }}
-              >
-                엘리스 제인이야
-              </span>
-            </Reveal>
+          <div className="relative h-36 px-4">
+            <TypingEffect
+              lines={content}
+              startDelay={2000}
+              className="font-[900] text-[40px] leading-[1.2] tracking-[0]"
+              style={{ color: textColor }}
+              onComplete={handleTypingComplete}
+            />
           </div>
           <div className="h-[15px]" />
           <div className="px-4">
-            <Reveal delay={4}>
-              <button
-                type="button"
-                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
-                style={{ borderColor: textColor }}
-                onClick={() => navigate("/analyze")}
+            <button
+              type="button"
+              className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+              style={{ borderColor: textColor }}
+              onClick={() => navigate("/analyze")}
+            >
+              <span
+                className="font-bold text-[15px] leading-[1.2]"
+                style={{ color: textColor }}
               >
-                <span
-                  className="font-bold text-[15px] leading-[1.2]"
-                  style={{ color: textColor }}
-                >
-                  Start Fashion of AI
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="8"
-                  viewBox="0 0 18 8"
-                  fill="none"
-                >
-                  <title>arrow</title>
-                  <path
-                    d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
-                    fill={textColor}
-                  />
-                </svg>
-              </button>
-            </Reveal>
+                Start Fashion of AI
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="8"
+                viewBox="0 0 18 8"
+                fill="none"
+              >
+                <title>arrow</title>
+                <path
+                  d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
+                  fill={textColor}
+                />
+              </svg>
+            </button>
           </div>
         </div>
         <div className="h-1/2 pb-10">
           <div
-            className="flex h-full justify-center gap-2 overflow-hidden"
+            className="flex h-full justify-center gap-2"
             ref={(containerRef) => {
               if (containerRef) {
                 setContainerHeight(containerRef.clientHeight);
@@ -450,12 +388,12 @@ const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
               />
               <motion.img
                 ref={imageRef}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isInView ? 1 : 0 }}
-                transition={{ delay: 3 }}
                 src="/png/home-face.png"
                 alt="엘리스 제인"
-                className="absolute right-2 bottom-47.5"
+                className={cn(
+                  "absolute right-2 bottom-47.5 z-50",
+                  isTypingComplete && "animate-rotate-snap",
+                )}
                 width={100}
                 height={100}
               />
@@ -467,88 +405,87 @@ const FirstStep = ({ backgroundColor, textColor }: StepProps) => {
   );
 };
 
-const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
+const SecondStep = ({
+  backgroundColor,
+  textColor,
+  toggleOpenSidebar,
+}: StepProps) => {
   const [containerHeight, setContainerHeight] = useState(0);
   const imageRef = useRef<ComponentRef<"img">>(null);
-  const isInView = useInView(imageRef, {
-    once: true,
-  });
+
   const navigate = useNavigate();
+
+  const content = useMemo(
+    () => [
+      ["지금부터", <IconSecond key="icon-second" />],
+      ["너의 패션 스타일을"],
+      ["면밀하게 평가하겠어"],
+    ],
+    [],
+  );
+
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+
+  const handleTypingComplete = useCallback(() => {
+    setIsTypingComplete(true);
+  }, []);
 
   return (
     <>
       <PaperTextureLayer />
-      <HomeHeader backgroundColor={backgroundColor} logo={<LogoForest />} />
+      <HomeHeader
+        backgroundColor={backgroundColor}
+        logo={<LogoForest />}
+        toggleOpenSidebar={toggleOpenSidebar}
+      />
       <div
         className="flex h-full w-full flex-col justify-between pb-10"
         style={{ background: backgroundColor }}
       >
         <div>
           <div className="h-8" />
-          <div className="relative px-4">
-            <Reveal delay={1}>
-              <div className="flex gap-1">
-                <span
-                  className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                  style={{ color: textColor }}
-                >
-                  지금부터
-                </span>
-                <IconSecond />
-              </div>
-            </Reveal>
-            <Reveal delay={2}>
-              <p
-                className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                style={{ color: textColor }}
-              >
-                너의 패션 스타일을
-              </p>
-            </Reveal>
-            <Reveal delay={3}>
-              <span
-                className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                style={{ color: textColor }}
-              >
-                면밀하게 평가하겠어
-              </span>
-            </Reveal>
+          <div className="relative h-36 px-4">
+            <TypingEffect
+              lines={content}
+              startDelay={2000}
+              className="align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
+              style={{ color: textColor }}
+              onComplete={handleTypingComplete}
+            />
           </div>
           <div className="h-[15px]" />
           <div className="px-4">
-            <Reveal delay={4}>
-              <button
-                type="button"
-                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
-                style={{ borderColor: textColor }}
-                onClick={() => navigate("/analyze")}
+            <button
+              type="button"
+              className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+              style={{ borderColor: textColor }}
+              onClick={() => navigate("/analyze")}
+            >
+              <span
+                className="font-bold text-[15px] leading-[1.2]"
+                style={{ color: textColor }}
               >
-                <span
-                  className="font-bold text-[15px] leading-[1.2]"
-                  style={{ color: textColor }}
-                >
-                  Start Fashion of AI
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="8"
-                  viewBox="0 0 18 8"
-                  fill="none"
-                >
-                  <title>arrow</title>
-                  <path
-                    d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
-                    fill={textColor}
-                  />
-                </svg>
-              </button>
-            </Reveal>
+                Start Fashion of AI
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="8"
+                viewBox="0 0 18 8"
+                fill="none"
+              >
+                <title>arrow</title>
+                <path
+                  d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
+                  fill={textColor}
+                />
+              </svg>
+            </button>
           </div>
         </div>
         <div className="h-1/2 pb-10">
           <div
-            className="relative flex h-full justify-center gap-2 overflow-hidden"
+            className="relative flex h-full justify-center gap-2"
             ref={(containerRef) => {
               if (containerRef) {
                 setContainerHeight(containerRef.clientHeight);
@@ -574,12 +511,12 @@ const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
               />
               <motion.img
                 ref={imageRef}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isInView ? 1 : 0 }}
-                transition={{ delay: 3 }}
                 src="/png/home-face.png"
                 alt="엘리스 제인"
-                className="absolute right-2 bottom-47.5"
+                className={cn(
+                  "absolute right-2 bottom-47.5 z-50",
+                  isTypingComplete && "animate-rotate-snap",
+                )}
                 width={100}
                 height={100}
               />
@@ -590,88 +527,87 @@ const SecondStep = ({ backgroundColor, textColor }: StepProps) => {
     </>
   );
 };
-const ThirdStep = ({ backgroundColor, textColor }: StepProps) => {
+const ThirdStep = ({
+  backgroundColor,
+  textColor,
+  toggleOpenSidebar,
+}: StepProps) => {
   const [containerHeight, setContainerHeight] = useState(0);
   const imageRef = useRef<ComponentRef<"img">>(null);
-  const isInView = useInView(imageRef, {
-    once: true,
-  });
+
   const navigate = useNavigate();
+
+  const content = useMemo(
+    () => [
+      ["초상권은", <IconThird key="icon-third" />],
+      ["걱정하지말고"],
+      ["지금 시작해보라구"],
+    ],
+    [],
+  );
+
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+
+  const handleTypingComplete = useCallback(() => {
+    setIsTypingComplete(true);
+  }, []);
 
   return (
     <>
       <PaperTextureLayer />
-      <HomeHeader backgroundColor={backgroundColor} logo={<LogoWhite />} />
+      <HomeHeader
+        backgroundColor={backgroundColor}
+        logo={<LogoWhite />}
+        toggleOpenSidebar={toggleOpenSidebar}
+      />
       <div
         className="flex h-full w-full flex-col justify-between pb-10"
         style={{ background: backgroundColor }}
       >
         <div>
           <div className="h-8" />
-          <div className="relative px-4">
-            <Reveal delay={1}>
-              <div className="flex gap-1">
-                <span
-                  className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                  style={{ color: textColor }}
-                >
-                  초상권은
-                </span>
-                <IconThird />
-              </div>
-            </Reveal>
-            <Reveal delay={2}>
-              <p
-                className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                style={{ color: textColor }}
-              >
-                걱정하지말고
-              </p>
-            </Reveal>
-            <Reveal delay={3}>
-              <span
-                className="whitespace-pre align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
-                style={{ color: textColor }}
-              >
-                지금 시작해보라구
-              </span>
-            </Reveal>
+          <div className="relative h-36 px-4">
+            <TypingEffect
+              lines={content}
+              startDelay={2000}
+              className="align-top font-[900] text-[40px] leading-[1.2] tracking-[0]"
+              style={{ color: textColor }}
+              onComplete={handleTypingComplete}
+            />
           </div>
           <div className="h-[15px]" />
           <div className="px-4">
-            <Reveal delay={4}>
-              <button
-                type="button"
-                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
-                style={{ borderColor: textColor }}
-                onClick={() => navigate("/analyze")}
+            <button
+              type="button"
+              className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+              style={{ borderColor: textColor }}
+              onClick={() => navigate("/analyze")}
+            >
+              <span
+                className="font-bold text-[15px] leading-[1.2]"
+                style={{ color: textColor }}
               >
-                <span
-                  className="font-bold text-[15px] leading-[1.2]"
-                  style={{ color: textColor }}
-                >
-                  Start Fashion of AI
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="8"
-                  viewBox="0 0 18 8"
-                  fill="none"
-                >
-                  <title>arrow</title>
-                  <path
-                    d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
-                    fill={textColor}
-                  />
-                </svg>
-              </button>
-            </Reveal>
+                Start Fashion of AI
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="8"
+                viewBox="0 0 18 8"
+                fill="none"
+              >
+                <title>arrow</title>
+                <path
+                  d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
+                  fill={textColor}
+                />
+              </svg>
+            </button>
           </div>
         </div>
         <div className="h-1/2 pb-10">
           <div
-            className="flex h-full justify-center gap-2 overflow-hidden"
+            className="flex h-full justify-center gap-2"
             ref={(containerRef) => {
               if (containerRef) {
                 setContainerHeight(containerRef.clientHeight);
@@ -697,12 +633,12 @@ const ThirdStep = ({ backgroundColor, textColor }: StepProps) => {
               />
               <motion.img
                 ref={imageRef}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isInView ? 1 : 0 }}
-                transition={{ delay: 3 }}
                 src="/png/home-face.png"
                 alt="엘리스 제인"
-                className="absolute right-2 bottom-47.5"
+                className={cn(
+                  "absolute right-2 bottom-47.5 z-50",
+                  isTypingComplete && "animate-rotate-snap",
+                )}
                 width={100}
                 height={100}
               />
@@ -745,46 +681,54 @@ export default function Home() {
     ],
   );
 
+  const [isOpenSidebar, toggleOpenSidebar] = useCycle(false, true);
+
   useInterval(() => {
     toNextStep();
-  }, 8000);
+  }, 12000);
 
   return (
-    <div
-      className="h-full overflow-hidden"
-      style={{
-        background: step.backgroundColor,
-      }}
-    >
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={step.name}
-          variants={sliderVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="h-full w-full"
-        >
-          {step.name === "first" && (
-            <FirstStep
-              backgroundColor={step.backgroundColor}
-              textColor={step.textColor}
-            />
-          )}
-          {step.name === "second" && (
-            <SecondStep
-              backgroundColor={step.backgroundColor}
-              textColor={step.textColor}
-            />
-          )}
-          {step.name === "third" && (
-            <ThirdStep
-              backgroundColor={step.backgroundColor}
-              textColor={step.textColor}
-            />
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+    <>
+      <div
+        className="relative h-full overflow-hidden"
+        style={{
+          background: step.backgroundColor,
+        }}
+      >
+        <AnimatePresence initial={false} mode="popLayout">
+          <motion.div
+            key={step.name}
+            variants={sliderVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="h-full w-full"
+          >
+            {step.name === "first" && (
+              <FirstStep
+                backgroundColor={step.backgroundColor}
+                textColor={step.textColor}
+                toggleOpenSidebar={toggleOpenSidebar}
+              />
+            )}
+            {step.name === "second" && (
+              <SecondStep
+                backgroundColor={step.backgroundColor}
+                textColor={step.textColor}
+                toggleOpenSidebar={toggleOpenSidebar}
+              />
+            )}
+            {step.name === "third" && (
+              <ThirdStep
+                backgroundColor={step.backgroundColor}
+                textColor={step.textColor}
+                toggleOpenSidebar={toggleOpenSidebar}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
+        {isOpenSidebar && <Sidebar toggleOpen={toggleOpenSidebar} />}
+      </div>
+    </>
   );
 }
