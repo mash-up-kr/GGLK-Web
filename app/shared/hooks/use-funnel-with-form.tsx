@@ -7,6 +7,7 @@ import React, {
   type ReactNode,
 } from "react";
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 type FunnelProps = ComponentPropsWithoutRef<"div">;
 
@@ -19,14 +20,17 @@ interface FunnelConfig<D extends FieldValues = FieldValues> {
   methods: UseFormReturn<D>;
   onSubmit: (data: D) => void;
   onStepChange?: () => void;
+  defaultOnPrev?: () => void;
 }
 
 export default function useFunnelWithForm<D extends FieldValues = FieldValues>({
   methods,
   onSubmit,
   onStepChange,
+  defaultOnPrev,
 }: FunnelConfig<D>) {
   const { trigger, handleSubmit } = methods;
+  const navigate = useNavigate();
   // const [step, setStep] = useState<T>(defaultStep);
   const [step, setStep] = useState<number>(0);
   const history = useRef<Path<D>[]>([]);
@@ -69,8 +73,10 @@ export default function useFunnelWithForm<D extends FieldValues = FieldValues>({
       setStep((prev) => prev - 1);
       onStepChange?.();
       history.current.pop();
+    } else {
+      defaultOnPrev?.();
     }
-  }, [canMoveToPrevious, onStepChange]);
+  }, [canMoveToPrevious, onStepChange, defaultOnPrev]);
 
   const Funnel = useCallback(
     ({ children, className, ...props }: FunnelProps) => {

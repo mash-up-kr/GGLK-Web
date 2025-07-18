@@ -4,6 +4,7 @@ import ModalIcon1 from "~/assets/image-studio/modal-icon-1.svg?react";
 import ModalIcon2 from "~/assets/image-studio/modal-icon-2.svg?react";
 import ModalIcon3 from "~/assets/image-studio/modal-icon-3.svg?react";
 import Underline from "~/assets/image-studio/underline.svg?react";
+import PaperTextureLayer from "~/shared/components/paper-texture-layer";
 import Modal from "../../../shared/components/modal";
 import SvgContainer from "../../../shared/components/svg-container";
 
@@ -42,7 +43,8 @@ export default function ImageSelectGuideModal({
           className="xs:w-full select-none"
           isKeepRatio
         >
-          <div className="flex h-full flex-col items-center justify-between break-keep px-8 py-14 font-sf">
+          <PaperTextureLayer className="inset-1.5 rounded-tr-[44px] rounded-bl-[44px]" />
+          <div className="flex h-full flex-col items-center justify-between overflow-hidden break-keep px-8 py-14 font-sf">
             <div className="flex flex-col items-center font-bold text-lg xs:text-xl ">
               <div className="flex items-center space-x-2">
                 <ExclamationMark className="size-4 xs:size-5" />

@@ -30,7 +30,7 @@ export function ReanalyzeContent({
         <button
           type="button"
           onClick={handleKakaoLogin}
-          className="flex w-full flex-row items-center justify-center gap-x-3 rounded-lg bg-[#FEE500] px-4 py-3 font-medium"
+          className="flex w-full cursor-pointer flex-row items-center justify-center gap-x-3 rounded-lg bg-[#FEE500] px-4 py-3 font-medium"
         >
           <img
             src={"/png/IconKakaoLogo.png"}

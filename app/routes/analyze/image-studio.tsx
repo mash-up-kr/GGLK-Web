@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { type Path, useFormContext } from "react-hook-form";
 import { usePictureControllerUploadPicture } from "~/api/endpoints/api";
 import { toast } from "~/shared/stores/toast-store";
+import { cn } from "~/shared/utils/classname-utils";
 import { convertHeicToJpeg, isHeicFile } from "~/shared/utils/image-utils";
 import type { AnalyzeFormData } from "./analyze";
 import InitialContent from "./image-studio/initial-contnet";
@@ -90,9 +91,18 @@ export default function ImageStudioPage({
   return (
     <div className="relative flex h-full grow flex-col">
       <StickersBackground
-        firstStickerClassName="-translate-x-1/2 -rotate-30 top-1/12 left-0"
-        secondStickerClassName="right-0 bottom-1/4 right-0 translate-x-1/2"
-        thirdStickerClassName="-translate-x-1/2 bottom-1/12 left-0 rotate-30"
+        firstStickerClassName={cn(
+          "-translate-x-1/2 -rotate-30 top-1/12 left-0",
+          (tempImageUrl || isConverting) && "opacity-20",
+        )}
+        secondStickerClassName={cn(
+          "right-0 bottom-1/4 right-0 translate-x-1/2",
+          (tempImageUrl || isConverting) && "opacity-20",
+        )}
+        thirdStickerClassName={cn(
+          "-translate-x-1/2 bottom-1/12 left-0 rotate-30",
+          (tempImageUrl || isConverting) && "opacity-20",
+        )}
       />
       <input
         id="picture"
