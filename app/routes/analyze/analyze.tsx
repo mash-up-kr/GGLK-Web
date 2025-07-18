@@ -96,6 +96,9 @@ export default function Analyze() {
     onStepChange: () => {
       console.log("step changed");
     },
+    defaultOnPrev: () => {
+      navigate("/");
+    },
   });
 
   // watch로 intensity 값을 실시간으로 감지
