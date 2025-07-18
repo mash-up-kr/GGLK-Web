@@ -1,10 +1,4 @@
-import {
-  AnimatePresence,
-  motion,
-  useAnimate,
-  useCycle,
-  useInView,
-} from "motion/react";
+import { AnimatePresence, motion, useAnimate, useCycle } from "motion/react";
 import {
   type ComponentRef,
   useCallback,
@@ -78,31 +72,35 @@ const FirstOCharMotionComponent = ({
   color,
 }: FirstOCharMotionComponentProps) => {
   const [scope, animate] = useAnimate();
-  const isInView = useInView(scope, {
-    once: true,
-  });
 
   useEffect(() => {
-    if (containerHeight && scope.current && isInView) {
+    if (containerHeight && scope.current) {
+      animate(
+        scope.current,
+        { opacity: [0, 1] },
+        { duration: 0.2, delay: 0.5 },
+      );
       animate(
         scope.current,
         {
-          opacity: [0, 1],
           y: [
             0,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 150%)`,
+            `calc(${containerHeight}px - 120%)`,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 130%)`,
+            `calc(${containerHeight}px - 105%)`,
+            `calc(${containerHeight}px - 100%)`,
+            `calc(${containerHeight}px - 102%)`,
             `calc(${containerHeight}px - 100%)`,
           ],
         },
         {
-          delay: 0.1,
+          delay: 0.5,
+          duration: 1,
         },
       );
     }
-  }, [containerHeight, animate, scope, isInView]);
+  }, [containerHeight, animate, scope]);
 
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
@@ -130,31 +128,33 @@ const SecondOCharMotionComponent = ({
   color,
 }: SecondOCharMotionComponentProps) => {
   const [scope, animate] = useAnimate();
-  const isInView = useInView(scope, {
-    once: true,
-  });
 
   useEffect(() => {
-    if (containerHeight && scope.current && isInView) {
+    if (containerHeight && scope.current) {
+      animate(
+        scope.current,
+        { opacity: [0, 1] },
+        { duration: 0.2, delay: 0.6 },
+      );
       animate(
         scope.current,
         {
-          opacity: [0, 1],
           y: [
             0,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 150%)`,
+            `calc(${containerHeight}px - 120%)`,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 130%)`,
+            `calc(${containerHeight}px - 101%)`,
             `calc(${containerHeight}px - 100%)`,
           ],
         },
         {
-          delay: 0.2,
+          delay: 0.6,
+          duration: 1,
         },
       );
     }
-  }, [containerHeight, animate, scope, isInView]);
+  }, [containerHeight, animate, scope]);
 
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
@@ -182,31 +182,35 @@ const TCharMotionComponent = ({
   color,
 }: TCharMotionComponentProps) => {
   const [scope, animate] = useAnimate();
-  const isInView = useInView(scope, {
-    once: true,
-  });
 
   useEffect(() => {
-    if (containerHeight && scope.current && isInView) {
+    if (containerHeight && scope.current) {
+      animate(
+        scope.current,
+        { opacity: [0, 1] },
+        { duration: 0.2, delay: 0.7 },
+      );
       animate(
         scope.current,
         {
-          opacity: [0, 1],
           y: [
             0,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 150%)`,
+            `calc(${containerHeight}px - 120%)`,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 130%)`,
+            `calc(${containerHeight}px - 105%)`,
+            `calc(${containerHeight}px - 100%)`,
+            `calc(${containerHeight}px - 101%)`,
             `calc(${containerHeight}px - 100%)`,
           ],
         },
         {
-          delay: 0.3,
+          delay: 0.7,
+          duration: 1,
         },
       );
     }
-  }, [containerHeight, animate, scope, isInView]);
+  }, [containerHeight, animate, scope]);
 
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
@@ -230,31 +234,33 @@ const DCharMotionComponent = ({
   color,
 }: DCharMotionComponentProps) => {
   const [scope, animate] = useAnimate();
-  const isInView = useInView(scope, {
-    once: true,
-  });
 
   useEffect(() => {
-    if (containerHeight && scope.current && isInView) {
+    if (containerHeight && scope.current) {
+      animate(
+        scope.current,
+        { opacity: [0, 1] },
+        { duration: 0.2, delay: 0.8 },
+      );
       animate(
         scope.current,
         {
-          opacity: [0, 1],
           y: [
             0,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 150%)`,
+            `calc(${containerHeight}px - 120%)`,
             `calc(${containerHeight}px - 100%)`,
-            `calc(${containerHeight}px - 130%)`,
+            `calc(${containerHeight}px - 101%)`,
             `calc(${containerHeight}px - 100%)`,
           ],
         },
         {
-          delay: 0.4,
+          delay: 0.8,
+          duration: 1,
         },
       );
     }
-  }, [containerHeight, animate, scope, isInView]);
+  }, [containerHeight, animate, scope]);
 
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
@@ -292,6 +298,7 @@ const FirstStep = ({
   const imageRef = useRef<ComponentRef<"img">>(null);
 
   const navigate = useNavigate();
+
   const content = useMemo(
     () => [
       ["반가워", <IconFirst key="icon-first" />],
@@ -332,32 +339,34 @@ const FirstStep = ({
           </div>
           <div className="h-[15px]" />
           <div className="px-4">
-            <button
-              type="button"
-              className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
-              style={{ borderColor: textColor }}
-              onClick={() => navigate("/analyze")}
-            >
-              <span
-                className="font-bold text-[15px] leading-[1.2]"
-                style={{ color: textColor }}
+            {isTypingComplete && (
+              <button
+                type="button"
+                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+                style={{ borderColor: textColor }}
+                onClick={() => navigate("/analyze")}
               >
-                Start Fashion of AI
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="8"
-                viewBox="0 0 18 8"
-                fill="none"
-              >
-                <title>arrow</title>
-                <path
-                  d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
-                  fill={textColor}
-                />
-              </svg>
-            </button>
+                <span
+                  className="font-bold text-[15px] leading-[1.2]"
+                  style={{ color: textColor }}
+                >
+                  Start Fashion of AI
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="8"
+                  viewBox="0 0 18 8"
+                  fill="none"
+                >
+                  <title>arrow</title>
+                  <path
+                    d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
+                    fill={textColor}
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
         <div className="h-1/2 pb-10">
@@ -391,8 +400,8 @@ const FirstStep = ({
                 src="/png/home-face.png"
                 alt="엘리스 제인"
                 className={cn(
-                  "absolute right-2 bottom-47.5 z-50",
-                  isTypingComplete && "animate-rotate-snap",
+                  "absolute right-2 bottom-47.5 z-50 opacity-0",
+                  isTypingComplete && "animate-rotate-snap opacity-100",
                 )}
                 width={100}
                 height={100}
@@ -455,32 +464,34 @@ const SecondStep = ({
           </div>
           <div className="h-[15px]" />
           <div className="px-4">
-            <button
-              type="button"
-              className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
-              style={{ borderColor: textColor }}
-              onClick={() => navigate("/analyze")}
-            >
-              <span
-                className="font-bold text-[15px] leading-[1.2]"
-                style={{ color: textColor }}
+            {isTypingComplete && (
+              <button
+                type="button"
+                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+                style={{ borderColor: textColor }}
+                onClick={() => navigate("/analyze")}
               >
-                Start Fashion of AI
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="8"
-                viewBox="0 0 18 8"
-                fill="none"
-              >
-                <title>arrow</title>
-                <path
-                  d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
-                  fill={textColor}
-                />
-              </svg>
-            </button>
+                <span
+                  className="font-bold text-[15px] leading-[1.2]"
+                  style={{ color: textColor }}
+                >
+                  Start Fashion of AI
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="8"
+                  viewBox="0 0 18 8"
+                  fill="none"
+                >
+                  <title>arrow</title>
+                  <path
+                    d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
+                    fill={textColor}
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
         <div className="h-1/2 pb-10">
@@ -514,8 +525,8 @@ const SecondStep = ({
                 src="/png/home-face.png"
                 alt="엘리스 제인"
                 className={cn(
-                  "absolute right-2 bottom-47.5 z-50",
-                  isTypingComplete && "animate-rotate-snap",
+                  "absolute right-2 bottom-47.5 z-50 opacity-0",
+                  isTypingComplete && "animate-rotate-snap opacity-100",
                 )}
                 width={100}
                 height={100}
@@ -577,32 +588,34 @@ const ThirdStep = ({
           </div>
           <div className="h-[15px]" />
           <div className="px-4">
-            <button
-              type="button"
-              className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
-              style={{ borderColor: textColor }}
-              onClick={() => navigate("/analyze")}
-            >
-              <span
-                className="font-bold text-[15px] leading-[1.2]"
-                style={{ color: textColor }}
+            {isTypingComplete && (
+              <button
+                type="button"
+                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+                style={{ borderColor: textColor }}
+                onClick={() => navigate("/analyze")}
               >
-                Start Fashion of AI
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="8"
-                viewBox="0 0 18 8"
-                fill="none"
-              >
-                <title>arrow</title>
-                <path
-                  d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
-                  fill={textColor}
-                />
-              </svg>
-            </button>
+                <span
+                  className="font-bold text-[15px] leading-[1.2]"
+                  style={{ color: textColor }}
+                >
+                  Start Fashion of AI
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="8"
+                  viewBox="0 0 18 8"
+                  fill="none"
+                >
+                  <title>arrow</title>
+                  <path
+                    d="M17.3536 4.35355C17.5488 4.15829 17.5488 3.84171 17.3536 3.64645L14.1716 0.464466C13.9763 0.269204 13.6597 0.269204 13.4645 0.464466C13.2692 0.659728 13.2692 0.976311 13.4645 1.17157L16.2929 4L13.4645 6.82843C13.2692 7.02369 13.2692 7.34027 13.4645 7.53553C13.6597 7.7308 13.9763 7.7308 14.1716 7.53553L17.3536 4.35355ZM0 4V4.5H17V4V3.5H0V4Z"
+                    fill={textColor}
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
         <div className="h-1/2 pb-10">
@@ -636,8 +649,8 @@ const ThirdStep = ({
                 src="/png/home-face.png"
                 alt="엘리스 제인"
                 className={cn(
-                  "absolute right-2 bottom-47.5 z-50",
-                  isTypingComplete && "animate-rotate-snap",
+                  "absolute right-2 bottom-47.5 z-50 opacity-0",
+                  isTypingComplete && "animate-rotate-snap opacity-100",
                 )}
                 width={100}
                 height={100}
@@ -685,7 +698,7 @@ export default function Home() {
 
   useInterval(() => {
     toNextStep();
-  }, 12000);
+  }, 11000);
 
   return (
     <>
