@@ -122,6 +122,7 @@ export default function Analyze() {
         <Header
           onPrevious={onPrev}
           className={cn(step === 0 ? "text-white" : "")}
+          isMenuIconHidden={step === 1}
         />
 
         {isPending || isSuccess ? (
