@@ -28,7 +28,7 @@ export default function Theme3({
       </div>
       <div className="absolute bottom-10 z-50 w-[257px] translate-x-1/2">
         <img src="/png/photoboothSmall.png" alt="photoboothSmall" />
-        <div className="absolute inset-0 flex flex-col justify-between p-4">
+        <div className="absolute inset-0 flex flex-col p-4">
           <div
             className="flex flex-col space-y-1 p-2 text-gray-300"
             style={{ marginTop: "10%" }}
@@ -51,7 +51,7 @@ export default function Theme3({
             <div className="flex flex-row items-start gap-x-1">
               <div className="text-[9px]">Hash Tag:</div>
               <div className="flex flex-row items-start gap-x-1 text-[9px]">
-                <div className="grid grid-cols-2 gap-x-0.5">
+                <div className="grid grid-cols-2 gap-x-auto">
                   {evaluationData.hashtagList.map((hashtag) => (
                     <span
                       key={`hashtag-${hashtag}`}
@@ -64,9 +64,9 @@ export default function Theme3({
               </div>
             </div>
           </div>
-          <div className="flex flex-col space-y-1">
+          <div className="mt-2 flex flex-col space-y-1">
             <hr className="w-full border-[#676767] border-t" />
-            <div className="text-center">
+            <div className="mt-1 text-center">
               <span className="font-['NeoDunggeunmo'] text-[17px] text-black">
                 Score:{" "}
               </span>

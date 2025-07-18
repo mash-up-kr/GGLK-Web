@@ -58,20 +58,13 @@ export default function Theme1({
       <EvaluationText evaluationData={evaluationData} />
 
       <div className="absolute inset-0 z-10">
-        <div className="absolute top-4 left-4">
+        <div className="-translate-x-1/2 absolute top-0 left-1/2">
+          <img src="/png/iconX.png" className="h-[85px] w-[85px]" alt="X" />
+        </div>
+        <div className="absolute top-25 right-12">
           <img
             src="/png/iconStarBlack.png"
             className="h-[24px] w-[24px]"
-            alt="star"
-          />
-        </div>
-        <div className="absolute top-0 right-1/3">
-          <img src="/png/iconX.png" className="h-[85px] w-[85px]" alt="X" />
-        </div>
-        <div className="absolute top-20 right-10">
-          <img
-            src="/png/iconStarBlack.png"
-            className="h-[30px] w-[30px]"
             alt="iconStarBlack"
           />
         </div>
@@ -82,18 +75,25 @@ export default function Theme1({
             alt="smile"
           />
         </div>
-        <div className="-rotate-1 absolute top-15 left-15">
+        <div className="-rotate-1 absolute top-15 left-19">
           <img
             src="/png/iconTagEasy.png"
             className="h-[21px] w-[63px]"
             alt="iconTagEasy"
           />
         </div>
-        <div className="absolute top-50 right-10 rotate-10">
+        <div className="absolute top-60 right-5 rotate-10">
           <img
             src="/png/iconHanger.png"
             className="h-[38px] w-[46px]"
             alt="iconHanger"
+          />
+        </div>
+        <div className="-rotate-15 absolute bottom-19 left-11 z-0">
+          <img
+            src="/png/iconTshirt.png"
+            className="h-[64px] w-[84px]"
+            alt="iconTshirt"
           />
         </div>
         <div className="-rotate-30 -right-10 absolute bottom-30">

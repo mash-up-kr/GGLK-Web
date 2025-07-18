@@ -19,7 +19,7 @@ const CarouselContainer: React.FC<CarouselContainerProps> = ({
   onSelectIndexChange,
 }) => {
   return (
-    <div className="h-full w-full">
+    <div className="carousel-container h-full w-full">
       <Carousel
         theme="dark"
         slides={slides}

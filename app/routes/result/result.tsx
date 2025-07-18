@@ -1,6 +1,7 @@
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+// @ts-ignore
 import {
   useEvaluationControllerCheckIfGuestUserUseChance,
   useEvaluationControllerGetEvaluationById,
@@ -189,7 +190,6 @@ export default function ResultPage() {
     return "Unknown";
   }, []);
 
-  // 이미지 추출 및 저장 로직
   const handleSaveImage = useCallback(async () => {
     try {
       const container = containerRef.current;
@@ -204,16 +204,11 @@ export default function ResultPage() {
       // 바텀시트가 열려있으면 닫기
       if (isBottomSheetOpen) {
         setIsBottomSheetOpen(false);
-        // 바텀시트가 완전히 닫힐 때까지 잠시 대기
         await new Promise((resolve) => setTimeout(resolve, 300));
       }
 
-      // 캡처할 영역 계산 (전체 컨테이너를 캡처하되 슬라이드 영역만 잘라내기)
-      const slideContainer = container.querySelector(
-        '[class*="h-full overflow-hidden"]',
-      ) as HTMLElement | null;
-
-      if (!slideContainer) {
+      const slideArea = container.querySelector(".slide-area") as HTMLElement;
+      if (!slideArea) {
         const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
         toast.error("이미지 저장 실패", {
           offset: { y: bottomSheetHeight + 4 },
@@ -221,57 +216,143 @@ export default function ResultPage() {
         return;
       }
 
-      const html2canvas = (await import("html2canvas")).default;
-
-      // 전체 컨테이너를 캡처 (테마 배경 이미지 포함)
-      const fullCanvas = await html2canvas(container, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null,
-        scrollY: -window.scrollY,
-      });
-
-      // 슬라이드 영역만 잘라내기
-      const slideTop = slideContainer.offsetTop;
-      const slideHeight = slideContainer.offsetHeight;
-      const containerWidth = container.offsetWidth;
-
-      const cropCanvas = document.createElement("canvas");
-      const finalWidth = 375; // 375 * 2 (scale 2 적용)
-      const finalHeight = 670; // 670 * 2 (scale 2 적용)
-
-      cropCanvas.width = finalWidth;
-      cropCanvas.height = finalHeight;
-
-      const ctx = cropCanvas.getContext("2d");
-      if (!ctx) {
-        const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
-        toast.error("이미지 저장 실패", {
-          offset: { y: bottomSheetHeight + 4 },
-        });
-        return;
+      // 폰트 로딩 완료 대기 추가
+      if (document?.fonts?.ready) {
+        await document.fonts.ready;
+        console.log("폰트 로딩 완");
       }
 
-      // 전체 캔버스에서 슬라이드 영역만 잘라내기 (375×670 크기로 고정)
-      ctx.drawImage(
-        fullCanvas,
-        0,
-        slideTop * 2,
-        containerWidth * 2,
-        slideHeight * 2, // src (잘라낼 영역)
-        0,
-        0,
-        finalWidth,
-        finalHeight, // dest (375×670 크기로 고정)
+      // 모든 이미지 로딩 완료까지 대기하기,
+      const allImages = slideArea.querySelectorAll("img");
+
+      await Promise.all(
+        Array.from(allImages).map((img, index) => {
+          return new Promise<void>((resolve) => {
+            console.log(`이미지 ${index} 로딩중:`, img.src);
+
+            if (img.complete && img.naturalWidth > 0) {
+              console.log(`이미지 ${index} 이미 로딩완`);
+              resolve();
+            } else {
+              img.onload = () => {
+                console.log(`이미지 ${index} 로딩 완료`);
+                resolve();
+              };
+              img.onerror = () => {
+                console.warn(`이미지 ${index} 로딩 실패:`, img.src);
+                // CORS 에러 시 기본 몽구 이미지로 대체
+                if (
+                  img.src.includes("naverncp.com") ||
+                  img.src.includes("http")
+                ) {
+                  img.src = "/png/1.png"; // 기본 이미지로 대체
+                  console.log(`이미지 ${index}  대체됨`);
+                }
+                resolve();
+              };
+              setTimeout(() => {
+                console.warn(`이미지 ${index} 타임아웃`);
+                if (
+                  img.src.includes("naverncp.com") ||
+                  img.src.includes("http")
+                ) {
+                  img.src = "/png/1.png"; // 기본 이미지로 대체
+                }
+                resolve();
+              }, 5000);
+            }
+          });
+        }),
       );
 
-      // 이미지 다운로드
-      const link = document.createElement("a");
-      const browserInfo = getBrowserInfo().toLowerCase().replace(/\s+/g, "-");
-      link.download = `ootd-result-${browserInfo}-${Date.now()}.png`;
-      link.href = cropCanvas.toDataURL("image/png");
-      link.click();
+      // 배경 이미지 로딩을 위한 추가 대기
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // 저장 전에 외부 이미지를 로컬 이미지로 임시 변경 - CORS 우회 FIXME
+      const originalSrcs: string[] = [];
+      const externalImages = slideArea.querySelectorAll('img[src*="http"]');
+      externalImages.forEach((img, index) => {
+        const imgElement = img as HTMLImageElement;
+        originalSrcs[index] = imgElement.src;
+        imgElement.src = "/png/1.png"; //FIXME
+      });
+
+      // 캐러셀 인덱스 버튼 - 캡쳐할 때 숨기도록
+      const carouselButtons = slideArea.querySelectorAll(
+        ".carousel-buttons, .carousel-container button",
+      );
+      const originalDisplay: string[] = [];
+      carouselButtons.forEach((button, index) => {
+        const buttonElement = button as HTMLElement;
+        originalDisplay[index] = buttonElement.style.display;
+        buttonElement.style.display = "none";
+      });
+
+      const exportDomAsPng = async (el: HTMLElement, fileName: string) => {
+        // html-to-image
+        const { toPng } = await import("html-to-image");
+
+        // 현재 테마 인덱스에 따른 배경색 설정 FIXME
+        let backgroundColor = "#ffffff"; // 기본 fallback 임시로 주도록 설정
+        switch (selectedThemeIndex) {
+          case 0:
+            backgroundColor = "#181818"; // 테마 1: 검은색
+            break;
+          case 1:
+            backgroundColor = "#ffffff"; // 테마 2: 흰색
+            break;
+          case 2:
+            backgroundColor = "#ffffff"; // 테마 3: 흰색
+            break;
+          default:
+            backgroundColor = "#ffffff";
+        }
+
+        try {
+          const dataUrl = await toPng(el, {
+            quality: 1.0,
+            width: el.offsetWidth,
+            height: el.offsetHeight,
+            backgroundColor: backgroundColor, // 테마별 배경색 설정
+            style: {
+              transform: "scale(1)",
+              transformOrigin: "top left",
+            },
+          });
+
+          const link = document.createElement("a");
+          const browserInfo = getBrowserInfo()
+            .toLowerCase()
+            .replace(/\s+/g, "-");
+          link.download = `${fileName}-${browserInfo}-${Date.now()}.png`;
+          link.href = dataUrl;
+          link.click();
+        } catch (error) {
+          console.error("이미지 생성 실패:", error);
+          throw error;
+        }
+      };
+
+      // slide-area를 PNG로 저장
+      await exportDomAsPng(slideArea, "ootd-result");
+
+      // 캡처 후 원본 이미지로 복원
+      externalImages.forEach((img, index) => {
+        const imgElement = img as HTMLImageElement;
+        if (originalSrcs[index]) {
+          imgElement.src = originalSrcs[index];
+        }
+      });
+
+      // 캐러셀 버튼들 복원
+      carouselButtons.forEach((button, index) => {
+        const buttonElement = button as HTMLElement;
+        if (originalDisplay[index] !== undefined) {
+          buttonElement.style.display = originalDisplay[index];
+        } else {
+          buttonElement.style.display = "";
+        }
+      });
 
       const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
       toast.success("이미지 저장 완료!", {
@@ -282,7 +363,7 @@ export default function ResultPage() {
       const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
       toast.error("이미지 저장 실패", { offset: { y: bottomSheetHeight + 4 } });
     }
-  }, [getBrowserInfo, isBottomSheetOpen]);
+  }, [getBrowserInfo, isBottomSheetOpen, selectedThemeIndex]);
 
   const handleCopyLink = async () => {
     try {

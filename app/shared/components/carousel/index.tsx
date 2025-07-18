@@ -128,7 +128,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
         className={cn(
           "relative mx-auto",
           fullWidthSlide
-            ? "h-[670px] w-[375px]"
+            ? "slide-area h-[670px] w-[375px]"
             : "w-5/6 min-w-[280px] max-w-md grow",
         )}
       >
