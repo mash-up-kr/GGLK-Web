@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useEffect } from "react";
 import { toastHandler } from "~/shared/stores/toast-store";
 import type { Toast } from "~/shared/types/toast";
+import { cn } from "~/shared/utils/classname-utils";
 
 interface ToastItemProps {
   toast: Toast;
@@ -14,7 +15,7 @@ export default function ToastItem({ toast }: ToastItemProps) {
   useEffect(() => {
     const timerId = setTimeout(() => {
       toastHandler.dispatch({ type: "remove" });
-    }, 1000);
+    }, 2500);
 
     return () => {
       clearTimeout(timerId);
@@ -28,9 +29,10 @@ export default function ToastItem({ toast }: ToastItemProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
-      className={
-        "relative z-50 w-fit max-w-full rounded-3xl bg-black px-5 py-2.5 text-center text-sm text-white"
-      }
+      className={cn(
+        "relative z-50 w-fit max-w-full rounded-3xl bg-black px-5 py-2.5 text-center text-sm text-white",
+        type === "error" && "bg-red-600",
+      )}
       style={{
         bottom: offset?.y,
         left: offset?.x,

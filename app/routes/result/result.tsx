@@ -1,11 +1,13 @@
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Lottie from "react-lottie";
 import { useNavigate, useSearchParams } from "react-router";
 import {
   useEvaluationControllerCheckIfGuestUserUseChance,
   useEvaluationControllerGetEvaluationById,
 } from "~/api/endpoints/api";
 import type { EvaluationItemResponseDto, Picture } from "~/api/model";
+import Loading from "~/assets/loading.json";
 import BottomSheet, {
   type BottomSheetAction,
   BOTTOM_SHEET_HEIGHT,
@@ -143,6 +145,7 @@ export default function ResultPage() {
   const {
     data: evaluationData,
     isLoading,
+    isError,
     error,
   } = useEvaluationControllerGetEvaluationById(
     evaluationId ? Number.parseInt(evaluationId) : 0,
@@ -402,28 +405,72 @@ export default function ResultPage() {
     },
   ];
 
+  // evaluationId가 없는 경우 홈으로 리다이렉트
+  useEffect(() => {
+    if (!evaluationId) {
+      navigate("/", { replace: true });
+      toast.error("잘못된 접근입니다.");
+    }
+  }, [evaluationId, navigate]);
+
   // 조건부 반환문들을 모든 Hook 이후에 배치
-  if (isLoading) {
-    return <div>로딩중</div>;
-  }
-
-  // evaluationId가 없는 경우만 홈으로 리다이렉트
   if (!evaluationId) {
-    useEffect(() => {
-      navigate("/");
-    }, [navigate]);
-    return <div>잘못된 접근입니다.</div>;
+    return (
+      <div className="relative h-full w-full overflow-hidden transition-colors duration-500">
+        <div
+          className={`flex h-full items-center justify-center text-white ${getThemeBackgroundClass(0)}`}
+        >
+          잘못된 접근입니다.
+        </div>
+      </div>
+    );
   }
 
-  if (!isLoading && !evaluationData?.data) {
-    useEffect(() => {
-      navigate("/");
-    }, [navigate]);
-    return <div>데이터를 찾을 수 없습니다.</div>;
+  // 로딩 중
+  if (isLoading) {
+    return (
+      <div className="relative h-full w-full overflow-hidden transition-colors duration-500">
+        <div
+          className={`flex h-full items-center justify-center text-white ${getThemeBackgroundClass(0)}`}
+        >
+          <Lottie
+            width={80}
+            height={80}
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: Loading,
+            }}
+          />
+        </div>
+      </div>
+    );
   }
 
-  if (error && evaluationId) {
-    return <div>데이터를 불러올 수 없습니다.</div>;
+  // 에러 처리
+  if (isError) {
+    // 404 에러 (데이터를 찾을 수 없음)
+    if (error.code === "404") {
+      return (
+        <div className="relative h-full w-full overflow-hidden transition-colors duration-500">
+          <div
+            className={`flex h-full items-center justify-center text-white ${getThemeBackgroundClass(0)}`}
+          >
+            데이터를 찾을 수 없습니다
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative h-full w-full overflow-hidden transition-colors duration-500">
+        <div
+          className={`flex h-full items-center justify-center text-white ${getThemeBackgroundClass(0)}`}
+        >
+          데이터를 불러올 수 없습니다.
+        </div>
+      </div>
+    );
   }
 
   return (
