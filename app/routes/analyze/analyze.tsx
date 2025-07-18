@@ -23,7 +23,7 @@ import StickersBackground from "./image-studio/stickers-background";
 import IntensitySelectPage from "./intensity-select";
 
 const analyzeSchema = z.object({
-  spicyLevel: z.number(),
+  spicyLevel: z.number().min(1).max(3),
   imageId: z.number(),
 });
 
