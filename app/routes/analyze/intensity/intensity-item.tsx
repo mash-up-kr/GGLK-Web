@@ -30,7 +30,7 @@ export default function IntensityItem({ intensity }: { intensity: Intensity }) {
             <Highlight className="-top-1/3 -left-2/5 absolute h-[190%] w-[200%]" />
           </div>
 
-          <IntensityBadge value={value} level={level + 1} />
+          <IntensityBadge value={value} id={id} />
         </div>
         <div className="flex grow items-center justify-center">
           <SvgContainer SvgComponent={MainIcon}>
@@ -87,7 +87,7 @@ export default function IntensityItem({ intensity }: { intensity: Intensity }) {
   );
 }
 
-function IntensityBadge({ value, level }: { value: string; level: number }) {
+function IntensityBadge({ value, id }: { value: string; id: number }) {
   return (
     <div className="flex flex-col items-center justify-center font-nanum-brush">
       <SvgContainer SvgComponent={Badge} className="h-6 xs:h-8">
@@ -97,7 +97,7 @@ function IntensityBadge({ value, level }: { value: string; level: number }) {
       </SvgContainer>
       <SvgContainer SvgComponent={Badge} className="h-6 xs:h-8">
         <div className="flex h-full w-full items-center justify-center text-sm xs:text-lg [@media(max-height:)]:text-sm">
-          Version 0{level}
+          Version 0{id}
         </div>
       </SvgContainer>
     </div>
