@@ -23,7 +23,7 @@ import StickersBackground from "./image-studio/stickers-background";
 import IntensitySelectPage from "./intensity-select";
 
 const analyzeSchema = z.object({
-  spicyLevel: z.number(),
+  spicyLevel: z.number().min(1).max(3),
   imageId: z.number(),
 });
 
@@ -96,6 +96,9 @@ export default function Analyze() {
     onStepChange: () => {
       console.log("step changed");
     },
+    defaultOnPrev: () => {
+      navigate("/");
+    },
   });
 
   // watch로 intensity 값을 실시간으로 감지
@@ -119,6 +122,7 @@ export default function Analyze() {
         <Header
           onPrevious={onPrev}
           className={cn(step === 0 ? "text-white" : "")}
+          isMenuIconHidden={step === 1}
         />
 
         {isPending || isSuccess ? (

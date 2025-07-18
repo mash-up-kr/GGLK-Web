@@ -342,7 +342,7 @@ const FirstStep = ({
             {isTypingComplete && (
               <button
                 type="button"
-                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+                className="inline-flex max-w-max cursor-pointer items-center gap-2 rounded-full border px-5 py-[9px]"
                 style={{ borderColor: textColor }}
                 onClick={() => navigate("/analyze")}
               >
@@ -467,7 +467,7 @@ const SecondStep = ({
             {isTypingComplete && (
               <button
                 type="button"
-                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+                className="inline-flex max-w-max cursor-pointer items-center gap-2 rounded-full border px-5 py-[9px]"
                 style={{ borderColor: textColor }}
                 onClick={() => navigate("/analyze")}
               >
@@ -591,7 +591,7 @@ const ThirdStep = ({
             {isTypingComplete && (
               <button
                 type="button"
-                className="inline-flex max-w-max items-center gap-2 rounded-full border px-5 py-[9px]"
+                className="inline-flex max-w-max cursor-pointer items-center gap-2 rounded-full border px-5 py-[9px]"
                 style={{ borderColor: textColor }}
                 onClick={() => navigate("/analyze")}
               >

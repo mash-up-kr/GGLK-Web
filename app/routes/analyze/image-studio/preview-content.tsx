@@ -43,7 +43,7 @@ export default function PreviewContent({
               src={imgSrc ?? placeholderImageUrl ?? ""}
               alt="preview"
               className={cn(
-                "w-4/5 sm:w-3/5",
+                "z-10 w-4/5 sm:w-3/5",
                 isLoading || !imgSrc ? "opacity-80 brightness-60" : "border",
               )}
             />
@@ -86,7 +86,7 @@ export default function PreviewContent({
         </div>
         <button
           type="button"
-          className="cursor-pointer font-apple-gothic font-semibold text-sm underline"
+          className="cursor-pointer font-apple-gothic font-semibold text-sm underline opacity-80"
           onClick={() => {
             if (imageRef.current) {
               imageRef.current.click();

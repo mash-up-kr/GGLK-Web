@@ -8,9 +8,14 @@ import { Sidebar } from "./sidebar";
 interface HeaderProps {
   onPrevious?: () => void;
   className?: string;
+  isMenuIconHidden?: boolean;
 }
 
-export default function Header({ onPrevious, className }: HeaderProps) {
+export default function Header({
+  onPrevious,
+  className,
+  isMenuIconHidden,
+}: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   return (
@@ -31,7 +36,7 @@ export default function Header({ onPrevious, className }: HeaderProps) {
         >
           <ChevronLeft />
         </button>
-        {isMenuOpen ? (
+        {isMenuIconHidden ? null : isMenuOpen ? (
           <button
             type="button"
             onClick={() => setIsMenuOpen((prev) => !prev)}
