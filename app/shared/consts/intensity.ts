@@ -66,7 +66,7 @@ export const intensities: Intensity[] = [
   {
     id: 3,
     value: "easy",
-    level: 0,
+    level: 1,
     MainIcon: HeartShape,
     discription: "다정하고 칭찬을 아끼지 않는 패션 입문자를 위한 평가 버전",
     colorClassName: {
