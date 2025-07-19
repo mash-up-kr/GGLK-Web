@@ -11,13 +11,13 @@ function EvaluationText({ evaluationData }: EvaluationTextProps) {
       <div className="relative h-[626px] w-[290px]">
         <div className="-rotate-1 absolute top-17 right-8 left-8">
           <div className="mb-2 text-left">
-            <div className="font-['Elice_Digital_Baeum'] font-bold text-[22px] text-black leading-tight">
+            <div className="font-['EliceBaeum'] font-bold text-[22px] text-black leading-tight">
               {evaluationData.title}
             </div>
           </div>
           <div className="mb-2 h-px w-full border-[#676767] border-t border-dashed" />
           <div className="mb-2 text-left">
-            <span className="font-['Elice_Digital_Baeum'] font-bold text-[15px]">
+            <span className="font-['EliceBaeum'] font-bold text-[15px]">
               CODE NAME: {evaluationData.nickname}
             </span>
           </div>
@@ -26,7 +26,7 @@ function EvaluationText({ evaluationData }: EvaluationTextProps) {
             {evaluationData.hashtagList.map((hashtag) => (
               <div
                 key={`hashtag-${hashtag}`}
-                className="font-['Elice_Digital_Baeum'] font-normal text-[12px] text-gray-500 leading-tight"
+                className="font-['EliceBaeum'] font-normal text-[12px] text-gray-500 leading-tight"
               >
                 {hashtag}
               </div>
