@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useCookies } from "react-cookie";
 import { useNavigate, useSearchParams } from "react-router";
@@ -10,44 +10,59 @@ export default function Kakao() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [_, setCookie] = useCookies();
+  const effectRan = useRef(false);
 
-  const kakaoLoginHandler = useAuthControllerKakaoLoginHandler();
+  const { mutateAsync } = useAuthControllerKakaoLoginHandler();
 
   const code = searchParams.get("code");
 
+  const codeParseResult = z.string().safeParse(code);
+
+  if (!codeParseResult.success) {
+    throw new Error(codeParseResult.error.message);
+  }
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const codeParseResult = z.string().safeParse(code);
-
-    if (!codeParseResult.success) {
-      throw new Error(codeParseResult.error.message);
+    if (effectRan.current === true) {
+      console.log("개발 모드 재마운트로 인한 실행 방지");
+      return;
     }
 
-    kakaoLoginHandler.mutate(
-      {
-        data: {
-          code: codeParseResult.data,
-          redirectUri: `${window.location.origin}/auth/kakao`,
-        },
-      },
-      {
-        onSuccess: (data: unknown) => {
-          const dataParseResult = z
-            .object({ data: z.object({ token: z.string() }) })
-            .safeParse(data);
+    const runMutation = async () => {
+      console.log("useEffect 실행: mutateAsync를 호출합니다.");
+      try {
+        const data = await mutateAsync({
+          data: {
+            code: codeParseResult.data,
+            redirectUri: `${window.location.origin}/auth/kakao`,
+          },
+        });
 
-          if (dataParseResult.success) {
-            setCookie(AUTH_KEY, dataParseResult.data.data.token);
-          }
-        },
-        onSettled: () => {
-          navigate("/", {
-            replace: true,
-          });
-        },
-      },
-    );
-  }, [code, navigate, setCookie]);
+        const dataParseResult = z
+          .object({ data: z.object({ token: z.string() }) })
+          .safeParse(data);
+
+        if (dataParseResult.success) {
+          setCookie(AUTH_KEY, dataParseResult.data.data.token);
+        }
+
+        console.log("성공! (try 블록):", data);
+      } catch (error) {
+        console.error("실패! (catch 블록):", error);
+      }
+
+      navigate("/", {
+        replace: true,
+      });
+    };
+
+    runMutation();
+
+    return () => {
+      effectRan.current = true;
+    };
+  }, []);
 
   return null;
 }
