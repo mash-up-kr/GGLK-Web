@@ -217,6 +217,29 @@ export default function ResultPage() {
         return;
       }
 
+      // 배경 이미지 요소들을 slide-area로 이동 (아니면 반영 안됨ㄴ)
+      const backgroundImages = container.querySelectorAll('img[src*="theme"]');
+      const addedBackgroundElements: HTMLElement[] = [];
+
+      for (const bgImg of backgroundImages) {
+        const imgElement = bgImg as HTMLImageElement;
+        if (
+          imgElement.src.includes("theme2.png") ||
+          imgElement.src.includes("theme3.png")
+        ) {
+          // 배경 이미지를 slide-area의 첫 번째 자식으로 복사하여 추가
+          const clonedBgImg = imgElement.cloneNode(true) as HTMLImageElement;
+          clonedBgImg.style.position = "absolute";
+          clonedBgImg.style.top = "0";
+          clonedBgImg.style.left = "0";
+          clonedBgImg.style.width = "100%";
+          clonedBgImg.style.height = "100%";
+          clonedBgImg.style.zIndex = "-1";
+          slideArea.insertBefore(clonedBgImg, slideArea.firstChild);
+          addedBackgroundElements.push(clonedBgImg);
+        }
+      }
+
       const allImages = slideArea.querySelectorAll("img");
       console.log(`총 ${allImages.length}개의 이미지 로딩 대기`);
 
@@ -247,16 +270,39 @@ export default function ResultPage() {
         }),
       );
 
+      if (document?.fonts?.ready) {
+        await document.fonts.ready;
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const checkFontsLoaded = () => {
+          const fonts = [
+            "NeoDunggeunmo",
+            "Elice_Digital_Baeum",
+            "AppleSDGothicNeo",
+          ];
+          return fonts.every((font) => document.fonts.check(`12px ${font}`));
+        };
+
+        let attempts = 0;
+        while (!checkFontsLoaded() && attempts < 10) {
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          attempts++;
+        }
+      }
+
       // 캐러셀 인덱스 버튼 - 캡쳐할 때 숨기도록
       const carouselButtons = slideArea.querySelectorAll(
         ".carousel-buttons, .carousel-container button",
       );
       const originalDisplay: string[] = [];
-      carouselButtons.forEach((button, index) => {
+      let buttonIndex = 0;
+      for (const button of carouselButtons) {
         const buttonElement = button as HTMLElement;
-        originalDisplay[index] = buttonElement.style.display;
+        originalDisplay[buttonIndex] = buttonElement.style.display;
         buttonElement.style.display = "none";
-      });
+        buttonIndex++;
+      }
 
       const exportDomAsPng = async (el: HTMLElement, fileName: string) => {
         // html-to-image
@@ -312,15 +358,22 @@ export default function ResultPage() {
       // slide-area를 PNG로 저장
       await exportDomAsPng(slideArea, "ootd-result");
 
+      // 추가된 배경 이미지 요소들 제거
+      for (const bgImg of addedBackgroundElements) {
+        bgImg.remove();
+      }
+
       // 캐러셀 버튼들 복원
-      carouselButtons.forEach((button, index) => {
+      let restoreIndex = 0;
+      for (const button of carouselButtons) {
         const buttonElement = button as HTMLElement;
-        if (originalDisplay[index] !== undefined) {
-          buttonElement.style.display = originalDisplay[index];
+        if (originalDisplay[restoreIndex] !== undefined) {
+          buttonElement.style.display = originalDisplay[restoreIndex];
         } else {
           buttonElement.style.display = "";
         }
-      });
+        restoreIndex++;
+      }
 
       const bottomSheetHeight = BOTTOM_SHEET_HEIGHT();
       toast.success("이미지 저장 완료!", {

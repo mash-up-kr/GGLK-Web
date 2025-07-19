@@ -27,7 +27,11 @@ export default function Theme3({
         />
       </div>
       <div className="absolute bottom-10 z-50 w-[257px] translate-x-1/2">
-        <img src="/png/photoboothSmall.png" alt="photoboothSmall" />
+        <img
+          src="/png/photoboothSmall.png"
+          alt="photoboothSmall"
+          className="h-auto w-full"
+        />
         <div className="absolute inset-0 flex flex-col p-4">
           <div
             className="flex flex-col space-y-1 p-2 pb-0 text-gray-300"
