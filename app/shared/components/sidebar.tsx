@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import CloseIcon from "~/assets/close.svg?react";
 import LogoWhite from "~/assets/logo-white.svg?react";
 import { useKakaoScript } from "../hooks/use-kakao-script";
@@ -10,6 +10,7 @@ type SidebarProps = {
 
 export const Sidebar = ({ toggleOpen }: SidebarProps) => {
   const { authorize } = useKakaoScript();
+  const navigate = useNavigate();
 
   return (
     <motion.aside
@@ -27,14 +28,11 @@ export const Sidebar = ({ toggleOpen }: SidebarProps) => {
         <Link to="/">
           <li>Home</li>
         </Link>
-        <Link to="#" onClick={() => authorize()}>
+        <Link to="" onClick={() => authorize()}>
           <li>Login</li>
         </Link>
-        <Link to="#">
-          <li>Profile</li>
-        </Link>
-        <Link to="#">
-          <li>Contact</li>
+        <Link to="/analyze" onClick={() => navigate("/analyze")}>
+          <li>Analyze</li>
         </Link>
       </ul>
     </motion.aside>
