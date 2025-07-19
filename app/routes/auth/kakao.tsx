@@ -38,10 +38,12 @@ export default function Kakao() {
           },
         });
 
-        const dataParseResult = z.object({ data: z.string() }).safeParse(data);
+        const dataParseResult = z
+          .object({ data: z.object({ token: z.string() }) })
+          .safeParse(data);
 
         if (dataParseResult.success) {
-          setCookie(AUTH_KEY, dataParseResult.data.data, {
+          setCookie(AUTH_KEY, dataParseResult.data.data.token, {
             path: "/",
           });
         }
