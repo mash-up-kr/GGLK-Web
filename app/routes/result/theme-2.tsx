@@ -86,21 +86,21 @@ export default function Theme2({
             alt="iconTodaysLook"
           />
         </div>
-        <div className="absolute top-12 right-25">
+        <div className="absolute top-16 right-25">
           <img
             src="/png/iconStarPearl.png"
-            className="h-[48px] w-[48px]"
+            className="h-[42px] w-[42px]"
             alt="iconStarPearl"
           />
         </div>
-        <div className="absolute top-12 right-20">
+        <div className="-rotate-10 absolute top-17 right-22">
           <img
             src="/png/iconStarPearl.png"
-            className="h-[30px] w-[30px]"
+            className="h-[22px] w-[22px]"
             alt="iconStarPearl"
           />
         </div>
-        <div className="absolute top-10 right-5">
+        <div className="absolute top-12 right-5">
           <img
             src="/png/iconTagSpicy.png"
             className="h-[21px] w-[63px]"
@@ -115,7 +115,7 @@ export default function Theme2({
             className="h-[332px] w-[272px] object-contain"
             alt="icon-frame"
           />
-          <div className="absolute inset-0 bottom-11 flex items-center justify-center">
+          <div className="absolute inset-0 bottom-10 flex items-center justify-center">
             <img
               className="h-[226px] w-[226px] rotate-3 object-cover"
               src={slides[slideIndex].image}
@@ -124,6 +124,23 @@ export default function Theme2({
           </div>
         </div>
       </div>
+      <div className="-translate-x-1/2 absolute top-[385px] left-[135px] z-30 rotate-3 transform">
+        <div className="font-['NeoDunggeunmo'] text-black text-xl">
+          {evaluationData.nickname}
+        </div>
+      </div>
+      <div className="-translate-x-1/2 absolute top-[410px] left-[260px] z-30 rotate-3 transform">
+        <div className="right-1/2 mt-1 font-['NeoDunggeunmo'] text-[#676767] text-xs">
+          {new Date()
+            .toLocaleDateString("ko-KR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+            .replace(/\./g, ".")}
+        </div>
+      </div>
+
       <EvaluationText evaluationData={evaluationData} />
     </div>
   );
