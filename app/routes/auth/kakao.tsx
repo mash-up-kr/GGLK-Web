@@ -30,7 +30,6 @@ export default function Kakao() {
     }
 
     const runMutation = async () => {
-      console.log("useEffect 실행: mutateAsync를 호출합니다.");
       try {
         const data = await mutateAsync({
           data: {
@@ -39,18 +38,14 @@ export default function Kakao() {
           },
         });
 
-        const dataParseResult = z
-          .object({ data: z.object({ token: z.string() }) })
-          .safeParse(data);
+        const dataParseResult = z.object({ data: z.string() }).safeParse(data);
 
         if (dataParseResult.success) {
-          setCookie(AUTH_KEY, dataParseResult.data.data.token);
+          setCookie(AUTH_KEY, dataParseResult.data.data, {
+            path: "/",
+          });
         }
-
-        console.log("성공! (try 블록):", data);
-      } catch (error) {
-        console.error("실패! (catch 블록):", error);
-      }
+      } catch (error) {}
 
       navigate("/", {
         replace: true,
