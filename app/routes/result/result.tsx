@@ -46,7 +46,6 @@ const createThemeSlides = (
 ): CarouselSlide[] => {
   const roastedResult = evaluationData || mockEvaluationData;
 
-  // API 데이터에서 이미지 URL을 가져오거나 기본값 사용
   const getImageUrl = (index: number) => {
     if (
       roastedResult?.picture &&
@@ -59,7 +58,7 @@ const createThemeSlides = (
         return url;
       }
     }
-    // FIXME: 기본 이미지들 (API 데이터가 없을 때 사용)
+    // 사용자 이미지가 없을 때만 기본 이미지 사용
     const defaultImages = ["/png/1.png", "/png/2.png", "/png/3.png"];
     return defaultImages[index] || "/png/1.png";
   };
@@ -162,7 +161,6 @@ export default function ResultPage() {
   );
 
   const slides = createThemeSlides(evaluationData?.data);
-
   const [selectedThemeIndex, setSelectedThemeIndex] = useControllableState({
     prop: undefined,
     defaultProp: 0,
@@ -219,66 +217,35 @@ export default function ResultPage() {
         return;
       }
 
-      // 폰트 로딩 완료 대기 추가
-      if (document?.fonts?.ready) {
-        await document.fonts.ready;
-        console.log("폰트 로딩 완");
-      }
-
-      // 모든 이미지 로딩 완료까지 대기하기,
       const allImages = slideArea.querySelectorAll("img");
+      console.log(`총 ${allImages.length}개의 이미지 로딩 대기`);
 
       await Promise.all(
         Array.from(allImages).map((img, index) => {
           return new Promise<void>((resolve) => {
-            console.log(`이미지 ${index} 로딩중:`, img.src);
+            const imgElement = img as HTMLImageElement;
+            console.log(`이미지 ${index} 로딩중:`, imgElement.src);
 
-            if (img.complete && img.naturalWidth > 0) {
-              console.log(`이미지 ${index} 이미 로딩완`);
+            if (imgElement.complete && imgElement.naturalWidth > 0) {
+              console.log(`이미지 ${index} 이미 로딩됨:`, imgElement.src);
               resolve();
             } else {
-              img.onload = () => {
-                console.log(`이미지 ${index} 로딩 완료`);
+              imgElement.onload = () => {
+                console.log(`이미지 ${index} 로딩 완료:`, imgElement.src);
                 resolve();
               };
-              img.onerror = () => {
-                console.warn(`이미지 ${index} 로딩 실패:`, img.src);
-                // CORS 에러 시 기본 몽구 이미지로 대체
-                if (
-                  img.src.includes("naverncp.com") ||
-                  img.src.includes("http")
-                ) {
-                  img.src = "/png/1.png"; // 기본 이미지로 대체
-                  console.log(`이미지 ${index}  대체됨`);
-                }
+              imgElement.onerror = () => {
+                console.warn(`이미지 ${index} 로딩 실패:`, imgElement.src);
                 resolve();
               };
               setTimeout(() => {
-                console.warn(`이미지 ${index} 타임아웃`);
-                if (
-                  img.src.includes("naverncp.com") ||
-                  img.src.includes("http")
-                ) {
-                  img.src = "/png/1.png"; // 기본 이미지로 대체
-                }
+                console.warn(`이미지 ${index} 타임아웃:`, imgElement.src);
                 resolve();
-              }, 5000);
+              }, 10000);
             }
           });
         }),
       );
-
-      // 배경 이미지 로딩을 위한 추가 대기
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // 저장 전에 외부 이미지를 로컬 이미지로 임시 변경 - CORS 우회 FIXME
-      const originalSrcs: string[] = [];
-      const externalImages = slideArea.querySelectorAll('img[src*="http"]');
-      externalImages.forEach((img, index) => {
-        const imgElement = img as HTMLImageElement;
-        originalSrcs[index] = imgElement.src;
-        imgElement.src = "/png/1.png"; //FIXME
-      });
 
       // 캐러셀 인덱스 버튼 - 캡쳐할 때 숨기도록
       const carouselButtons = slideArea.querySelectorAll(
@@ -295,8 +262,7 @@ export default function ResultPage() {
         // html-to-image
         const { toPng } = await import("html-to-image");
 
-        // 현재 테마 인덱스에 따른 배경색 설정 FIXME
-        let backgroundColor = "#ffffff"; // 기본 fallback 임시로 주도록 설정
+        let backgroundColor = "#ffffff"; // 기본 fallback
         switch (selectedThemeIndex) {
           case 0:
             backgroundColor = "#181818"; // 테마 1: 검은색
@@ -316,10 +282,17 @@ export default function ResultPage() {
             quality: 1.0,
             width: el.offsetWidth,
             height: el.offsetHeight,
-            backgroundColor: backgroundColor, // 테마별 배경색 설정
+            backgroundColor: backgroundColor,
             style: {
               transform: "scale(1)",
               transformOrigin: "top left",
+            },
+            skipFonts: false,
+            filter: (node) => {
+              if (node instanceof HTMLImageElement) {
+                return true;
+              }
+              return true;
             },
           });
 
@@ -338,14 +311,6 @@ export default function ResultPage() {
 
       // slide-area를 PNG로 저장
       await exportDomAsPng(slideArea, "ootd-result");
-
-      // 캡처 후 원본 이미지로 복원
-      externalImages.forEach((img, index) => {
-        const imgElement = img as HTMLImageElement;
-        if (originalSrcs[index]) {
-          imgElement.src = originalSrcs[index];
-        }
-      });
 
       // 캐러셀 버튼들 복원
       carouselButtons.forEach((button, index) => {

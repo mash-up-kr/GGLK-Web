@@ -79,13 +79,6 @@ export default function Theme3({
         </div>
       </div>
 
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <img
-          src="/png/photoboothSmall.png"
-          className="h-[420px] w-[320px] object-contain"
-          alt="photoboothSmall"
-        />
-      </div>
       <div className="absolute bottom-20 left-27 z-20">
         <img
           src="/png/iconImageFolder.png"
@@ -103,7 +96,7 @@ export default function Theme3({
       <div className="absolute inset-0 z-25 flex items-center justify-center">
         <div className="absolute inset-0 top-5 flex items-center justify-center">
           <img
-            className="h-[284px] w-[284px] rounded-b-md object-cover"
+            className="h-[284px] w-[284px] object-cover"
             src={slides[slideIndex].image}
             alt={slides[slideIndex].alt}
           />
