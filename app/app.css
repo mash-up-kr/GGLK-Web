@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'NeoDunggeunmo';
+  src: url('/fonts/neodgm.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EliceBaeum';
+  src: url('/fonts/EliceDigitalBaeum_Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @import url("//cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.600/neodgm/style.css");
 @import url("https://font.elice.io/css?family=Elice+Digital+Baeum");
 @import url("https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap");

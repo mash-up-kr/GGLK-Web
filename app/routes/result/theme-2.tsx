@@ -13,7 +13,7 @@ function EvaluationText({ evaluationData }: EvaluationTextProps) {
     <div className="absolute inset-0 top-[130px] z-20 flex items-center justify-center">
       <div className="mt-75 flex w-[280px] flex-col space-y-4">
         <div className="absolute top-80 left-18 h-[87px] w-[214px] text-left">
-          <div className="font-['Elice_Digital_Baeum'] font-bold text-[22px] text-black leading-tight">
+          <div className="font-['EliceBaeum'] font-bold text-[22px] text-black leading-tight">
             {evaluationData.title}
           </div>
         </div>
@@ -22,7 +22,7 @@ function EvaluationText({ evaluationData }: EvaluationTextProps) {
             {leftHashtags.map((hashtag) => (
               <div
                 key={`hashtag-left-${hashtag}`}
-                className="relative w-full px-2 py-1 font-['Elice_Digital_Baeum'] font-normal text-[12px]"
+                className="relative w-full px-2 py-1 font-['EliceBaeum'] font-normal text-[12px]"
               >
                 <img
                   src="/png/IconGrayBg.png"
@@ -37,7 +37,7 @@ function EvaluationText({ evaluationData }: EvaluationTextProps) {
             {rightHashtags.map((hashtag) => (
               <div
                 key={`hashtag-right-${hashtag}`}
-                className="relative w-full px-2 py-1 font-['Elice_Digital_Baeum'] font-normal text-[12px]"
+                className="relative w-full px-2 py-1 font-['EliceBaeum'] font-normal text-[12px]"
               >
                 <img
                   src="/png/IconGrayBg.png"
