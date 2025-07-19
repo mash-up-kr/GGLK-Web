@@ -459,7 +459,7 @@ export default function ResultPage() {
     // 게스트 사용자라면 사용 여부 확인하게
     try {
       guestUsedCheck.refetch().then((result) => {
-        if (result.data) {
+        if (result.data?.data) {
           // 이미 기회를 사용한 경우 - 카카오 로그인 필요
           setContentType("reanalyze");
           setIsBottomSheetOpen(true);
