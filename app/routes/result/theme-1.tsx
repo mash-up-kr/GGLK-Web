@@ -112,7 +112,7 @@ export default function Theme1({
       <div className="absolute inset-0 top-1/3 flex items-center justify-center">
         <div className="-rotate-1 transform">
           <img
-            className="h-[226px] w-[226px] object-contain"
+            className="h-[226px] w-[226px] object-cover"
             src={slides[slideIndex].image}
             alt={slides[slideIndex].alt}
           />
