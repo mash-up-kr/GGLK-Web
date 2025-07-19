@@ -10,7 +10,7 @@ export const intensities: Intensity[] = [
   {
     id: 1,
     value: "normal",
-    level: 1,
+    level: 2,
     MainIcon: ChatBubbleShape,
     discription: "MZ사이에서 통하는 현실적인 하이브리드 공감형 평가 버전",
     colorClassName: {
@@ -38,7 +38,7 @@ export const intensities: Intensity[] = [
   {
     id: 2,
     value: "spicy",
-    level: 2,
+    level: 3,
     MainIcon: StarShape,
     discription: "깐깐한 패션 디렉터의 눈으로 골져스한 평가 버전",
     colorClassName: {

@@ -7,7 +7,7 @@ interface Position {
 export interface Intensity {
   id: number;
   value: "easy" | "normal" | "spicy";
-  level: 0 | 1 | 2;
+  level: 1 | 2 | 3;
   MainIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   colorClassName: {
     text: "text-ocean" | "text-forest" | "text-lava";
