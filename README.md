@@ -15,7 +15,7 @@
 - **AI 패션 편집장** 엘리스 제인이 당신의 스타일을 위트있게 로스팅
 - **3단계 강도 선택**: Easy, Normal, Spicy 중 원하는 로스팅 강도 선택하여, 기분이 상하지 않고 재밌는 평가를 받을 수 있습니다.
   
-  <img width="700" alt="image" src="https://github.com/user-attachments/assets/5bfbc440-6c01-4b09-928f-b010e982ff41" />
+  <img width="700" alt="image" src="https://github.com/user-attachments/assets/efcdf95b-36fd-49d0-b667-a0b6fa4d0bfe" />
 
 - **이미지 스튜디오**: 테마 스티커로 꾸민 평가 결과를 받아, 다양한 SNS에 공유하기 좋은 형태로 평가를 받아 볼 수 있습니다. 해당 이미지는 캔버스를 활용하여 구현하였습니다.  
   
